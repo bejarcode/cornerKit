@@ -368,20 +368,20 @@ This document breaks down the implementation of the cornerKit Core Library into 
 - [X] T197 [P3] [US3] Validate element: If string, resolve to HTMLElement
 - [X] T198 [P3] [US3] Check if managed: `if (!this.registry.has(element))` throw Error "Element not managed by CornerKit"
 - [X] T199 [P3] [US3] Merge config: Get existing config from registry, merge with new values
-- [ ] T200 [P3] [US3] Validate new config: Call `validateRadius()`, `validateSmoothing()`
-- [ ] T201 [P3] [US3] Update registry: `this.registry.update(element, mergedConfig)`
-- [ ] T202 [P3] [US3] Re-render: Get renderer from tier, call `renderer.update(element, mergedConfig)`
-- [ ] T203 [P3] [US3] Preserve observers: Do not disconnect/reconnect ResizeObserver on update
-- [ ] T204 [P3] [US3] Export update() method
+- [X] T200 [P3] [US3] Validate new config: Call `validateRadius()`, `validateSmoothing()`
+- [X] T201 [P3] [US3] Update registry: `this.registry.update(element, mergedConfig)`
+- [X] T202 [P3] [US3] Re-render: Get renderer from tier, call `renderer.update(element, mergedConfig)`
+- [X] T203 [P3] [US3] Preserve observers: Do not disconnect/reconnect ResizeObserver on update
+- [X] T204 [P3] [US3] Export update() method
 
-- [ ] T205 [P3] [US3] Add tests to `tests/unit/api.test.ts` (update section)
-- [ ] T206 [P3] [US3] Test update() on managed element: Verify config merged, path regenerated
-- [ ] T207 [P3] [US3] Test update() throws on unmanaged element: Verify error message
-- [ ] T208 [P3] [US3] Test update() with partial config: Update only radius, verify smoothing unchanged
-- [ ] T209 [P3] [US3] Test update() with invalid config: Verify validation, defaults used
-- [ ] T210 [P3] [US3] Test update() preserves observers: Verify ResizeObserver not recreated
-- [ ] T211 [P3] [US3] Integration test: Apply squircle, update radius, verify visual change
-- [ ] T212 [P3] [US3] User Story 3 acceptance scenario 2: Verify update() works smoothly
+- [X] T205 [P3] [US3] Add tests to `tests/unit/api.test.ts` (update section)
+- [X] T206 [P3] [US3] Test update() on managed element: Verify config merged, path regenerated
+- [X] T207 [P3] [US3] Test update() throws on unmanaged element: Verify error message
+- [X] T208 [P3] [US3] Test update() with partial config: Update only radius, verify smoothing unchanged
+- [X] T209 [P3] [US3] Test update() with invalid config: Verify validation, defaults used
+- [X] T210 [P3] [US3] Test update() preserves observers: Verify ResizeObserver not recreated
+- [X] T211 [P3] [US3] Integration test: Apply squircle, update radius, verify visual change
+- [X] T212 [P3] [US3] User Story 3 acceptance scenario 2: Verify update() works smoothly
 
 **Success Gate**: update() tests pass
 
@@ -389,14 +389,14 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T213-T220 are refinements to existing implementation
 
-- [ ] T213 [P3] [US3] Refine ResizeObserver in `src/renderers/clippath.ts`: Add comments explaining RAF debouncing
-- [ ] T214 [P3] [US3] Implement dimension caching: Store `lastDimensions` in registry entry
-- [ ] T215 [P3] [US3] Implement 1px threshold check: Compare new dimensions to cached, update only if ≥1px change (FR-022)
-- [ ] T216 [P3] [US3] Implement detached element handling: Try-catch around path update, catch errors, call `registry.delete(element)` (FR-021)
-- [ ] T217 [P3] [US3] Test ResizeObserver exception handling in `tests/unit/clippath.test.ts`
-- [ ] T218 [P3] [US3] Test detached element: Remove element from DOM, trigger ResizeObserver, verify error caught
-- [ ] T219 [P3] [US3] Test graceful cleanup: Verify element removed from registry after error
-- [ ] T220 [P3] [US3] User Story 3 acceptance scenario 5: Verify detached elements handled gracefully
+- [X] T213 [P3] [US3] Refine ResizeObserver in `src/renderers/clippath.ts`: Add comments explaining RAF debouncing
+- [X] T214 [P3] [US3] Implement dimension caching: Store `lastDimensions` in registry entry
+- [X] T215 [P3] [US3] Implement 1px threshold check: Compare new dimensions to cached, update only if ≥1px change (FR-022)
+- [X] T216 [P3] [US3] Implement detached element handling: Try-catch around path update, catch errors, call `registry.delete(element)` (FR-021)
+- [X] T217 [P3] [US3] Test ResizeObserver exception handling in `tests/unit/clippath.test.ts`
+- [X] T218 [P3] [US3] Test detached element: Remove element from DOM, trigger ResizeObserver, verify error caught
+- [X] T219 [P3] [US3] Test graceful cleanup: Verify element removed from registry after error
+- [X] T220 [P3] [US3] User Story 3 acceptance scenario 5: Verify detached elements handled gracefully
 
 **Success Gate**: ResizeObserver edge cases handled
 
@@ -404,18 +404,18 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T221-T225 implementation can happen in parallel with tests T226-T230
 
-- [ ] T221 [P3] [US3] Implement `respectsReducedMotion()` helper in `src/utils/accessibility.ts`
-- [ ] T222 [P3] [US3] Check media query: `window.matchMedia('(prefers-reduced-motion: reduce)').matches` (FR-042)
-- [ ] T223 [P3] [US3] Disable transitions: If reduced motion enabled, set `element.style.transition = 'none'`
-- [ ] T224 [P3] [US3] Apply on initialization: Call `respectsReducedMotion()` in `apply()` method
-- [ ] T225 [P3] [US3] Listen for changes: Add `matchMedia.addEventListener('change', callback)` to update dynamically
+- [X] T221 [P3] [US3] Implement `respectsReducedMotion()` helper in `src/utils/accessibility.ts`
+- [X] T222 [P3] [US3] Check media query: `window.matchMedia('(prefers-reduced-motion: reduce)').matches` (FR-042)
+- [X] T223 [P3] [US3] Disable transitions: If reduced motion enabled, set `element.style.transition = 'none'`
+- [X] T224 [P3] [US3] Apply on initialization: Call `respectsReducedMotion()` in `apply()` method
+- [X] T225 [P3] [US3] Listen for changes: Add `matchMedia.addEventListener('change', callback)` to update dynamically
 
-- [ ] T226 [P3] [US3] Create `tests/unit/accessibility.test.ts`
-- [ ] T227 [P3] [US3] Mock `window.matchMedia()`: Return mocked object with `matches: true/false`
-- [ ] T228 [P3] [US3] Test prefers-reduced-motion enabled: Verify `transition: none` applied
-- [ ] T229 [P3] [US3] Test prefers-reduced-motion disabled: Verify transitions allowed
-- [ ] T230 [P3] [US3] Test dynamic change: Mock media query change event, verify behavior updates
-- [ ] T231 [P3] [US3] User Story 3 acceptance scenario 3: Verify reduced motion respected
+- [X] T226 [P3] [US3] Create `tests/unit/accessibility.test.ts`
+- [X] T227 [P3] [US3] Mock `window.matchMedia()`: Return mocked object with `matches: true/false`
+- [X] T228 [P3] [US3] Test prefers-reduced-motion enabled: Verify `transition: none` applied
+- [X] T229 [P3] [US3] Test prefers-reduced-motion disabled: Verify transitions allowed
+- [X] T230 [P3] [US3] Test dynamic change: Mock media query change event, verify behavior updates
+- [X] T231 [P3] [US3] User Story 3 acceptance scenario 3: Verify reduced motion respected
 
 **Success Gate**: accessibility.test.ts passes, FR-042 compliant
 
@@ -423,11 +423,11 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T232-T235 documentation tasks
 
-- [ ] T232 [P3] [US3] Preserve outline styles: Verify ClipPath renderer does NOT modify `outline` property (FR-040)
-- [ ] T233 [P3] [US3] Test focus ring visibility: Create button element, apply squircle, focus with keyboard, verify outline visible (FR-041)
-- [ ] T234 [P3] [US3] Document outline usage: Add section to README explaining `outline` vs `border` for focus indicators
-- [ ] T235 [P3] [US3] Add code example: Show recommended `outline: 2px solid blue; outline-offset: 2px;` pattern
-- [ ] T236 [P3] [US3] Lighthouse accessibility test: Verify >95 score with squircles on interactive elements (SC-010, SC-012)
+- [X] T232 [P3] [US3] Preserve outline styles: Verify ClipPath renderer does NOT modify `outline` property (FR-040)
+- [X] T233 [P3] [US3] Test focus ring visibility: Create button element, apply squircle, focus with keyboard, verify outline visible (FR-041)
+- [X] T234 [P3] [US3] Document outline usage: Add section to README explaining `outline` vs `border` for focus indicators
+- [X] T235 [P3] [US3] Add code example: Show recommended `outline: 2px solid blue; outline-offset: 2px;` pattern
+- [X] T236 [P3] [US3] Lighthouse accessibility test: Verify >95 score with squircles on interactive elements (SC-010, SC-012)
 
 **Success Gate**: Focus indicators remain visible, documentation complete
 
@@ -435,10 +435,10 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T237-T240 validation tasks
 
-- [ ] T237 [P3] [US3] Verify ARIA preservation: Test that ClipPath renderer does NOT modify ARIA attributes (FR-043)
-- [ ] T238 [P3] [US3] Verify tab order: Test keyboard navigation, ensure tab order unchanged (FR-044)
-- [ ] T239 [P3] [US3] Test screen reader compatibility: Use NVDA/VoiceOver, verify announcements unaffected
-- [ ] T240 [P3] [US3] Add accessibility tests: Create Playwright test for keyboard navigation and screen readers
+- [X] T237 [P3] [US3] Verify ARIA preservation: Test that ClipPath renderer does NOT modify ARIA attributes (FR-043)
+- [X] T238 [P3] [US3] Verify tab order: Test keyboard navigation, ensure tab order unchanged (FR-044)
+- [X] T239 [P3] [US3] Test screen reader compatibility: Use NVDA/VoiceOver, verify announcements unaffected
+- [X] T240 [P3] [US3] Add accessibility tests: Create Playwright test for keyboard navigation and screen readers
 
 **Success Gate**: ARIA and screen readers unaffected
 
@@ -456,24 +456,24 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T241-T245 implementation can happen in parallel with tests T246-T250
 
-- [ ] T241 [P4] [US4] Implement `remove(element: HTMLElement | string): void` in `src/index.ts` (FR-006)
-- [ ] T242 [P4] [US4] Validate element: If string, resolve to HTMLElement
-- [ ] T243 [P4] [US4] Check if managed: `if (!this.registry.has(element))` throw Error "Element not managed by CornerKit"
-- [ ] T244 [P4] [US4] Get managed data: `const managed = this.registry.get(element)`
-- [ ] T245 [P4] [US4] Disconnect observers: `managed.resizeObserver?.disconnect()`, `managed.intersectionObserver?.disconnect()`
-- [ ] T246 [P4] [US4] Remove styling: Get renderer from tier, call `renderer.remove(element)`
-- [ ] T247 [P4] [US4] Delete from registry: `this.registry.delete(element)`
-- [ ] T248 [P4] [US4] Export remove() method
+- [X] T241 [P4] [US4] Implement `remove(element: HTMLElement | string): void` in `src/index.ts` (FR-006)
+- [X] T242 [P4] [US4] Validate element: If string, resolve to HTMLElement
+- [X] T243 [P4] [US4] Check if managed: `if (!this.registry.has(element))` throw Error "Element not managed by CornerKit"
+- [X] T244 [P4] [US4] Get managed data: `const managed = this.registry.get(element)`
+- [X] T245 [P4] [US4] Disconnect observers: `managed.resizeObserver?.disconnect()`, `managed.intersectionObserver?.disconnect()`
+- [X] T246 [P4] [US4] Remove styling: Get renderer from tier, call `renderer.remove(element)`
+- [X] T247 [P4] [US4] Delete from registry: `this.registry.delete(element)`
+- [X] T248 [P4] [US4] Export remove() method
 
-- [ ] T249 [P4] [US4] Add tests to `tests/unit/api.test.ts` (remove section)
-- [ ] T250 [P4] [US4] Test remove() on managed element: Verify clip-path removed, observers disconnected
-- [ ] T251 [P4] [US4] Test remove() throws on unmanaged element: Verify error message
-- [ ] T252 [P4] [US4] Test remove() disconnects ResizeObserver: Mock observer, verify `disconnect()` called
-- [ ] T253 [P4] [US4] Test remove() disconnects IntersectionObserver: Mock observer, verify `disconnect()` called
-- [ ] T254 [P4] [US4] Test remove() deletes from registry: Verify `registry.has(element)` returns false after removal
-- [ ] T255 [P4] [US4] Test remove() restores original styles: Verify `clipPath` reset to empty string
-- [ ] T256 [P4] [US4] Integration test: Apply squircle, remove, verify element returns to original state
-- [ ] T257 [P4] [US4] User Story 4 acceptance scenario 1: Verify remove() works correctly
+- [X] T249 [P4] [US4] Add tests to `tests/unit/api.test.ts` (remove section)
+- [X] T250 [P4] [US4] Test remove() on managed element: Verify clip-path removed, observers disconnected
+- [X] T251 [P4] [US4] Test remove() throws on unmanaged element: Verify error message
+- [X] T252 [P4] [US4] Test remove() disconnects ResizeObserver: Mock observer, verify `disconnect()` called
+- [X] T253 [P4] [US4] Test remove() disconnects IntersectionObserver: Mock observer, verify `disconnect()` called
+- [X] T254 [P4] [US4] Test remove() deletes from registry: Verify `registry.has(element)` returns false after removal
+- [X] T255 [P4] [US4] Test remove() restores original styles: Verify `clipPath` reset to empty string
+- [X] T256 [P4] [US4] Integration test: Apply squircle, remove, verify element returns to original state
+- [X] T257 [P4] [US4] User Story 4 acceptance scenario 1: Verify remove() works correctly
 
 **Success Gate**: remove() tests pass
 
@@ -483,20 +483,20 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 - [ ] T258 [P4] [US4] Implement `inspect(element: HTMLElement | string): ManagedElementInfo | null` in `src/index.ts` (FR-007)
 - [ ] T259 [P4] [US4] Validate element: If string, resolve to HTMLElement (no error on invalid selector, return null)
-- [ ] T260 [P4] [US4] Check if managed: `if (!this.registry.has(element))` return null (no error)
-- [ ] T261 [P4] [US4] Get managed data: `const managed = this.registry.get(element)`
-- [ ] T262 [P4] [US4] Return info object: `{ config: managed.config, tier: managed.tier, dimensions: managed.lastDimensions, isManaged: true }`
-- [ ] T263 [P4] [US4] Export `ManagedElementInfo` interface from types
-- [ ] T264 [P4] [US4] Export inspect() method
+- [X] T260 [P4] [US4] Check if managed: `if (!this.registry.has(element))` return null (no error)
+- [X] T261 [P4] [US4] Get managed data: `const managed = this.registry.get(element)`
+- [X] T262 [P4] [US4] Return info object: `{ config: managed.config, tier: managed.tier, dimensions: managed.lastDimensions, isManaged: true }`
+- [X] T263 [P4] [US4] Export `ManagedElementInfo` interface from types
+- [X] T264 [P4] [US4] Export inspect() method
 
-- [ ] T265 [P4] [US4] Add tests to `tests/unit/api.test.ts` (inspect section)
-- [ ] T266 [P4] [US4] Test inspect() on managed element: Verify returns correct config, tier, dimensions
-- [ ] T267 [P4] [US4] Test inspect() on unmanaged element: Verify returns null (no error)
-- [ ] T268 [P4] [US4] Test inspect() with CSS selector: Verify selector resolution works
-- [ ] T269 [P4] [US4] Test inspect() with invalid selector: Verify returns null (no error)
-- [ ] T270 [P4] [US4] Test inspect() returns immutable data: Modify returned config, verify registry unchanged
-- [ ] T271 [P4] [US4] Integration test: Apply squircle, inspect, verify returned data matches expected
-- [ ] T272 [P4] [US4] User Story 4 acceptance scenario 2: Verify inspect() returns correct configuration
+- [X] T265 [P4] [US4] Add tests to `tests/unit/api.test.ts` (inspect section)
+- [X] T266 [P4] [US4] Test inspect() on managed element: Verify returns correct config, tier, dimensions
+- [X] T267 [P4] [US4] Test inspect() on unmanaged element: Verify returns null (no error)
+- [X] T268 [P4] [US4] Test inspect() with CSS selector: Verify selector resolution works
+- [X] T269 [P4] [US4] Test inspect() with invalid selector: Verify returns null (no error)
+- [X] T270 [P4] [US4] Test inspect() returns immutable data: Modify returned config, verify registry unchanged
+- [X] T271 [P4] [US4] Integration test: Apply squircle, inspect, verify returned data matches expected
+- [X] T272 [P4] [US4] User Story 4 acceptance scenario 2: Verify inspect() returns correct configuration
 
 **Success Gate**: inspect() tests pass
 
@@ -504,24 +504,24 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T273-T277 implementation can happen in parallel with tests T278-T285
 
-- [ ] T273 [P4] [US4] Implement `destroy(): void` in `src/index.ts` (FR-008)
-- [ ] T274 [P4] [US4] Iterate registry: For each managed element, disconnect observers, remove styling
-- [ ] T275 [P4] [US4] Disconnect all observers: Call `managed.resizeObserver?.disconnect()`, `managed.intersectionObserver?.disconnect()`
-- [ ] T276 [P4] [US4] Remove all styling: Get renderer, call `renderer.remove(element)` for each
-- [ ] T277 [P4] [US4] Clear registry: `this.registry.clear()` or reinitialize WeakMap
-- [ ] T278 [P4] [US4] Allow re-initialization: After destroy(), instance should still work (fresh start)
-- [ ] T279 [P4] [US4] Export destroy() method
+- [X] T273 [P4] [US4] Implement `destroy(): void` in `src/index.ts` (FR-008)
+- [X] T274 [P4] [US4] Iterate registry: For each managed element, disconnect observers, remove styling
+- [X] T275 [P4] [US4] Disconnect all observers: Call `managed.resizeObserver?.disconnect()`, `managed.intersectionObserver?.disconnect()`
+- [X] T276 [P4] [US4] Remove all styling: Get renderer, call `renderer.remove(element)` for each
+- [X] T277 [P4] [US4] Clear registry: `this.registry.clear()` or reinitialize WeakMap
+- [X] T278 [P4] [US4] Allow re-initialization: After destroy(), instance should still work (fresh start)
+- [X] T279 [P4] [US4] Export destroy() method
 
-- [ ] T280 [P4] [US4] Add tests to `tests/unit/api.test.ts` (destroy section)
-- [ ] T281 [P4] [US4] Test destroy() on multiple elements: Apply to 20 elements, destroy, verify all removed
-- [ ] T282 [P4] [US4] Test destroy() disconnects all observers: Mock observers, verify all `disconnect()` calls
-- [ ] T283 [P4] [US4] Test destroy() removes all styling: Verify all elements have `clipPath` reset
-- [ ] T284 [P4] [US4] Test destroy() clears registry: Verify `registry.has()` returns false for all elements
-- [ ] T285 [P4] [US4] Test destroy() allows re-initialization: Call destroy(), then apply() again, verify works
-- [ ] T286 [P4] [US4] Test destroy() is idempotent: Call destroy() twice, verify no errors
-- [ ] T287 [P4] [US4] Integration test: Apply 20 squircles, destroy, verify complete cleanup
-- [ ] T288 [P4] [US4] User Story 4 acceptance scenario 3: Verify destroy() works correctly
-- [ ] T289 [P4] [US4] User Story 4 acceptance scenario 4: Verify re-initialization after destroy()
+- [X] T280 [P4] [US4] Add tests to `tests/unit/api.test.ts` (destroy section)
+- [X] T281 [P4] [US4] Test destroy() on multiple elements: Apply to 20 elements, destroy, verify all removed
+- [X] T282 [P4] [US4] Test destroy() disconnects all observers: Mock observers, verify all `disconnect()` calls
+- [X] T283 [P4] [US4] Test destroy() removes all styling: Verify all elements have `clipPath` reset
+- [X] T284 [P4] [US4] Test destroy() clears registry: Verify `registry.has()` returns false for all elements
+- [X] T285 [P4] [US4] Test destroy() allows re-initialization: Call destroy(), then apply() again, verify works
+- [X] T286 [P4] [US4] Test destroy() is idempotent: Call destroy() twice, verify no errors
+- [X] T287 [P4] [US4] Integration test: Apply 20 squircles, destroy, verify complete cleanup
+- [X] T288 [P4] [US4] User Story 4 acceptance scenario 3: Verify destroy() works correctly
+- [X] T289 [P4] [US4] User Story 4 acceptance scenario 4: Verify re-initialization after destroy()
 
 **Success Gate**: destroy() tests pass, User Story 4 all acceptance scenarios work
 

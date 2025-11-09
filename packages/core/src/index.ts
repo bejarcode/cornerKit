@@ -13,6 +13,7 @@ import { FallbackRenderer } from './renderers/fallback';
 import { validateRadius, validateSmoothing, validateElement } from './utils/validator';
 import { warn } from './utils/logger';
 import { hasSquircleAttribute, parseDataAttributes } from './utils/data-attributes';
+import { applyReducedMotionPreference } from './utils/accessibility';
 
 /**
  * CornerKit Main API Class
@@ -123,6 +124,9 @@ export default class CornerKit {
 
     // Detect tier (or use forced tier from config)
     const tier = mergedConfig.tier || this.detector.detectTier();
+
+    // T224: Apply reduced motion preferences (FR-042)
+    applyReducedMotionPreference(element);
 
     // Apply squircle using appropriate renderer
     if (tier === RendererTier.CLIPPATH) {
