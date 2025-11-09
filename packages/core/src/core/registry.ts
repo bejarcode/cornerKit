@@ -4,7 +4,7 @@
  * Provides lifecycle management and observer cleanup (FR-023, FR-026)
  */
 
-import type { SquircleConfig } from './types';
+import type { SquircleConfig, OriginalStyles } from './types';
 import type { RendererTier } from './detector';
 import { warnDuplicateApply } from '../utils/logger';
 
@@ -53,6 +53,12 @@ export interface ManagedElement {
     width: number;
     height: number;
   };
+
+  /**
+   * Original element styles before cornerKit modification (optional)
+   * Used to restore element to original state on remove()
+   */
+  originalStyles?: OriginalStyles;
 }
 
 /**
@@ -84,13 +90,15 @@ export class ElementRegistry {
    * @param tier - Renderer tier being used
    * @param resizeObserver - Optional ResizeObserver instance
    * @param intersectionObserver - Optional IntersectionObserver instance
+   * @param originalStyles - Optional original element styles for restoration
    */
   register(
     element: HTMLElement,
     config: SquircleConfig,
     tier: RendererTier,
     resizeObserver?: ResizeObserver,
-    intersectionObserver?: IntersectionObserver
+    intersectionObserver?: IntersectionObserver,
+    originalStyles?: OriginalStyles
   ): void {
     // FR-026: Check for duplicate registration
     if (this.has(element)) {
@@ -113,6 +121,10 @@ export class ElementRegistry {
           width: element.offsetWidth,
           height: element.offsetHeight,
         };
+        // Preserve originalStyles if they exist (don't overwrite on re-apply)
+        if (!existing.originalStyles && originalStyles) {
+          existing.originalStyles = originalStyles;
+        }
         return;
       }
     }
@@ -128,6 +140,7 @@ export class ElementRegistry {
         width: element.offsetWidth,
         height: element.offsetHeight,
       },
+      originalStyles,
     };
 
     // Store in WeakMap and tracking Set

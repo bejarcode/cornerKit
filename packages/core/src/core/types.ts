@@ -67,6 +67,29 @@ export { BrowserSupport } from './detector';
 export type { SuperellipsePoint } from '../math/superellipse';
 
 /**
+ * RenderOptions Interface
+ * Additional options passed to renderers for accessibility and behavior control
+ */
+export interface RenderOptions {
+  /**
+   * Whether user prefers reduced motion
+   * When true, renderers should disable/minimize transitions
+   */
+  reducedMotion?: boolean;
+}
+
+/**
+ * OriginalStyles Interface
+ * Stores original element styles for restoration on remove()
+ */
+export interface OriginalStyles {
+  /**
+   * Original transition value before cornerKit modification
+   */
+  transition?: string;
+}
+
+/**
  * ManagedElementInfo Interface
  * Information returned by inspect() method about a managed element
  * FR-007: Inspect managed elements

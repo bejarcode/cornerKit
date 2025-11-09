@@ -13,7 +13,7 @@ import { FallbackRenderer } from './renderers/fallback';
 import { validateRadius, validateSmoothing, validateElement } from './utils/validator';
 import { warn } from './utils/logger';
 import { hasSquircleAttribute, parseDataAttributes } from './utils/data-attributes';
-import { applyReducedMotionPreference } from './utils/accessibility';
+import { prefersReducedMotion, watchReducedMotionPreference } from './utils/accessibility';
 
 /**
  * CornerKit Main API Class
@@ -58,6 +58,19 @@ export default class CornerKit {
   private autoObserver?: IntersectionObserver;
 
   /**
+   * Cached reduced motion preference
+   * Checked once on init, then updated via watcher (not per-element)
+   * Prevents performance degradation from repeated matchMedia calls
+   */
+  private reducedMotionEnabled: boolean;
+
+  /**
+   * Cleanup function for reduced motion preference watcher
+   * Called in destroy() to prevent memory leaks
+   */
+  private reducedMotionWatcher?: () => void;
+
+  /**
    * FR-001: Constructor - Initialize CornerKit with optional global configuration
    *
    * @param config - Optional global configuration overrides
@@ -85,6 +98,16 @@ export default class CornerKit {
     // Initialize detector and registry
     this.detector = CapabilityDetector.getInstance();
     this.registry = new ElementRegistry();
+
+    // FR-042: Cache reduced motion preference (single check, not per-element)
+    this.reducedMotionEnabled = prefersReducedMotion();
+
+    // Watch for changes to reduced motion preference
+    this.reducedMotionWatcher = watchReducedMotionPreference((matches) => {
+      this.reducedMotionEnabled = matches;
+      // Update all managed elements when preference changes
+      this.updateAllReducedMotion();
+    });
   }
 
   /**
@@ -125,8 +148,8 @@ export default class CornerKit {
     // Detect tier (or use forced tier from config)
     const tier = mergedConfig.tier || this.detector.detectTier();
 
-    // T224: Apply reduced motion preferences (FR-042)
-    applyReducedMotionPreference(element);
+    // Store original transition for restoration on remove()
+    const originalTransition = element.style.transition;
 
     // Apply squircle using appropriate renderer
     if (tier === RendererTier.CLIPPATH) {
@@ -136,9 +159,11 @@ export default class CornerKit {
       }
 
       // ClipPath renderer returns ResizeObserver
+      // Pass reducedMotion option to renderer (cached value, not repeated matchMedia calls)
       const observer = this.clipPathRenderer.apply(
         element,
         mergedConfig,
+        { reducedMotion: this.reducedMotionEnabled }, // FR-042: Pass as option
         // Callback for dimension updates
         (el, width, height) => {
           this.registry.updateDimensions(el, width, height);
@@ -150,8 +175,15 @@ export default class CornerKit {
         }
       );
 
-      // Register element with observer
-      this.registry.register(element, mergedConfig, tier, observer);
+      // Register element with observer and original styles
+      this.registry.register(
+        element,
+        mergedConfig,
+        tier,
+        observer,
+        undefined, // no intersectionObserver yet
+        { transition: originalTransition } // Store for restoration
+      );
     } else {
       // Fallback renderer (no observers)
       if (!this.fallbackRenderer) {
@@ -161,7 +193,14 @@ export default class CornerKit {
       this.fallbackRenderer.apply(element, mergedConfig);
 
       // Register element without observers
-      this.registry.register(element, mergedConfig, tier);
+      this.registry.register(
+        element,
+        mergedConfig,
+        tier,
+        undefined, // no resizeObserver
+        undefined, // no intersectionObserver
+        { transition: originalTransition } // Store for restoration
+      );
     }
   }
 
@@ -447,8 +486,8 @@ export default class CornerKit {
       );
     }
 
-    // T246: Remove styling using helper method
-    this.removeElementStyling(element, managed.tier);
+    // T246: Remove styling using helper method and restore original transition
+    this.removeElementStyling(element, managed.tier, managed.originalStyles?.transition);
 
     // T247: Delete from registry (this also disconnects observers)
     this.registry.delete(element);
@@ -477,12 +516,12 @@ export default class CornerKit {
     // T274: Iterate registry and get all managed elements
     const elements = this.registry.getAllElements();
 
-    // T276: Remove styling from all elements
+    // T276: Remove styling from all elements and restore original styles
     // Note: Observer cleanup is handled by clear() below
     elements.forEach((element) => {
       const managed = this.registry.get(element);
       if (managed) {
-        this.removeElementStyling(element, managed.tier);
+        this.removeElementStyling(element, managed.tier, managed.originalStyles?.transition);
       }
     });
 
@@ -493,6 +532,12 @@ export default class CornerKit {
     if (this.autoObserver) {
       this.autoObserver.disconnect();
       this.autoObserver = undefined;
+    }
+
+    // Cleanup reduced motion watcher to prevent memory leaks
+    if (this.reducedMotionWatcher) {
+      this.reducedMotionWatcher();
+      this.reducedMotionWatcher = undefined;
     }
 
     // T278: Instance remains usable - no need to reinitialize anything
@@ -551,19 +596,28 @@ export default class CornerKit {
    *
    * @param element - HTMLElement to remove styling from
    * @param tier - Renderer tier to use
+   * @param originalTransition - Optional original transition to restore
    */
-  private removeElementStyling(element: HTMLElement, tier: RendererTier): void {
+  private removeElementStyling(
+    element: HTMLElement,
+    tier: RendererTier,
+    originalTransition?: string
+  ): void {
     if (tier === RendererTier.CLIPPATH) {
       if (!this.clipPathRenderer) {
         this.clipPathRenderer = new ClipPathRenderer();
       }
-      this.clipPathRenderer.remove(element);
+      this.clipPathRenderer.remove(element, originalTransition);
     } else {
       // Fallback renderer
       if (!this.fallbackRenderer) {
         this.fallbackRenderer = new FallbackRenderer();
       }
       this.fallbackRenderer.remove(element);
+      // Restore original transition for fallback too
+      if (originalTransition !== undefined) {
+        element.style.transition = originalTransition;
+      }
     }
   }
 
@@ -592,6 +646,51 @@ export default class CornerKit {
       }
       this.fallbackRenderer.update(element, config);
     }
+  }
+
+  /**
+   * FR-042: Update all managed elements when reduced motion preference changes
+   * Called by watcher when user changes OS preference
+   *
+   * @private
+   */
+  private updateAllReducedMotion(): void {
+    const elements = this.registry.getAllElements();
+
+    elements.forEach((element) => {
+      const managed = this.registry.get(element);
+      if (!managed || managed.tier !== RendererTier.CLIPPATH) {
+        return;
+      }
+
+      // Apply or remove reduced motion styling based on current preference
+      if (!this.clipPathRenderer) {
+        this.clipPathRenderer = new ClipPathRenderer();
+      }
+
+      // Re-apply with current reduced motion preference
+      // The renderer handles the transition modification
+      const existing = element.style.transition || '';
+
+      if (this.reducedMotionEnabled) {
+        // Add clip-path 0s if not already present
+        if (!existing.includes('clip-path')) {
+          element.style.transition = existing
+            ? `${existing}, clip-path 0s`
+            : 'clip-path 0s';
+        }
+      } else {
+        // Remove clip-path 0s and restore original
+        if (existing.includes('clip-path 0s')) {
+          const restored = existing
+            .split(',')
+            .map(s => s.trim())
+            .filter(s => !s.startsWith('clip-path'))
+            .join(', ');
+          element.style.transition = restored || (managed.originalStyles?.transition ?? '');
+        }
+      }
+    });
   }
 
   /**

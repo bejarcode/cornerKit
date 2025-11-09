@@ -5,7 +5,7 @@
  */
 
 import { generateSquirclePath } from '../math/path-generator';
-import type { SquircleConfig } from '../core/types';
+import type { SquircleConfig, RenderOptions } from '../core/types';
 import { warn, warnZeroDimensions, warnDetachedElement } from '../utils/logger';
 import { hasZeroDimensions, isDetached } from '../utils/validator';
 
@@ -30,12 +30,15 @@ export class ClipPathRenderer {
    *
    * @param element - Target HTMLElement
    * @param config - Squircle configuration
+   * @param options - Render options (reduced motion, etc.)
+   * @param onDimensionUpdate - Callback for dimension changes
    * @param getConfig - Callback to get current config (for dynamic updates)
    * @returns ResizeObserver instance for this element (to be stored in registry)
    */
   apply(
     element: HTMLElement,
     config: SquircleConfig,
+    options?: RenderOptions,
     onDimensionUpdate?: DimensionUpdateCallback,
     getConfig?: () => SquircleConfig
   ): ResizeObserver {
@@ -47,6 +50,12 @@ export class ClipPathRenderer {
     // Check if element is detached (development warning)
     if (isDetached(element)) {
       warnDetachedElement(element);
+    }
+
+    // FR-042: Handle reduced motion preference
+    // Only disable clip-path transitions, don't overwrite user's other transitions
+    if (options?.reducedMotion) {
+      this.applyReducedMotion(element);
     }
 
     // Generate and apply initial clip-path
@@ -72,12 +81,18 @@ export class ClipPathRenderer {
 
   /**
    * Remove squircle clip-path from element
-   * Resets element.style.clipPath to empty string
+   * Resets element.style.clipPath and optionally restores original transition
    *
    * @param element - Target HTMLElement
+   * @param originalTransition - Original transition value to restore (if any)
    */
-  remove(element: HTMLElement): void {
+  remove(element: HTMLElement, originalTransition?: string): void {
     element.style.clipPath = '';
+
+    // Restore original transition if provided
+    if (originalTransition !== undefined) {
+      element.style.transition = originalTransition;
+    }
   }
 
   /**
@@ -104,6 +119,24 @@ export class ClipPathRenderer {
 
     // Apply clip-path CSS property
     element.style.clipPath = `path('${path}')`;
+  }
+
+  /**
+   * FR-042: Apply reduced motion preferences
+   * Disables clip-path transitions without overwriting user's other transitions
+   *
+   * @param element - Target HTMLElement
+   */
+  private applyReducedMotion(element: HTMLElement): void {
+    const existing = element.style.transition || '';
+
+    // Only modify if clip-path transition not already disabled
+    if (!existing.includes('clip-path')) {
+      // Append clip-path with 0s duration to existing transitions
+      element.style.transition = existing
+        ? `${existing}, clip-path 0s`
+        : 'clip-path 0s';
+    }
   }
 
   /**

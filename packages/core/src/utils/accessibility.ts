@@ -32,6 +32,10 @@ export function prefersReducedMotion(): boolean {
  * T223, T224: Apply reduced motion preferences to an element
  * Disables CSS transitions if user prefers reduced motion
  *
+ * @deprecated This function is deprecated and will be removed in v2.0.
+ * Reduced motion is now handled automatically by CornerKit renderers.
+ * You don't need to call this function manually.
+ *
  * @param element - Target HTMLElement
  *
  * @example
