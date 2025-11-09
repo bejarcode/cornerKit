@@ -1,0 +1,66 @@
+{
+  "name": "@cornerkit/core",
+  "version": "1.0.0",
+  "description": "Lightweight library for iOS-style squircle corners",
+  "main": "dist/cornerkit.js",
+  "module": "dist/cornerkit.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/cornerkit.esm.js",
+      "require": "./dist/cornerkit.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "keywords": [
+    "squircle",
+    "corner",
+    "border-radius",
+    "superellipse",
+    "ios",
+    "ui",
+    "css"
+  ],
+  "author": "cornerKit Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cornerkit/cornerkit.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/cornerkit/cornerkit/issues"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^5.0.5",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "@vitest/coverage-v8": "^1.0.4",
+    "eslint": "^8.55.0",
+    "happy-dom": "^12.10.3",
+    "prettier": "^3.1.0",
+    "rollup": "^4.6.1",
+    "rollup-plugin-dts": "^6.1.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.4"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
