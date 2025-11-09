@@ -44,33 +44,59 @@ The library automatically detects and uses the best available rendering method:
 
 ```
 cornerKit/
-├── src/
-│   ├── core/
-│   │   ├── detector.ts          # Browser capability detection
-│   │   ├── registry.ts          # Element tracking and management
-│   │   └── config.ts            # Default configuration
-│   ├── renderers/
-│   │   ├── native.ts            # Tier 1: CSS corner-shape
-│   │   ├── houdini.ts           # Tier 2: Paint API
-│   │   ├── clippath.ts          # Tier 3: SVG clip-path
-│   │   └── fallback.ts          # Tier 4: border-radius
-│   ├── math/
-│   │   ├── superellipse.ts      # Superellipse formula implementation
-│   │   └── path-generator.ts   # SVG path string generation
-│   ├── integrations/
-│   │   ├── react.tsx            # React component + hook
-│   │   ├── vue.ts               # Vue component + composable
-│   │   ├── web-component.ts    # Native Web Component
-│   │   └── shopify.ts           # Shopify Liquid helpers
-│   ├── utils/
-│   │   ├── observer.ts          # Intersection/Resize observers
-│   │   └── performance.ts      # Performance monitoring
-│   └── index.ts                 # Main entry point
-├── worklets/
-│   └── squircle-paint.js        # Houdini Paint Worklet
-├── dist/                        # Build output
-├── examples/                    # Usage examples
-└── tests/                       # Unit + visual tests
+├── .specify/                    # Spec-kit configuration
+│   ├── memory/
+│   │   └── constitution.md     # Project constitution (10 principles)
+│   └── templates/              # Spec-kit templates
+├── specs/                      # Feature specifications
+│   └── 001-core-library/
+│       ├── spec.md            # Feature specification (60 functional requirements)
+│       ├── plan.md            # Implementation plan (architecture decisions)
+│       ├── tasks.md           # Task breakdown (390 atomic tasks)
+│       ├── research.md        # Technical decisions (7 key choices)
+│       ├── data-model.md      # Entity definitions
+│       ├── quickstart.md      # Developer onboarding guide
+│       ├── contracts/
+│       │   ├── api.md        # API contract
+│       │   └── types.ts      # TypeScript definitions contract
+│       └── checklists/
+│           └── requirements.md
+├── docs/                       # Product & technical documentation
+│   ├── PRD.md
+│   ├── PRD-SHOPIFY.md
+│   ├── TECH-STACK.md
+│   ├── API-SPEC.md
+│   ├── WORKSPACE-CONFIG.md
+│   ├── ARCHITECTURE.md
+│   ├── SHOPIFY.md
+│   └── ROADMAP.md            # 43 features across 6 phases
+├── packages/core/             # Monorepo package (Feature 001)
+│   ├── src/
+│   │   ├── core/
+│   │   │   ├── detector.ts   # Browser capability detection
+│   │   │   ├── registry.ts   # Element tracking and management
+│   │   │   └── config.ts     # Default configuration
+│   │   ├── renderers/
+│   │   │   ├── clippath.ts   # Tier 3: SVG clip-path (PRIMARY)
+│   │   │   ├── fallback.ts   # Tier 4: border-radius
+│   │   │   ├── houdini.ts    # Tier 2: Paint API (Phase 2)
+│   │   │   └── native.ts     # Tier 1: CSS corner-shape (Phase 2)
+│   │   ├── math/
+│   │   │   ├── superellipse.ts    # Superellipse formula
+│   │   │   └── path-generator.ts  # SVG path generation
+│   │   ├── utils/
+│   │   │   ├── validator.ts       # Input validation
+│   │   │   └── logger.ts          # Development warnings
+│   │   └── index.ts               # Main entry point
+│   ├── tests/
+│   │   ├── unit/                  # Unit tests (>90% coverage target)
+│   │   └── integration/           # Integration tests (Playwright)
+│   ├── package.json               # Zero runtime dependencies
+│   ├── tsconfig.json              # TypeScript strict mode
+│   ├── rollup.config.js           # ESM/UMD/CJS builds
+│   └── vitest.config.ts           # Test configuration
+├── examples/                      # Usage examples
+└── README.md                      # NPM package documentation
 ```
 
 ## Key Technical Components
@@ -152,36 +178,70 @@ ck.apply('.button', { radius: 20, smoothing: 0.85 });
 
 ## Development Workflow
 
-### Phase 1: Core Library (Current Focus)
-1. Set up TypeScript + Rollup build system
-2. Implement superellipse math engine
-3. Create browser capability detector
-4. Build clip-path renderer (Tier 3 - most compatible)
-5. Write unit tests for math and detection
+This project uses **spec-kit** (GitHub's Spec-Driven Development toolkit) for structured feature development.
 
-### Phase 2: Progressive Enhancement
-1. Implement Houdini Paint Worklet (Tier 2)
-2. Add native CSS renderer (Tier 1)
-3. Create tier selection orchestration
-4. Performance benchmarking
+### Spec-Kit Workflow
 
-### Phase 3: Framework Integrations
-1. React component + `useSquircle` hook
-2. Vue component + composable
-3. Web Component implementation
-4. Documentation for each framework
+```
+Constitution → Specify → Plan → Tasks → Implement
+```
 
-### Phase 4: Shopify Integration (Separate Package)
-1. Liquid snippet helpers
-2. Theme App Extension wrapper
-3. Merchant-facing UI in theme editor
+1. **Constitution** (`.specify/memory/constitution.md`) - 10 core principles governing all decisions
+2. **Specify** (`/specify`) - Generate feature specifications with requirements and user stories
+3. **Plan** (`/plan`) - Create implementation plans with architecture decisions
+4. **Tasks** (`/tasks`) - Break down into atomic, actionable tasks (1-4 hours each)
+5. **Implement** (`/implement`) - Execute tasks systematically with tests
 
-### Phase 5: Publication
-1. Visual regression tests
-2. Bundle size optimization
-3. Documentation website
-4. NPM publish
-5. Optional: Shopify App Store
+### Current Project Status
+
+**Feature 001: Core Library** (Phase 1 - In Progress)
+- ✅ Constitution v1.1.0 created (10 principles)
+- ✅ Specification complete ([specs/001-core-library/spec.md](specs/001-core-library/spec.md))
+- ✅ Implementation plan complete ([specs/001-core-library/plan.md](specs/001-core-library/plan.md))
+- ✅ Task breakdown complete ([specs/001-core-library/tasks.md](specs/001-core-library/tasks.md)) - 390 tasks
+- ✅ Setup phase complete (T001-T010) - TypeScript, Rollup, Vitest configured
+- 🔄 **Next**: Phase 2 (Foundational) - T011-T060 (Detector, Math, Path Gen, Validation)
+
+**Roadmap** ([docs/ROADMAP.md](docs/ROADMAP.md)):
+- Phase 1: Core Library (Features 001-010) - 4 weeks
+- Phase 2: Framework Integrations (Features 011-020) - 3 weeks
+- Phase 3: Advanced Features (Features 021-030) - 3 weeks
+- Phase 4: Shopify Extension (Features 031-035) - 2 weeks
+- Phase 5: Developer Experience (Features 036-040) - 2 weeks
+- Phase 6: Final Polish (Features 041-043) - 1 week
+
+### Implementation Phases (Feature 001)
+
+**Phase 1A: Foundation** (T011-T060)
+- Browser capability detector
+- Superellipse math engine
+- SVG path generator
+- Input validator
+- Development logger
+
+**Phase 1B: Rendering** (T061-T110)
+- ClipPath renderer (Tier 3 - primary implementation)
+- Fallback renderer (Tier 4)
+- Element registry with WeakMap
+- ResizeObserver integration
+
+**Phase 1C: API & Integration** (T111-T140)
+- Main API (CornerKit class)
+- Data attribute support
+- Build system (Rollup)
+- Unit tests (>90% coverage)
+
+**Phase 2-4: User Stories** (T141-T292)
+- Batch application (applyAll, auto)
+- Dynamic updates (update, resize handling)
+- Cleanup (remove, inspect, destroy)
+- Accessibility features
+
+**Phase 5: Final Polish** (T293-T390)
+- Integration tests (Playwright)
+- Performance benchmarks
+- Bundle size optimization (<5KB)
+- Documentation and release
 
 ## Testing Strategy
 
@@ -226,6 +286,27 @@ ck.apply('.button', { radius: 20, smoothing: 0.85 });
 
 ## Common Development Commands
 
+### Spec-Kit Commands
+
+```bash
+# Create project constitution (one-time setup)
+/constitution
+
+# Generate feature specification
+/specify
+
+# Create implementation plan
+/plan
+
+# Break down into tasks
+/tasks
+
+# Start implementation
+/implement
+```
+
+### Build & Test Commands
+
 ```bash
 # Install dependencies
 npm install
@@ -239,6 +320,9 @@ npm run build
 # Run tests
 npm test
 
+# Run tests in watch mode
+npm run test:watch
+
 # Run visual regression tests
 npm run test:visual
 
@@ -247,6 +331,9 @@ npm run type-check
 
 # Lint
 npm run lint
+
+# Check bundle size
+npm run size
 ```
 
 ## Documentation Files
@@ -261,6 +348,7 @@ npm run lint
 **Product Requirements:**
 - **[docs/PRD.md](docs/PRD.md)**: Core library PRD - NPM package for developers
 - **[docs/PRD-SHOPIFY.md](docs/PRD-SHOPIFY.md)**: Shopify extension PRD - App Store product for merchants
+- **[docs/ROADMAP.md](docs/ROADMAP.md)**: Master roadmap - 43 features across 6 phases
 
 **Technical Documentation:**
 - **[docs/TECH-STACK.md](docs/TECH-STACK.md)**: Technology stack and tooling decisions
@@ -268,6 +356,23 @@ npm run lint
 - **[docs/WORKSPACE-CONFIG.md](docs/WORKSPACE-CONFIG.md)**: Monorepo workspace configuration
 - **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Technical architecture and implementation plan (with optimized code)
 - **[docs/SHOPIFY.md](docs/SHOPIFY.md)**: Shopify Theme App Extension technical documentation
+
+### specs/ Directory (Spec-Kit Features)
+
+**Feature 001: Core Library** (Current)
+- **[specs/001-core-library/spec.md](specs/001-core-library/spec.md)**: Complete specification (60 functional requirements, 4 user stories)
+- **[specs/001-core-library/plan.md](specs/001-core-library/plan.md)**: Implementation plan (3 phases, constitution compliance)
+- **[specs/001-core-library/tasks.md](specs/001-core-library/tasks.md)**: Task breakdown (390 atomic tasks)
+- **[specs/001-core-library/research.md](specs/001-core-library/research.md)**: Technical decisions (7 key architecture choices)
+- **[specs/001-core-library/data-model.md](specs/001-core-library/data-model.md)**: Entity definitions (SquircleConfig, RendererTier, etc.)
+- **[specs/001-core-library/quickstart.md](specs/001-core-library/quickstart.md)**: Developer onboarding (<5 min setup guide)
+- **[specs/001-core-library/contracts/api.md](specs/001-core-library/contracts/api.md)**: API contract (8 methods, error handling)
+- **[specs/001-core-library/contracts/types.ts](specs/001-core-library/contracts/types.ts)**: TypeScript type definitions contract
+
+### .specify/ Directory (Spec-Kit Configuration)
+
+- **[.specify/memory/constitution.md](.specify/memory/constitution.md)**: Project constitution v1.1.0 (10 principles)
+- **[.specify/templates/](.specify/templates/)**: Spec-kit command templates
 
 ## Package.json Configuration
 
@@ -327,12 +432,20 @@ npm run lint
 
 ## Implementation Notes
 
-When implementing features:
+### Spec-Kit Methodology
 
-1. **Start with Tier 3 (clip-path)** - Most universally compatible, easiest to test
-2. **Add Tier 2 (Houdini)** - Requires worklet, more complex
-3. **Add Tier 1 (Native CSS)** - Simplest, but newest (Chrome 139+ only)
-4. **Tier 4 is automatic** - Just CSS, no special handling needed
+**Follow this order for Feature 001:**
+1. **Phase 1A: Foundation** - Core infrastructure (detector, math, path gen, validation)
+2. **Phase 1B: Rendering** - ClipPath (Tier 3) and Fallback (Tier 4) renderers
+3. **Phase 1C: API** - CornerKit class, data attributes, build system
+4. **Phases 2-4: User Stories** - Batch, dynamic, cleanup functionality
+5. **Phase 5: Polish** - Integration tests, performance, documentation
+
+**Tier Implementation Priority:**
+1. **Start with Tier 3 (clip-path)** - Primary implementation, most compatible, easiest to test
+2. **Add Tier 4 (fallback)** - Simple border-radius for IE11/older browsers
+3. **Defer Tier 2 (Houdini)** - Phase 2 (requires worklet, more complex)
+4. **Defer Tier 1 (Native CSS)** - Phase 2 (newest, Chrome 139+ only)
 
 ### Superellipse Implementation
 
@@ -376,3 +489,21 @@ Use bezier-based for production (smaller output).
 - **Houdini Paint API**: https://developer.mozilla.org/en-US/docs/Web/API/CSS_Painting_API
 - **Superellipse formula**: https://en.wikipedia.org/wiki/Superellipse
 - **figma-squircle library**: https://github.com/figma/squircle (reference implementation)
+- **spec-kit**: https://github.com/github/spec-kit (Spec-Driven Development toolkit)
+
+## Constitution Principles (v1.1.0)
+
+The project follows 10 core principles defined in [.specify/memory/constitution.md](.specify/memory/constitution.md):
+
+1. **Zero Dependencies** - Core library has zero runtime dependencies
+2. **Performance First** - <5KB bundle, <10ms render, <100ms init
+3. **Progressive Enhancement** - 4-tier system (Native→Houdini→ClipPath→Fallback)
+4. **Framework Agnostic** - Vanilla TypeScript core, framework wrappers separate
+5. **Type Safety** - TypeScript strict mode, >90% coverage for core, >85% for integration
+6. **Developer Experience** - <5 min quickstart, excellent documentation
+7. **Browser Compatibility** - 98%+ support with graceful degradation
+8. **Accessibility** - WCAG 2.1 AA compliant, preserve focus rings, respect reduced motion
+9. **Security** - No eval/innerHTML, input validation, CSP compatible
+10. **Privacy** - No data collection, no network requests, GDPR/CCPA compliant
+
+All implementation decisions must align with these principles.
