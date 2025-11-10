@@ -455,16 +455,11 @@ ck.auto(); // Visible elements processed immediately, off-screen deferred
 
 ## Examples
 
-See the [examples/](../../examples/) directory for complete working examples:
-
-- Vanilla JavaScript
-- React integration
-- Vue integration
-- TypeScript usage
+Complete working examples coming soon. For now, refer to the code examples in this README and the [Quick Start](#quick-start) section.
 
 ## Contributing
 
-See [CONTRIBUTING.md](../../CONTRIBUTING.md) for development workflow, testing, and PR guidelines.
+Contributions are welcome! Please open an issue to discuss proposed changes before submitting a pull request.
 
 ## License
 

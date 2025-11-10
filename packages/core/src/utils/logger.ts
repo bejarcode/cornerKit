@@ -181,7 +181,10 @@ export function warnNonHTMLElement(selector: string, elementType: string): void 
  */
 export function warnInvalidElement(element: unknown): void {
   const type = element === null ? 'null' : typeof element;
-  const constructor = (element as any)?.constructor?.name ?? 'unknown';
+  const constructor =
+    typeof element === 'object' && element !== null && 'constructor' in element
+      ? (element.constructor as { name?: string } | undefined)?.name ?? 'unknown'
+      : 'unknown';
   warn(`Invalid element: Expected HTMLElement, got ${type}. Element type: ${constructor}`);
 }
 

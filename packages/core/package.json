@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Lightweight library for iOS-style squircle corners",
   "type": "module",
+  "sideEffects": false,
   "main": "dist/cornerkit.js",
   "module": "dist/cornerkit.esm.js",
   "types": "dist/index.d.ts",
