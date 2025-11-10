@@ -565,13 +565,13 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T304-T310 type export tasks
 
-- [ ] T304 [PF] [N/A] Export `SquircleConfig` interface from `src/index.ts`
-- [ ] T305 [PF] [N/A] Export `RendererTier` enum from `src/index.ts`
-- [ ] T306 [PF] [N/A] Export `ManagedElementInfo` interface from `src/index.ts`
-- [ ] T307 [PF] [N/A] Export `BrowserSupport` interface from `src/index.ts`
-- [ ] T308 [PF] [N/A] Export `DEFAULT_CONFIG` constant from `src/index.ts`
-- [ ] T309 [PF] [N/A] Verify type exports: Create test TypeScript file, import all types, verify no errors
-- [ ] T310 [PF] [N/A] Add JSDoc comments: Document all public methods, parameters, return values
+- [X] T304 [PF] [N/A] Export `SquircleConfig` interface from `src/index.ts`
+- [X] T305 [PF] [N/A] Export `RendererTier` enum from `src/index.ts`
+- [X] T306 [PF] [N/A] Export `ManagedElementInfo` interface from `src/index.ts`
+- [X] T307 [PF] [N/A] Export `BrowserSupport` interface from `src/index.ts`
+- [X] T308 [PF] [N/A] Export `DEFAULT_CONFIG` constant from `src/index.ts`
+- [X] T309 [PF] [N/A] Verify type exports: Create test TypeScript file, import all types, verify no errors
+- [X] T310 [PF] [N/A] Add JSDoc comments: Document all public methods, parameters, return values
 
 **Success Gate**: All public types exported, JSDoc complete
 
@@ -579,10 +579,10 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T311-T325 test creation can happen in parallel
 
-- [ ] T311 [PF] [N/A] Install Playwright: `npm install -D @playwright/test`
-- [ ] T312 [PF] [N/A] Configure Playwright: Create `playwright.config.ts` with Chrome, Firefox, Safari, Edge
-- [ ] T313 [PF] [N/A] Create test HTML page: `tests/integration/fixtures/test-page.html` with squircle elements
-- [ ] T314 [PF] [N/A] Create `tests/integration/apply.test.ts`: Test basic apply() in all browsers (FR-053)
+- [X] T311 [PF] [N/A] Install Playwright: `npm install -D @playwright/test`
+- [X] T312 [PF] [N/A] Configure Playwright: Create `playwright.config.ts` with Chrome, Firefox, Safari, Edge
+- [X] T313 [PF] [N/A] Create test HTML page: `tests/integration/fixtures/test-page.html` with squircle elements
+- [X] T314 [PF] [N/A] Create `tests/integration/apply.test.ts`: Test basic apply() in all browsers (FR-053)
 - [ ] T315 [PF] [N/A] Create `tests/integration/batch.test.ts`: Test applyAll() and auto() in all browsers
 - [ ] T316 [PF] [N/A] Create `tests/integration/resize.test.ts`: Test responsive behavior (resize viewport)
 - [ ] T317 [PF] [N/A] Create `tests/integration/cleanup.test.ts`: Test remove() and destroy()
