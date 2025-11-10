@@ -791,7 +791,8 @@ export default class CornerKit {
 
 // Re-export types for convenience
 export type { SquircleConfig, ManagedElement, ManagedElementInfo };
-export { RendererTier };
+export { RendererTier, type BrowserSupport } from './core/detector';
+export { DEFAULT_CONFIG } from './core/types';
 
 // Re-export data attribute utilities for convenience
 export { hasSquircleAttribute, parseDataAttributes, parseRadius, parseSmoothing } from './utils/data-attributes';

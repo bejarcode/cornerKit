@@ -2,6 +2,7 @@
   "name": "@cornerkit/core",
   "version": "1.0.0",
   "description": "Lightweight library for iOS-style squircle corners",
+  "type": "module",
   "main": "dist/cornerkit.js",
   "module": "dist/cornerkit.esm.js",
   "types": "dist/index.d.ts",
@@ -57,6 +58,7 @@
     "prettier": "^3.1.0",
     "rollup": "^4.6.1",
     "rollup-plugin-dts": "^6.1.0",
+    "tslib": "^2.8.1",
     "typescript": "^5.3.3",
     "vitest": "^1.0.4"
   },
