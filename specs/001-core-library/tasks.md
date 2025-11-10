@@ -547,17 +547,17 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T293-T300 configuration tasks can happen in parallel
 
-- [ ] T293 [PF] [N/A] Configure Rollup output formats: ESM, UMD, CJS in `rollup.config.js` (FR-059)
-- [ ] T294 [PF] [N/A] Add @rollup/plugin-typescript: Compile TypeScript to JavaScript
-- [ ] T295 [PF] [N/A] Add rollup-plugin-dts: Bundle TypeScript type definitions (FR-058)
-- [ ] T296 [PF] [N/A] Add @rollup/plugin-terser: Minify production build
-- [ ] T297 [PF] [N/A] Add @rollup/plugin-replace: Replace `process.env.NODE_ENV` with literal values
-- [ ] T298 [PF] [N/A] Enable source maps: `sourcemap: true` in Rollup output config (FR-060)
-- [ ] T299 [PF] [N/A] Configure package.json exports: `{ ".": { "import": "./dist/cornerkit.esm.js", "require": "./dist/cornerkit.js", "types": "./dist/index.d.ts" } }`
-- [ ] T300 [PF] [N/A] Add build scripts: `"build": "rollup -c"`, `"build:watch": "rollup -c -w"`
-- [ ] T301 [PF] [N/A] Test build: Run `npm run build`, verify 3 output files created (ESM, UMD, CJS)
-- [ ] T302 [PF] [N/A] Test TypeScript definitions: Import library in TypeScript project, verify types work
-- [ ] T303 [PF] [N/A] Test source maps: Load minified file in Chrome DevTools, verify original source visible
+- [X] T293 [PF] [N/A] Configure Rollup output formats: ESM, UMD, CJS in `rollup.config.js` (FR-059)
+- [X] T294 [PF] [N/A] Add @rollup/plugin-typescript: Compile TypeScript to JavaScript
+- [X] T295 [PF] [N/A] Add rollup-plugin-dts: Bundle TypeScript type definitions (FR-058)
+- [X] T296 [PF] [N/A] Add @rollup/plugin-terser: Minify production build
+- [X] T297 [PF] [N/A] Add @rollup/plugin-replace: Replace `process.env.NODE_ENV` with literal values
+- [X] T298 [PF] [N/A] Enable source maps: `sourcemap: true` in Rollup output config (FR-060)
+- [X] T299 [PF] [N/A] Configure package.json exports: `{ ".": { "import": "./dist/cornerkit.esm.js", "require": "./dist/cornerkit.js", "types": "./dist/index.d.ts" } }`
+- [X] T300 [PF] [N/A] Add build scripts: `"build": "rollup -c"`, `"build:watch": "rollup -c -w"`
+- [X] T301 [PF] [N/A] Test build: Run `npm run build`, verify 3 output files created (ESM, UMD, CJS)
+- [X] T302 [PF] [N/A] Test TypeScript definitions: Import library in TypeScript project, verify types work
+- [X] T303 [PF] [N/A] Test source maps: Load minified file in Chrome DevTools, verify original source visible
 
 **Success Gate**: Build produces ESM, UMD, CJS + .d.ts files, source maps work
 
