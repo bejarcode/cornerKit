@@ -12,7 +12,7 @@ import { ClipPathRenderer } from './renderers/clippath';
 import { FallbackRenderer } from './renderers/fallback';
 import { validateRadius, validateSmoothing, validateElement } from './utils/validator';
 import { warn } from './utils/logger';
-import { hasSquircleAttribute, parseDataAttributes } from './utils/data-attributes';
+import { parseDataAttributes } from './utils/data-attributes';
 import { prefersReducedMotion, watchReducedMotionPreference } from './utils/accessibility';
 
 /**

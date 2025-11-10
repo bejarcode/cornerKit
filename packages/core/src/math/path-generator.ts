@@ -75,9 +75,6 @@ function buildBezierPath(
   bottomRight: SuperellipsePoint[],
   bottomLeft: SuperellipsePoint[]
 ): string {
-  const hw = width / 2;
-  const hh = height / 2;
-
   // Helper to convert corner-relative coordinates to absolute SVG coordinates
   const toAbsolute = (point: SuperellipsePoint, cornerX: number, cornerY: number) => ({
     x: cornerX + point.x,
