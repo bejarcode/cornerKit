@@ -13,6 +13,9 @@ build/
 coverage/
 .nyc_output/
 *.log
+playwright-report/
+test-results/
+.playwright/
 
 # Environment variables
 .env

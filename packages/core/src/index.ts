@@ -146,7 +146,13 @@ export default class CornerKit {
     };
 
     // Detect tier (or use forced tier from config)
-    const tier = mergedConfig.tier || this.detector.detectTier();
+    let tier = mergedConfig.tier || this.detector.detectTier();
+
+    // TEMPORARY: Fall back to ClipPath for unimplemented tiers
+    // TODO: Remove this when Native and Houdini renderers are implemented (Phase 2)
+    if (tier === RendererTier.NATIVE || tier === RendererTier.HOUDINI) {
+      tier = RendererTier.CLIPPATH;
+    }
 
     // Store original transition for restoration on remove()
     const originalTransition = element.style.transition;

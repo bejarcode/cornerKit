@@ -3,6 +3,8 @@
  * Central location for all public and internal types used across cornerKit
  */
 
+import { RendererTier } from './detector';
+
 /**
  * SquircleConfig Interface
  * Configuration object for squircle rendering
@@ -31,7 +33,7 @@ export interface SquircleConfig {
    * Normally auto-detected, but can be overridden for testing
    * @optional
    */
-  tier?: 'native' | 'houdini' | 'clippath' | 'fallback';
+  tier?: RendererTier;
 }
 
 /**
@@ -103,7 +105,7 @@ export interface ManagedElementInfo {
   /**
    * Renderer tier being used for this element
    */
-  tier: 'native' | 'houdini' | 'clippath' | 'fallback';
+  tier: RendererTier;
 
   /**
    * Current element dimensions (width x height in pixels)

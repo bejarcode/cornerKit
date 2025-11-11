@@ -232,21 +232,41 @@ function calculateTangent(
   points: Array<{ x: number; y: number }>,
   index: number
 ): { x: number; y: number } {
+  // Defensive: Ensure we have at least 2 points
+  if (points.length < 2 || index < 0 || index >= points.length) {
+    return { x: 0, y: 0 };
+  }
+
   let dx: number;
   let dy: number;
 
-  if (index === 0) {
+  if (index === 0 && points.length > 1) {
     // Start point: use forward difference
-    dx = points[1].x - points[0].x;
-    dy = points[1].y - points[0].y;
+    const p0 = points[0];
+    const p1 = points[1];
+    if (!p0 || !p1) {
+      return { x: 0, y: 0 };
+    }
+    dx = p1.x - p0.x;
+    dy = p1.y - p0.y;
   } else if (index === points.length - 1) {
     // End point: use backward difference
-    dx = points[index].x - points[index - 1].x;
-    dy = points[index].y - points[index - 1].y;
+    const p0 = points[index - 1];
+    const p1 = points[index];
+    if (!p0 || !p1) {
+      return { x: 0, y: 0 };
+    }
+    dx = p1.x - p0.x;
+    dy = p1.y - p0.y;
   } else {
     // Interior point: use central difference for better accuracy
-    dx = points[index + 1].x - points[index - 1].x;
-    dy = points[index + 1].y - points[index - 1].y;
+    const pPrev = points[index - 1];
+    const pNext = points[index + 1];
+    if (!pPrev || !pNext) {
+      return { x: 0, y: 0 };
+    }
+    dx = pNext.x - pPrev.x;
+    dy = pNext.y - pPrev.y;
   }
 
   // Normalize the tangent vector

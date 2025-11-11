@@ -57,8 +57,9 @@ export default defineConfig({
 
   // Run local dev server before starting the tests
   webServer: {
-    command: 'npm run preview',
+    command: 'npx http-server -p 5173 -c-1 --cors',
     url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
+    timeout: 10000,
   },
 });

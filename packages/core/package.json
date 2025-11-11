@@ -24,6 +24,9 @@
     "build:watch": "rollup -c -w",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
+    "test:integration": "playwright test",
+    "test:integration:ui": "playwright test --ui",
+    "preview": "http-server -p 5173 -c-1 --cors",
     "type-check": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\""
