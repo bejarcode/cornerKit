@@ -11,23 +11,29 @@ export interface SuperellipsePoint {
 
 /**
  * FR-014: Convert smoothing parameter (0-1) to superellipse exponent
- * Formula: n = 2 + (4 - 2) × (1 - smoothing)
+ * Formula: n = 2 + 3.75 × smoothing
  *
- * @param smoothing - Value between 0 and 1 (0 = square, 1 = circle)
- * @returns Exponent n (2 = circle, 4 = square)
+ * @param smoothing - Value between 0 and 1 (0 = circle, 1 = iOS squircle)
+ * @returns Exponent n (2 = circle, ~5 = iOS continuous corners)
+ *
+ * Based on iOS continuous corners research:
+ * - iOS uses n ≈ 5 for their distinctive squircle shape
+ * - Higher n = more "square-like" curve (less smooth transitions)
+ * - Lower n = more circular
  *
  * Examples:
- * - smoothing = 0.0 → n = 4.0 (square corners)
- * - smoothing = 0.5 → n = 3.0 (moderate squircle)
- * - smoothing = 0.8 → n = 2.4 (iOS-like, DEFAULT)
- * - smoothing = 1.0 → n = 2.0 (perfect circle)
+ * - smoothing = 0.0 → n = 2.0 (perfect circle)
+ * - smoothing = 0.6 → n = 4.25 (moderate squircle)
+ * - smoothing = 0.8 → n = 5.0 (iOS-like, DEFAULT)
+ * - smoothing = 1.0 → n = 5.75 (strong squircle)
  */
 export function smoothingToExponent(smoothing: number): number {
   // Clamp smoothing to [0, 1] range
   const s = Math.max(0, Math.min(1, smoothing));
 
-  // Map: smoothing=0 → n=4 (square), smoothing=1 → n=2 (circle)
-  return 2 + (4 - 2) * (1 - s);
+  // Map: smoothing=0 → n=2 (circle), smoothing=0.8 → n=5 (iOS)
+  // Formula derived to match iOS continuous corners at smoothing=0.8
+  return 2 + 3.75 * s;
 }
 
 /**
@@ -41,7 +47,7 @@ export function smoothingToExponent(smoothing: number): number {
  * @param radius - Corner radius in pixels
  * @param exponent - Superellipse exponent (n)
  * @param corner - Which corner: 0=top-left, 1=top-right, 2=bottom-right, 3=bottom-left
- * @param numPoints - Number of points to generate (default: 8 for smooth bezier approximation)
+ * @param numPoints - Number of points to generate (default: 40 for smooth curves without stepping)
  * @returns Array of points forming the corner curve
  */
 export function generateCornerPoints(
@@ -50,7 +56,7 @@ export function generateCornerPoints(
   radius: number,
   exponent: number,
   corner: 0 | 1 | 2 | 3,
-  numPoints: number = 8
+  numPoints: number = 40
 ): SuperellipsePoint[] {
   const points: SuperellipsePoint[] = [];
 

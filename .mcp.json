@@ -1,0 +1,85 @@
+{
+    "mcpServers": {
+      "github": {
+        "type": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-github"
+        ],
+        "env": {
+          "GITHUB_PERSONAL_ACCESS_TOKEN": "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"
+        }
+      },
+      "chrome-mcp-server": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/Users/victor/Library/pnpm/global/5/.pnpm/mcp-chrome-bridge@1.0.29/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"
+      ]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest"]
+    }
+    },
+    "disabledMcpServers": {
+      "puppeteer": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-puppeteer",
+          "https://www.google.com"
+        ]
+      },
+      "memory": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-memory"
+        ]
+      },
+      "sequential-thinking": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-sequential-thinking"
+        ]
+      },
+      "brave-search": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-brave-search"
+        ],
+        "env": {
+          "BRAVE_API_KEY": "BSAcBIv70HlsEkGziQ7CvjgNRsoVoyD"
+        }
+      },
+      "desktop-commander": {
+        "command": "npx",
+        "args": [
+          "@wonderwhy-er/desktop-commander@latest"
+        ]
+      },
+      "exa": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-remote",
+          "https://mcp.exa.ai/mcp?exaApiKey=24a7d5bd-8841-4437-813a-9ef649e6eb2e"
+        ]
+      },
+      "context7-mcp": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@smithery/cli@latest",
+          "run",
+          "@upstash/context7-mcp",
+          "--key",
+          "e6054d2f-c497-48cc-b4ca-4f66cb1fbfb8"
+        ]
+      }
+    }
+  }
