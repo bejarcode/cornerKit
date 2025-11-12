@@ -2,6 +2,9 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
+    // Only run unit tests (exclude Playwright integration tests)
+    include: ['tests/unit/**/*.test.ts'],
+    exclude: ['tests/integration/**', 'tests/performance/**', 'node_modules/**'],
     environment: 'happy-dom',
     globals: true,
     environmentOptions: {
