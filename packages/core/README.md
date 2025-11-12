@@ -2,14 +2,14 @@
 
 > Lightweight, framework-agnostic library for iOS-style squircle corners on the web
 
-[![Bundle Size](https://img.shields.io/badge/bundle%20size-3.63%20KB-success)](https://bundlephobia.com/package/cornerkit)
+[![Bundle Size](https://img.shields.io/badge/bundle%20size-3.66%20KB-success)](https://bundlephobia.com/package/cornerkit)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3%2B-blue)](https://www.typescriptlang.org/)
 [![Security: A+](https://img.shields.io/badge/security-A%2B-success)](security/SECURITY-AUDIT.md)
 [![Test Coverage](https://img.shields.io/badge/coverage-97.9%25-brightgreen)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../../LICENSE)
 
-**CornerKit** brings the beautiful, continuous curve corners (squircles) of iOS design to your web applications. At just **3.63 KB gzipped** with **zero runtime dependencies**, it delivers professional-grade rounded corners with exceptional performance.
+**CornerKit** brings the beautiful, continuous curve corners (squircles) of iOS design to your web applications. At just **3.66 KB gzipped** with **zero runtime dependencies**, it delivers professional-grade rounded corners with exceptional performance.
 
 ```bash
 npm install @cornerkit/core
@@ -20,7 +20,7 @@ npm install @cornerkit/core
 ## ✨ Key Strengths
 
 ### 🎯 **Exceptionally Tiny Bundle**
-- **3.63 KB gzipped** (27% under budget!)
+- **3.66 KB gzipped** (27% under budget!)
 - Zero runtime dependencies
 - Tree-shakeable ES modules
 - Perfect for performance-conscious projects

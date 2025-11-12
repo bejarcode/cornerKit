@@ -625,9 +625,9 @@ This document breaks down the implementation of the cornerKit Core Library into 
 - [X] T340 [PF] [N/A] Analyze bundle composition: Use `rollup-plugin-visualizer` to identify large modules
 - [X] T341 [PF] [N/A] Optimize imports: Ensure no unused imports, dead code eliminated
 - [X] T342 [PF] [N/A] Verify <5KB gzipped: Measure final bundle size, verify meets target (FR-049, SC-002)
-- [ ] T343 [PF] [N/A] Add bundlephobia CI check: Automate bundle size monitoring on every PR
-- [ ] T344 [PF] [N/A] Document bundle size: Add badge to README showing current size
-- [ ] T345 [PF] [N/A] Success criteria SC-002: Verify bundle size <5KB gzipped via bundlephobia
+- [X] T343 [PF] [N/A] Add bundlephobia CI check: Automate bundle size monitoring on every PR
+- [X] T344 [PF] [N/A] Document bundle size: Add badge to README showing current size
+- [X] T345 [PF] [N/A] Success criteria SC-002: Verify bundle size <5KB gzipped via bundlephobia
 
 **Success Gate**: Bundle size <5KB gzipped verified
 

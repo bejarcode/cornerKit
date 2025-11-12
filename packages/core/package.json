@@ -28,6 +28,7 @@
     "test:integration:ui": "playwright test --ui",
     "test:performance": "playwright test tests/performance --reporter=list",
     "analyze-bundle": "node scripts/analyze-bundle.js",
+    "verify-bundle-size": "node scripts/verify-bundle-size.js",
     "preview": "http-server -p 5173 -c-1 --cors",
     "type-check": "tsc --noEmit",
     "lint": "eslint src --ext .ts",

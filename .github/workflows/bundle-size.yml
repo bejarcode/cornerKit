@@ -1,0 +1,127 @@
+name: Bundle Size Check
+
+# T343: Bundlephobia CI check
+# Automatically monitors bundle size on every PR
+# Verifies SC-002: Bundle size <5KB gzipped
+
+on:
+  pull_request:
+    branches: [main, 001-core-library]
+    paths:
+      - 'packages/core/src/**'
+      - 'packages/core/rollup.config.js'
+      - 'packages/core/package.json'
+  push:
+    branches: [main, 001-core-library]
+    paths:
+      - 'packages/core/src/**'
+      - 'packages/core/rollup.config.js'
+      - 'packages/core/package.json'
+
+jobs:
+  check-bundle-size:
+    name: Verify Bundle Size <5KB
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'packages/core/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: packages/core
+        run: npm ci
+
+      - name: Build production bundle
+        working-directory: packages/core
+        run: npm run build
+
+      - name: Verify bundle size
+        working-directory: packages/core
+        run: npm run verify-bundle-size
+
+      - name: Report bundle sizes
+        if: always()
+        working-directory: packages/core
+        run: |
+          echo "## Bundle Size Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Format | Size (gzipped) | Target | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|----------------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          ESM_SIZE=$(gzip -c dist/cornerkit.esm.js | wc -c | tr -d ' ')
+          UMD_SIZE=$(gzip -c dist/cornerkit.js | wc -c | tr -d ' ')
+          CJS_SIZE=$(gzip -c dist/cornerkit.cjs | wc -c | tr -d ' ')
+
+          ESM_KB=$(echo "scale=2; $ESM_SIZE / 1024" | bc)
+          UMD_KB=$(echo "scale=2; $UMD_SIZE / 1024" | bc)
+          CJS_KB=$(echo "scale=2; $CJS_SIZE / 1024" | bc)
+
+          TARGET="5.00 KB"
+
+          ESM_STATUS="✅"
+          UMD_STATUS="✅"
+          CJS_STATUS="✅"
+
+          if (( $(echo "$ESM_KB >= 5.0" | bc -l) )); then ESM_STATUS="❌"; fi
+          if (( $(echo "$UMD_KB >= 5.0" | bc -l) )); then UMD_STATUS="❌"; fi
+          if (( $(echo "$CJS_KB >= 5.0" | bc -l) )); then CJS_STATUS="❌"; fi
+
+          echo "| ESM | ${ESM_KB} KB | < ${TARGET} | ${ESM_STATUS} |" >> $GITHUB_STEP_SUMMARY
+          echo "| UMD | ${UMD_KB} KB | < ${TARGET} | ${UMD_STATUS} |" >> $GITHUB_STEP_SUMMARY
+          echo "| CJS | ${CJS_KB} KB | < ${TARGET} | ${CJS_STATUS} |" >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Success Criteria SC-002**: All bundles must be <5KB gzipped" >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const { execSync } = require('child_process');
+
+            const distDir = path.join(process.cwd(), 'packages/core/dist');
+
+            const getSize = (file) => {
+              const filePath = path.join(distDir, file);
+              const gzipCmd = `gzip -c "${filePath}" | wc -c`;
+              const bytes = parseInt(execSync(gzipCmd, { encoding: 'utf-8' }).trim(), 10);
+              return (bytes / 1024).toFixed(2);
+            };
+
+            const esmSize = getSize('cornerkit.esm.js');
+            const umdSize = getSize('cornerkit.js');
+            const cjsSize = getSize('cornerkit.cjs');
+
+            const target = 5.0;
+            const allPassed = parseFloat(esmSize) < target &&
+                             parseFloat(umdSize) < target &&
+                             parseFloat(cjsSize) < target;
+
+            const status = allPassed ? '✅ PASSED' : '❌ FAILED';
+
+            const comment = `## Bundle Size Check ${status}
+
+            | Format | Size (gzipped) | Target | Status |
+            |--------|----------------|--------|--------|
+            | ESM | ${esmSize} KB | < ${target} KB | ${parseFloat(esmSize) < target ? '✅' : '❌'} |
+            | UMD | ${umdSize} KB | < ${target} KB | ${parseFloat(umdSize) < target ? '✅' : '❌'} |
+            | CJS | ${cjsSize} KB | < ${target} KB | ${parseFloat(cjsSize) < target ? '✅' : '❌'} |
+
+            **Success Criteria SC-002**: ${allPassed ? '✅ All bundles meet the <5KB gzipped target' : '❌ One or more bundles exceed the 5KB gzipped target'}`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
