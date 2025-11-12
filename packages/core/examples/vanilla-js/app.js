@@ -1,5 +1,5 @@
 // Initialize CornerKit
-const ck = new window.CornerKit();
+const ck = new window.CornerKit.default();
 
 // Apply squircles to demo cards
 ck.apply('#basic-card', { radius: 20, smoothing: 0.8 });
