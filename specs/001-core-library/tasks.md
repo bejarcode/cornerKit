@@ -481,8 +481,8 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T258-T262 implementation can happen in parallel with tests T263-T267
 
-- [ ] T258 [P4] [US4] Implement `inspect(element: HTMLElement | string): ManagedElementInfo | null` in `src/index.ts` (FR-007)
-- [ ] T259 [P4] [US4] Validate element: If string, resolve to HTMLElement (no error on invalid selector, return null)
+- [X] T258 [P4] [US4] Implement `inspect(element: HTMLElement | string): ManagedElementInfo | null` in `src/index.ts` (FR-007)
+- [X] T259 [P4] [US4] Validate element: If string, resolve to HTMLElement (no error on invalid selector, return null)
 - [X] T260 [P4] [US4] Check if managed: `if (!this.registry.has(element))` return null (no error)
 - [X] T261 [P4] [US4] Get managed data: `const managed = this.registry.get(element)`
 - [X] T262 [P4] [US4] Return info object: `{ config: managed.config, tier: managed.tier, dimensions: managed.lastDimensions, isManaged: true }`
