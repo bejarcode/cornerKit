@@ -635,16 +635,16 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T346-T355 validation tasks
 
-- [ ] T346 [PF] [N/A] Code audit: Search codebase for `eval()`, `Function()`, `innerHTML`, `outerHTML` - verify none exist (FR-037)
-- [ ] T347 [PF] [N/A] Network monitoring test: Load library, monitor network tab, verify zero requests (FR-045, SC-013)
-- [ ] T348 [PF] [N/A] Storage audit: Search codebase for `localStorage`, `sessionStorage`, `cookies` - verify none exist (FR-046)
-- [ ] T349 [PF] [N/A] Analytics audit: Verify no telemetry, tracking, or phone-home code (FR-047)
-- [ ] T350 [PF] [N/A] CSP compatibility test: Add strict CSP headers, verify library works (FR-048)
-- [ ] T351 [PF] [N/A] Run `npm audit`: Verify no vulnerabilities in dev dependencies
-- [ ] T352 [PF] [N/A] Add npm audit to CI: Automate security scanning
-- [ ] T353 [PF] [N/A] Document security practices: Add security section to README
-- [ ] T354 [PF] [N/A] Document privacy guarantees: Add privacy section to README (GDPR/CCPA compliance)
-- [ ] T355 [PF] [N/A] Success criteria SC-013: Verify zero network requests via monitoring
+- [X] T346 [PF] [N/A] Code audit: Search codebase for `eval()`, `Function()`, `innerHTML`, `outerHTML` - verify none exist (FR-037)
+- [X] T347 [PF] [N/A] Network monitoring test: Load library, monitor network tab, verify zero requests (FR-045, SC-013)
+- [X] T348 [PF] [N/A] Storage audit: Search codebase for `localStorage`, `sessionStorage`, `cookies` - verify none exist (FR-046)
+- [X] T349 [PF] [N/A] Analytics audit: Verify no telemetry, tracking, or phone-home code (FR-047)
+- [X] T350 [PF] [N/A] CSP compatibility test: Add strict CSP headers, verify library works (FR-048)
+- [X] T351 [PF] [N/A] Run `npm audit`: Verify no vulnerabilities in dev dependencies
+- [X] T352 [PF] [N/A] Add npm audit to CI: Automate security scanning
+- [X] T353 [PF] [N/A] Document security practices: Add security section to README
+- [X] T354 [PF] [N/A] Document privacy guarantees: Add privacy section to README (GDPR/CCPA compliance)
+- [X] T355 [PF] [N/A] Success criteria SC-013: Verify zero network requests via monitoring
 
 **Success Gate**: All security and privacy requirements met
 
