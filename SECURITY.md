@@ -42,11 +42,11 @@ We take security seriously. If you discover a security vulnerability in CornerKi
 
 Instead, please email security details to:
 
-📧 **security@cornerkit.dev** (preferred)
+📧 **me@victorbejar.com** (preferred)
 
 Or create a private security advisory:
 
-1. Go to https://github.com/cornerkit/cornerkit/security/advisories
+1. Go to https://github.com/bejarcode/cornerkit/security/advisories
 2. Click "New draft security advisory"
 3. Fill in the details
 
@@ -190,8 +190,8 @@ Detailed security audit reports are available in:
 
 For security-related questions or concerns:
 
-📧 **security@cornerkit.dev**
-🔗 **GitHub Security**: https://github.com/cornerkit/cornerkit/security
+📧 **me@victorbejar.com**
+🔗 **GitHub Security**: https://github.com/bejarcode/cornerkit/security
 
 ## Acknowledgments
 

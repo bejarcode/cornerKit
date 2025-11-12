@@ -43,15 +43,15 @@
     "ui",
     "css"
   ],
-  "author": "cornerKit Contributors",
+  "author": "Victor Bejar <me@victorbejar.com> (https://victorbejar.com)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cornerkit/cornerkit.git",
+    "url": "https://github.com/bejarcode/cornerkit.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/cornerkit/cornerkit/issues"
+    "url": "https://github.com/bejarcode/cornerkit/issues"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

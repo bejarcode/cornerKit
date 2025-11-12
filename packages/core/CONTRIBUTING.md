@@ -209,7 +209,7 @@ git push origin feature/my-new-feature
 
 ### 2. Create a Pull Request
 
-1. Go to the [CornerKit repository](https://github.com/cornerkit/cornerkit)
+1. Go to the [CornerKit repository](https://github.com/bejarcode/cornerkit)
 2. Click "New Pull Request"
 3. Select your branch
 4. Fill out the PR template:
@@ -389,8 +389,8 @@ apply(element: HTMLElement | string, config?: Partial<SquircleConfig>): void {
 
 ## Getting Help
 
-- **Issues**: [GitHub Issues](https://github.com/cornerkit/cornerkit/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/cornerkit/cornerkit/discussions)
+- **Issues**: [GitHub Issues](https://github.com/bejarcode/cornerkit/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/bejarcode/cornerkit/discussions)
 - **Documentation**: [README.md](README.md)
 
 ---

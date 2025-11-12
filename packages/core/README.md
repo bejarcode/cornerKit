@@ -459,7 +459,7 @@ We welcome contributions! Please see our [Contributing Guide](../../CONTRIBUTING
 
 ```bash
 # Clone and install
-git clone https://github.com/cornerkit/cornerkit.git
+git clone https://github.com/bejarcode/cornerkit.git
 cd cornerkit/packages/core
 npm install
 
@@ -525,8 +525,8 @@ MIT License - see [LICENSE](../../LICENSE) for details.
 ## 📚 Resources
 
 - 📦 [npm Package](https://www.npmjs.com/package/@cornerkit/core)
-- 💬 [GitHub Discussions](https://github.com/cornerkit/cornerkit/discussions)
-- 🐛 [Issue Tracker](https://github.com/cornerkit/cornerkit/issues)
+- 💬 [GitHub Discussions](https://github.com/bejarcode/cornerkit/discussions)
+- 🐛 [Issue Tracker](https://github.com/bejarcode/cornerkit/issues)
 - 🔒 [Security Policy](../../SECURITY.md)
 - 🔍 [Security Audit](security/SECURITY-AUDIT.md)
 
@@ -536,6 +536,6 @@ MIT License - see [LICENSE](../../LICENSE) for details.
 
 **Made with ❤️ by the CornerKit team**
 
-[GitHub](https://github.com/cornerkit/cornerkit) • [NPM](https://www.npmjs.com/package/@cornerkit/core)
+[GitHub](https://github.com/bejarcode/cornerkit) • [NPM](https://www.npmjs.com/package/@cornerkit/core)
 
 </div>

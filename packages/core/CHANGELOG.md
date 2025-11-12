@@ -134,5 +134,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Working vanilla JavaScript example with interactive demo
 - CHANGELOG.md following Keep a Changelog format
 
-[Unreleased]: https://github.com/cornerkit/cornerkit/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/cornerkit/cornerkit/releases/tag/v1.0.0
+[Unreleased]: https://github.com/bejarcode/cornerkit/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/bejarcode/cornerkit/releases/tag/v1.0.0
