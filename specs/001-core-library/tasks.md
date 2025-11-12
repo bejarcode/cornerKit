@@ -674,21 +674,21 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T371-T385 are verification checklists
 
-- [ ] T371 [PF] [N/A] SC-001: Quick start guide <5 minutes ✅
-- [ ] T372 [PF] [N/A] SC-002: Bundle size <5KB gzipped (bundlephobia) ✅
-- [ ] T373 [PF] [N/A] SC-003: Render time <10ms per element (Performance API) ✅
-- [ ] T374 [PF] [N/A] SC-004: Init time <100ms (Performance API) ✅
-- [ ] T375 [PF] [N/A] SC-005: TypeScript strict mode passes with zero errors ✅
-- [ ] T376 [PF] [N/A] SC-006: Core rendering logic coverage >90% (Vitest) ✅
-- [ ] T377 [PF] [N/A] SC-007: Integration code coverage >85% (Vitest) ✅
-- [ ] T378 [PF] [N/A] SC-008: Visual regression tests pass (Playwright) ✅
-- [ ] T379 [PF] [N/A] SC-009: Lighthouse performance 100/100 ✅
-- [ ] T380 [PF] [N/A] SC-010: Lighthouse accessibility >95 ✅
-- [ ] T381 [PF] [N/A] SC-011: Zero JS errors in all browsers (Chrome 65+, Firefox, Safari 14+, Edge 79+, IE11) ✅
-- [ ] T382 [PF] [N/A] SC-012: Focus indicators visible and not clipped ✅
-- [ ] T383 [PF] [N/A] SC-013: Zero network requests (monitoring tools) ✅
-- [ ] T384 [PF] [N/A] SC-014: 100 elements in <500ms (5ms avg) ✅
-- [ ] T385 [PF] [N/A] SC-015: 50 simultaneous resizes maintain 60fps ✅
+- [X] T371 [PF] [N/A] SC-001: Quick start guide <5 minutes ✅
+- [X] T372 [PF] [N/A] SC-002: Bundle size <5KB gzipped (bundlephobia) ✅
+- [X] T373 [PF] [N/A] SC-003: Render time <10ms per element (Performance API) ✅
+- [X] T374 [PF] [N/A] SC-004: Init time <100ms (Performance API) ✅
+- [X] T375 [PF] [N/A] SC-005: TypeScript strict mode passes with zero errors ✅
+- [X] T376 [PF] [N/A] SC-006: Core rendering logic coverage >90% (Vitest) ✅
+- [X] T377 [PF] [N/A] SC-007: Integration code coverage >85% (Vitest) ✅
+- [X] T378 [PF] [N/A] SC-008: Visual regression tests pass (Playwright) ✅
+- [X] T379 [PF] [N/A] SC-009: Lighthouse performance 100/100 ✅
+- [X] T380 [PF] [N/A] SC-010: Lighthouse accessibility >95 ✅
+- [X] T381 [PF] [N/A] SC-011: Zero JS errors in all browsers (Chrome 65+, Firefox, Safari 14+, Edge 79+, IE11) ✅
+- [X] T382 [PF] [N/A] SC-012: Focus indicators visible and not clipped ✅
+- [X] T383 [PF] [N/A] SC-013: Zero network requests (monitoring tools) ✅
+- [X] T384 [PF] [N/A] SC-014: 100 elements in <500ms (5ms avg) ✅
+- [X] T385 [PF] [N/A] SC-015: 50 simultaneous resizes maintain 60fps ✅
 
 **Success Gate**: All 15 success criteria met
 
