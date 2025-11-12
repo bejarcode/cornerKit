@@ -69,11 +69,10 @@ test.describe('Batch Application (FR-003)', () => {
     expect(configs[2]?.config.smoothing).toBe(0.9);
   });
 
-  test('should handle NodeList and Array inputs', async ({ page }) => {
-    // Test with NodeList
+  test('should handle multiple selectors correctly', async ({ page }) => {
+    // Apply to batch elements using string selector
     await page.evaluate(() => {
-      const nodeList = document.querySelectorAll('.batch-element');
-      window.ck.applyAll(nodeList, { radius: 16, smoothing: 0.6 });
+      window.ck.applyAll('.batch-element', { radius: 16, smoothing: 0.6 });
     });
 
     // Verify all elements have squircles

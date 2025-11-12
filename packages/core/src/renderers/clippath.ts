@@ -20,6 +20,18 @@ export type DimensionUpdateCallback = (
 ) => void;
 
 /**
+ * Extended ResizeObserver interface with cleanup method
+ * Allows cancelling pending requestAnimationFrame callbacks
+ */
+export interface ResizeObserverWithCleanup extends ResizeObserver {
+  /**
+   * Cleanup method to cancel pending animations before disconnect
+   * Must be called before disconnect() to prevent race conditions
+   */
+  cleanup(): void;
+}
+
+/**
  * ClipPath Renderer Class
  * FR-018 to FR-022: SVG clip-path implementation with ResizeObserver
  */
@@ -41,7 +53,7 @@ export class ClipPathRenderer {
     options?: RenderOptions,
     onDimensionUpdate?: DimensionUpdateCallback,
     getConfig?: () => SquircleConfig
-  ): ResizeObserver {
+  ): ResizeObserverWithCleanup {
     // Check for zero dimensions (development warning)
     if (hasZeroDimensions(element)) {
       warnZeroDimensions(element);
@@ -152,7 +164,7 @@ export class ClipPathRenderer {
     element: HTMLElement,
     onDimensionUpdate?: DimensionUpdateCallback,
     getConfig?: () => SquircleConfig
-  ): ResizeObserver {
+  ): ResizeObserverWithCleanup {
     // Store last dimensions to implement 1px threshold (FR-022)
     let lastWidth = element.offsetWidth;
     let lastHeight = element.offsetHeight;
@@ -209,6 +221,16 @@ export class ClipPathRenderer {
       });
     });
 
-    return observer;
+    // Add cleanup method to cancel pending animations
+    // This prevents race conditions where pending rafId callbacks execute after disconnect()
+    const wrappedObserver = observer as ResizeObserverWithCleanup;
+    wrappedObserver.cleanup = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
+
+    return wrappedObserver;
   }
 }

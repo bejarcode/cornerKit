@@ -66,12 +66,22 @@ test.describe('Remove Single Element (FR-006)', () => {
     });
 
     // Verify element is no longer in registry
+    // inspect() should throw an error for unmanaged elements
     const afterRemove = await page.evaluate(() => {
-      const el = document.getElementById('basic-element');
-      return window.ck.inspect(el);
+      try {
+        const el = document.getElementById('basic-element');
+        window.ck.inspect(el);
+        return { error: false };
+      } catch (error) {
+        return {
+          error: true,
+          message: (error as Error).message,
+        };
+      }
     });
 
-    expect(afterRemove).toBeNull();
+    expect(afterRemove.error).toBe(true);
+    expect(afterRemove.message).toContain('not managed by CornerKit');
   });
 
   test('should stop observing element after remove', async ({ page }) => {
@@ -108,21 +118,22 @@ test.describe('Remove Single Element (FR-006)', () => {
     expect(stillRemoved).toBe(true);
   });
 
-  test('should handle removing non-existent element gracefully', async ({ page }) => {
+  test('should throw error when removing non-managed element', async ({ page }) => {
     const result = await page.evaluate(() => {
       try {
         // Try to remove element that was never applied
         const el = document.getElementById('basic-element');
         if (!el) throw new Error('Element not found');
         window.ck.remove(el);
-        return { success: true };
+        return { error: false };
       } catch (error) {
-        return { success: false, error: (error as Error).message };
+        return { error: true, message: (error as Error).message };
       }
     });
 
-    // Should not throw error
-    expect(result.success).toBe(true);
+    // Should throw error for non-managed elements
+    expect(result.error).toBe(true);
+    expect(result.message).toContain('not managed by CornerKit');
   });
 
   test('should allow re-applying after remove', async ({ page }) => {

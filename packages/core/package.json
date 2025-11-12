@@ -20,12 +20,14 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "rollup -c",
+    "build": "NODE_ENV=production rollup -c",
     "build:watch": "rollup -c -w",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "test:integration": "playwright test",
     "test:integration:ui": "playwright test --ui",
+    "test:performance": "playwright test tests/performance --reporter=list",
+    "analyze-bundle": "node scripts/analyze-bundle.js",
     "preview": "http-server -p 5173 -c-1 --cors",
     "type-check": "tsc --noEmit",
     "lint": "eslint src --ext .ts",

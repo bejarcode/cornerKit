@@ -108,7 +108,10 @@ export class ElementRegistry {
       // Get existing entry and update it instead of replacing
       const existing = this.get(element);
       if (existing) {
-        // Disconnect old observers before replacing
+        // Cleanup and disconnect old observers before replacing
+        if (existing.resizeObserver && 'cleanup' in existing.resizeObserver) {
+          (existing.resizeObserver as any).cleanup();
+        }
         existing.resizeObserver?.disconnect();
         existing.intersectionObserver?.disconnect();
 
@@ -178,7 +181,12 @@ export class ElementRegistry {
     const managed = this.get(element);
 
     if (managed) {
-      // Disconnect observers
+      // Cleanup and disconnect observers
+      // Call cleanup() first to cancel pending requestAnimationFrame callbacks
+      // This prevents race conditions where pending callbacks execute after disconnect()
+      if (managed.resizeObserver && 'cleanup' in managed.resizeObserver) {
+        (managed.resizeObserver as any).cleanup();
+      }
       managed.resizeObserver?.disconnect();
       managed.intersectionObserver?.disconnect();
 

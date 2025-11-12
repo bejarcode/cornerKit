@@ -5,6 +5,33 @@ import dts from 'rollup-plugin-dts';
 
 const production = process.env.NODE_ENV === 'production';
 
+// Aggressive terser configuration for maximum bundle size optimization
+const terserConfig = {
+  compress: {
+    passes: 3,
+    pure_getters: true,
+    unsafe: true,
+    unsafe_arrows: true,
+    unsafe_methods: true,
+    unsafe_proto: true,
+    drop_console: false, // Keep console.warn/error for production
+    drop_debugger: true,
+    ecma: 2020,
+    module: true,
+    toplevel: true,
+    keep_fargs: false,
+    keep_infinity: true,
+  },
+  mangle: {
+    properties: false, // Don't mangle properties to preserve API
+    toplevel: true, // Mangle top-level variables
+  },
+  format: {
+    comments: false, // Remove all comments
+    ecma: 2020,
+  },
+};
+
 const baseConfig = {
   input: 'src/index.ts',
   external: [], // Zero dependencies
@@ -32,16 +59,7 @@ export default [
     },
     plugins: [
       ...baseConfig.plugins,
-      production && terser({
-        compress: {
-          passes: 2,
-          pure_getters: true,
-          unsafe: true,
-        },
-        mangle: {
-          properties: false,
-        },
-      }),
+      production && terser(terserConfig),
     ].filter(Boolean),
   },
 
@@ -57,16 +75,7 @@ export default [
     },
     plugins: [
       ...baseConfig.plugins,
-      production && terser({
-        compress: {
-          passes: 2,
-          pure_getters: true,
-          unsafe: true,
-        },
-        mangle: {
-          properties: false,
-        },
-      }),
+      production && terser(terserConfig),
     ].filter(Boolean),
   },
 
@@ -81,16 +90,7 @@ export default [
     },
     plugins: [
       ...baseConfig.plugins,
-      production && terser({
-        compress: {
-          passes: 2,
-          pure_getters: true,
-          unsafe: true,
-        },
-        mangle: {
-          properties: false,
-        },
-      }),
+      production && terser(terserConfig),
     ].filter(Boolean),
   },
 
