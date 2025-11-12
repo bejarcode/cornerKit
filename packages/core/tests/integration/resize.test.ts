@@ -4,11 +4,11 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { setupTestPage } from './test-helpers';
 
 test.describe('Resize Handling (FR-022)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should automatically update squircle when element is resized', async ({ page }) => {
@@ -163,8 +163,7 @@ test.describe('Resize Handling (FR-022)', () => {
 
 test.describe('Dynamic Updates (FR-005)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should update radius dynamically', async ({ page }) => {
@@ -274,8 +273,7 @@ test.describe('Dynamic Updates (FR-005)', () => {
 
 test.describe('Performance: Resize Operations', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should handle resize within 16ms (60fps target)', async ({ page }) => {

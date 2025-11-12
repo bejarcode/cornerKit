@@ -4,11 +4,11 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { setupTestPage } from './test-helpers';
 
 test.describe('Focus Indicators (FR-040, FR-041)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should preserve focus outline on focusable elements', async ({ page }) => {
@@ -130,8 +130,7 @@ test.describe('Focus Indicators (FR-040, FR-041)', () => {
 
 test.describe('Accessibility: Reduced Motion (FR-042)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should respect prefers-reduced-motion', async ({ page }) => {
@@ -192,8 +191,7 @@ test.describe('Accessibility: Reduced Motion (FR-042)', () => {
 
 test.describe('Accessibility: Screen Readers', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should not interfere with ARIA attributes', async ({ page }) => {
@@ -263,8 +261,7 @@ test.describe('Accessibility: Screen Readers', () => {
 
 test.describe('Accessibility: Color Contrast', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should not affect text color contrast', async ({ page }) => {

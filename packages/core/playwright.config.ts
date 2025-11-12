@@ -17,9 +17,9 @@ export default defineConfig({
   // Retry on CI only
   retries: process.env.CI ? 2 : 0,
 
-  // Limit workers to avoid timeout issues with http-server
-  // Tests are fast, so fewer workers is acceptable
-  workers: process.env.CI ? 1 : 2,
+  // Use single worker to prevent http-server overload
+  // Even 2 workers can cause timeouts when tests from different files run concurrently
+  workers: 1,
 
   // Reporter to use
   reporter: 'html',

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { setupTestPage } from './test-helpers';
 
 /**
  * Integration Tests: Basic Application (FR-002, FR-053)
@@ -6,11 +7,7 @@ import { test, expect } from '@playwright/test';
  */
 
 test.beforeEach(async ({ page }) => {
-  // Navigate to test page
-  await page.goto('/tests/integration/fixtures/test-page.html');
-
-  // Wait for CornerKit to be ready
-  await page.waitForFunction(() => window.cornerKitReady === true);
+  await setupTestPage(page);
 });
 
 test.describe('Basic Application (FR-002)', () => {

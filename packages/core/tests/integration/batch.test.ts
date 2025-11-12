@@ -4,11 +4,11 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { setupTestPage } from './test-helpers';
 
 test.describe('Batch Application (FR-003)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should apply squircles to multiple elements with applyAll()', async ({ page }) => {
@@ -119,8 +119,7 @@ test.describe('Batch Application (FR-003)', () => {
 
 test.describe('Auto Discovery (FR-004)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should discover and parse data-squircle attributes', async ({ page }) => {
@@ -207,8 +206,7 @@ test.describe('Auto Discovery (FR-004)', () => {
 
 test.describe('Performance: Batch Operations', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should handle 50 elements within 250ms', async ({ page }) => {

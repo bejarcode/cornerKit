@@ -4,11 +4,11 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { setupTestPage } from './test-helpers';
 
 test.describe('Remove Single Element (FR-006)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should remove squircle styling from element', async ({ page }) => {
@@ -157,8 +157,7 @@ test.describe('Remove Single Element (FR-006)', () => {
 
 test.describe('Destroy Instance (FR-008)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should remove all squircles when instance is destroyed', async ({ page }) => {
@@ -299,8 +298,7 @@ test.describe('Destroy Instance (FR-008)', () => {
 
 test.describe('Memory Management', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/packages/core/tests/integration/fixtures/test-page.html');
-    await page.waitForFunction(() => window.cornerKitReady === true);
+    await setupTestPage(page);
   });
 
   test('should not leak memory when elements are removed from DOM', async ({ page }) => {
