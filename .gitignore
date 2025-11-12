@@ -54,3 +54,15 @@ lerna-debug.log*
 # Misc
 .eslintcache
 .prettierignore
+
+# Private notes (won't be in repo)
+PRIVATE.md
+private-notes/
+TODO-PRIVATE.md
+
+# Internal documentation and planning (private)
+docs/
+specs/
+.claude/
+CLAUDE.md
+.specify/
