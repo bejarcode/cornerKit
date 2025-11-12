@@ -694,13 +694,13 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 ### Release Preparation
 
-- [ ] T386 [PF] [N/A] Create changeset: Document version 1.0.0 release notes
-- [ ] T387 [PF] [N/A] Update package.json version: Set to `1.0.0`
-- [ ] T388 [PF] [N/A] Create git tag: `v1.0.0`
-- [ ] T389 [PF] [N/A] Verify npm package: Test `npm pack`, inspect tarball contents
-- [ ] T390 [PF] [N/A] Final review: Code review checklist, constitution compliance
+- [X] T386 [PF] [N/A] Create changeset: Document version 1.0.0 release notes
+- [X] T387 [PF] [N/A] Update package.json version: Set to `1.0.0`
+- [X] T388 [PF] [N/A] Create git tag: `v1.0.0`
+- [X] T389 [PF] [N/A] Verify npm package: Test `npm pack`, inspect tarball contents
+- [X] T390 [PF] [N/A] Final review: Code review checklist, constitution compliance
 
-**Success Gate**: Ready for npm publish
+**Success Gate**: ✅ Ready for npm publish
 
 ---
 
