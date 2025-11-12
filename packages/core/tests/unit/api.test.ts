@@ -1214,14 +1214,13 @@ describe('CornerKit API - applyAll() and auto()', () => {
       expect(info.config.smoothing).toBe(0.9);
     });
 
-    it('should throw error on unmanaged element (T264)', () => {
+    it('should return null for unmanaged element (T264)', () => {
       const ck = new CornerKit();
       const element = document.createElement('div');
 
       // Attempt to inspect without applying first
-      expect(() => {
-        ck.inspect(element);
-      }).toThrow('element is not managed by CornerKit');
+      const result = ck.inspect(element);
+      expect(result).toBeNull();
     });
 
     it('should work with CSS selector string (T265)', () => {

@@ -556,10 +556,7 @@ export default class CornerKit {
    * Retrieve information about an element's squircle configuration, tier, and dimensions
    *
    * @param elementOrSelector - HTMLElement or CSS selector string
-   * @returns ManagedElementInfo object with config, tier, and dimensions
-   *
-   * @throws TypeError if element is invalid
-   * @throws Error if element is not managed by CornerKit
+   * @returns ManagedElementInfo object with config, tier, and dimensions, or null if invalid selector or not managed
    *
    * @example
    * ```typescript
@@ -568,32 +565,41 @@ export default class CornerKit {
    *
    * // Later, inspect the element
    * const info = ck.inspect('#button');
-   * console.log(info.config.radius); // 24
-   * console.log(info.tier); // 'clippath'
-   * console.log(info.dimensions); // { width: 200, height: 50 }
+   * if (info) {
+   *   console.log(info.config.radius); // 24
+   *   console.log(info.tier); // 'clippath'
+   *   console.log(info.dimensions); // { width: 200, height: 50 }
+   * }
+   *
+   * // Returns null for invalid selectors or unmanaged elements
+   * const missing = ck.inspect('#nonexistent'); // null
+   * const unmanaged = ck.inspect('#not-applied'); // null
    * ```
    */
-  inspect(elementOrSelector: HTMLElement | string): ManagedElementInfo {
-    // T259: Validate and resolve element
-    const element = this.resolveElement(elementOrSelector);
+  inspect(elementOrSelector: HTMLElement | string): ManagedElementInfo | null {
+    // T259: Validate and resolve element (no error on invalid selector, return null)
+    try {
+      const element = this.resolveElement(elementOrSelector);
 
-    // T260: Get managed data (check if element is managed)
-    const managed = this.registry.get(element);
-    if (!managed) {
-      throw new Error(
-        `cornerKit: Cannot inspect element - element is not managed by CornerKit. Call apply() first.`
-      );
+      // T260: Get managed data (check if element is managed, return null if not)
+      const managed = this.registry.get(element);
+      if (!managed) {
+        return null;
+      }
+
+      // T261, T262: Return element information
+      return {
+        config: { ...managed.config }, // Return copy to prevent mutation
+        tier: managed.tier,
+        dimensions: {
+          width: managed.lastDimensions?.width ?? element.offsetWidth,
+          height: managed.lastDimensions?.height ?? element.offsetHeight,
+        },
+      };
+    } catch (error) {
+      // Invalid selector or element - return null instead of throwing
+      return null;
     }
-
-    // T261: Return element information
-    return {
-      config: { ...managed.config }, // Return copy to prevent mutation
-      tier: managed.tier,
-      dimensions: {
-        width: managed.lastDimensions?.width ?? element.offsetWidth,
-        height: managed.lastDimensions?.height ?? element.offsetHeight,
-      },
-    };
   }
 
   /**
