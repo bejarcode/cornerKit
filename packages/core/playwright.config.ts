@@ -8,8 +8,8 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests/integration',
 
-  // Run tests in files in parallel
-  fullyParallel: true,
+  // Run tests sequentially to avoid overwhelming http-server
+  fullyParallel: false,
 
   // Fail the build on CI if you accidentally left test.only in the source code
   forbidOnly: !!process.env.CI,
@@ -17,8 +17,9 @@ export default defineConfig({
   // Retry on CI only
   retries: process.env.CI ? 2 : 0,
 
-  // Opt out of parallel tests on CI
-  workers: process.env.CI ? 1 : undefined,
+  // Limit workers to avoid timeout issues with http-server
+  // Tests are fast, so fewer workers is acceptable
+  workers: process.env.CI ? 1 : 2,
 
   // Reporter to use
   reporter: 'html',

@@ -388,36 +388,94 @@ ck.inspect('#ios-standard');</pre>
 
   <!-- Load CornerKit -->
   <script type="module">
-    import CornerKit from '../../../dist/cornerkit.esm.js';
+    // Comprehensive error handling to prevent silent test failures
+    try {
+      // Import CornerKit module
+      const CornerKitModule = await import('../../../dist/cornerkit.esm.js');
+      const CornerKit = CornerKitModule.default;
 
-    // Make available globally
-    window.CornerKit = CornerKit;
-    window.ck = new CornerKit({ radius: 24, smoothing: 0.6 });
+      if (!CornerKit) {
+        throw new Error('CornerKit default export not found in module');
+      }
 
-    // Auto-discover data-attribute elements immediately (for integration tests)
-    // Must be before DOMContentLoaded so tests can wait for it
-    window.cornerKitReady = true;
+      // Make available globally
+      window.CornerKit = CornerKit;
+
+      // Initialize instance with error handling
+      try {
+        window.ck = new CornerKit({ radius: 24, smoothing: 0.6 });
+
+        // Signal successful initialization to integration tests
+        window.cornerKitReady = true;
+        window.cornerKitError = null;
+
+        console.log('✅ CornerKit initialized successfully');
+      } catch (initError) {
+        // Initialization failed - signal error state
+        window.cornerKitReady = false;
+        window.cornerKitError = {
+          stage: 'initialization',
+          message: initError.message,
+          stack: initError.stack,
+          timestamp: new Date().toISOString()
+        };
+        console.error('❌ CornerKit initialization failed:', initError);
+        throw initError; // Re-throw to outer catch
+      }
+    } catch (error) {
+      // Import or initialization failed - signal error state
+      window.cornerKitReady = false;
+      window.cornerKitError = window.cornerKitError || {
+        stage: 'import',
+        message: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString()
+      };
+      console.error('❌ CornerKit failed to load:', error);
+
+      // Display error in UI for manual debugging
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.insertAdjacentHTML('afterbegin', `
+          <div style="background: #fee; border: 2px solid #c00; padding: 20px; margin: 20px; border-radius: 8px;">
+            <h2 style="color: #c00; margin: 0 0 10px 0;">⚠️ CornerKit Load Error</h2>
+            <p><strong>Stage:</strong> ${window.cornerKitError.stage}</p>
+            <p><strong>Message:</strong> ${window.cornerKitError.message}</p>
+            <pre style="background: #f5f5f5; padding: 10px; overflow: auto;">${window.cornerKitError.stack}</pre>
+          </div>
+        `);
+      });
+    }
 
     // Auto-apply to all visible test boxes
     document.addEventListener('DOMContentLoaded', () => {
-      // Smoothing comparison boxes
-      ck.apply('#smooth-0', { radius: 24, smoothing: 0.0 });
-      ck.apply('#smooth-40', { radius: 24, smoothing: 0.4 });
-      ck.apply('#ios-standard', { radius: 24, smoothing: 0.6 });
-      ck.apply('#old-default', { radius: 24, smoothing: 0.8 });
-      ck.apply('#figma-85', { radius: 24, smoothing: 0.85 });
-      ck.apply('#figma-90', { radius: 24, smoothing: 0.9 });
-      ck.apply('#figma-95', { radius: 24, smoothing: 0.95 });
-      ck.apply('#smooth-100', { radius: 24, smoothing: 1.0 });
+      // Guard against applying if CornerKit failed to load
+      if (!window.cornerKitReady || !window.ck) {
+        console.warn('⚠️ CornerKit not ready, skipping DOMContentLoaded initialization');
+        return;
+      }
 
-      // Shape comparison boxes
-      ck.apply('#test-square', { radius: 40, smoothing: 0.6 });
-      ck.apply('#test-wide', { radius: 30, smoothing: 0.6 });
-      ck.apply('#test-tall', { radius: 30, smoothing: 0.6 });
+      try {
+        // Smoothing comparison boxes
+        ck.apply('#smooth-0', { radius: 24, smoothing: 0.0 });
+        ck.apply('#smooth-40', { radius: 24, smoothing: 0.4 });
+        ck.apply('#ios-standard', { radius: 24, smoothing: 0.6 });
+        ck.apply('#old-default', { radius: 24, smoothing: 0.8 });
+        ck.apply('#figma-85', { radius: 24, smoothing: 0.85 });
+        ck.apply('#figma-90', { radius: 24, smoothing: 0.9 });
+        ck.apply('#figma-95', { radius: 24, smoothing: 0.95 });
+        ck.apply('#smooth-100', { radius: 24, smoothing: 1.0 });
 
-      console.log('✅ CornerKit loaded with Figma algorithm (arc + bezier curves)');
-      console.log('📝 Default: smoothing=0.6 (iOS 7 standard per Figma API)');
-      console.log('🧪 Try: ck.update("#ios-standard", { radius: 24, smoothing: 0.9 })');
+        // Shape comparison boxes
+        ck.apply('#test-square', { radius: 40, smoothing: 0.6 });
+        ck.apply('#test-wide', { radius: 30, smoothing: 0.6 });
+        ck.apply('#test-tall', { radius: 30, smoothing: 0.6 });
+
+        console.log('✅ CornerKit loaded with Figma algorithm (arc + bezier curves)');
+        console.log('📝 Default: smoothing=0.6 (iOS 7 standard per Figma API)');
+        console.log('🧪 Try: ck.update("#ios-standard", { radius: 24, smoothing: 0.9 })');
+      } catch (applyError) {
+        console.error('❌ CornerKit apply failed during initialization:', applyError);
+      }
     });
   </script>
 </body>
