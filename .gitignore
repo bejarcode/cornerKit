@@ -21,6 +21,7 @@ test-results/
 .env
 .env.*
 !.env.example
+.mcp.json
 
 # IDEs and editors
 .vscode/
