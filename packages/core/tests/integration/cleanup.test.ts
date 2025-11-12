@@ -66,22 +66,13 @@ test.describe('Remove Single Element (FR-006)', () => {
     });
 
     // Verify element is no longer in registry
-    // inspect() should throw an error for unmanaged elements
+    // inspect() should return null for unmanaged elements
     const afterRemove = await page.evaluate(() => {
-      try {
-        const el = document.getElementById('basic-element');
-        window.ck.inspect(el);
-        return { error: false };
-      } catch (error) {
-        return {
-          error: true,
-          message: (error as Error).message,
-        };
-      }
+      const el = document.getElementById('basic-element');
+      return window.ck.inspect(el);
     });
 
-    expect(afterRemove.error).toBe(true);
-    expect(afterRemove.message).toContain('not managed by CornerKit');
+    expect(afterRemove).toBeNull();
   });
 
   test('should stop observing element after remove', async ({ page }) => {
