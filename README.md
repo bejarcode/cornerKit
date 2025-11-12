@@ -332,6 +332,4 @@ See [LICENSE](LICENSE) for details.
 
 **[Documentation](packages/core/README.md)** • **[npm Package](https://www.npmjs.com/package/@cornerkit/core)** • **[GitHub](https://github.com/bejarcode/cornerkit)** • **[Issues](https://github.com/bejarcode/cornerkit/issues)**
 
-Made with ❤️ by the CornerKit team
-
 </div>
