@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CornerKit - Vanilla JS Example</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CornerKit Vanilla JS Example</h1>
+      <p>iOS-style squircle corners for the web</p>
+    </header>
+
+    <main>
+      <section class="demo-grid">
+        <!-- Basic Squircle -->
+        <div class="demo-card" id="basic-card">
+          <h3>Basic Squircle</h3>
+          <p>radius: 20px, smoothing: 0.8</p>
+          <code>ck.apply('#basic-card', { radius: 20, smoothing: 0.8 });</code>
+        </div>
+
+        <!-- High Smoothing -->
+        <div class="demo-card" id="smooth-card">
+          <h3>High Smoothing</h3>
+          <p>radius: 20px, smoothing: 0.95</p>
+          <code>ck.apply('#smooth-card', { radius: 20, smoothing: 0.95 });</code>
+        </div>
+
+        <!-- Low Smoothing -->
+        <div class="demo-card" id="sharp-card">
+          <h3>Low Smoothing</h3>
+          <p>radius: 20px, smoothing: 0.6</p>
+          <code>ck.apply('#sharp-card', { radius: 20, smoothing: 0.6 });</code>
+        </div>
+
+        <!-- Large Radius -->
+        <div class="demo-card" id="large-card">
+          <h3>Large Radius</h3>
+          <p>radius: 40px, smoothing: 0.8</p>
+          <code>ck.apply('#large-card', { radius: 40, smoothing: 0.8 });</code>
+        </div>
+      </section>
+
+      <section class="controls">
+        <h2>Interactive Controls</h2>
+        <div class="control-panel">
+          <div class="control-group">
+            <label for="radius-slider">
+              Radius: <span id="radius-value">20</span>px
+            </label>
+            <input
+              type="range"
+              id="radius-slider"
+              min="0"
+              max="50"
+              value="20"
+              step="1"
+            >
+          </div>
+
+          <div class="control-group">
+            <label for="smoothing-slider">
+              Smoothing: <span id="smoothing-value">0.80</span>
+            </label>
+            <input
+              type="range"
+              id="smoothing-slider"
+              min="0"
+              max="1"
+              value="0.8"
+              step="0.05"
+            >
+          </div>
+
+          <div class="interactive-demo" id="interactive-card">
+            <h3>Interactive Squircle</h3>
+            <p>Adjust the sliders above to see changes in real-time</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="code-example">
+        <h2>Usage Example</h2>
+        <pre><code>// Import CornerKit
+import CornerKit from '@cornerkit/core';
+
+// Create instance
+const ck = new CornerKit();
+
+// Apply to single element
+ck.apply('#my-element', {
+  radius: 20,
+  smoothing: 0.8
+});
+
+// Apply to multiple elements
+ck.applyAll('.buttons', {
+  radius: 16,
+  smoothing: 0.85
+});
+
+// Update existing squircle
+ck.update('#my-element', {
+  radius: 30
+});
+
+// Remove squircle
+ck.remove('#my-element');
+
+// Inspect element
+const info = ck.inspect('#my-element');
+console.log(info); // { config, tier, dimensions }</code></pre>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        <a href="https://github.com/cornerkit/cornerkit">GitHub</a> |
+        <a href="../../README.md">Documentation</a> |
+        <a href="https://www.npmjs.com/package/@cornerkit/core">npm</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- Include CornerKit from CDN or local build -->
+  <script src="../../dist/cornerkit.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

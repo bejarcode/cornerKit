@@ -652,21 +652,21 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T356-T370 documentation tasks
 
-- [ ] T356 [PF] [N/A] Write README.md: Complete quick start guide based on `quickstart.md`
-- [ ] T357 [PF] [N/A] Add installation section: npm, pnpm, yarn commands
-- [ ] T358 [PF] [N/A] Add basic usage examples: JavaScript, TypeScript, UMD
-- [ ] T359 [PF] [N/A] Add complete example: HTML + CSS + JavaScript working demo
-- [ ] T360 [PF] [N/A] Add API reference: Document all 8 methods (constructor, apply, applyAll, auto, update, remove, inspect, destroy)
-- [ ] T361 [PF] [N/A] Add configuration reference: Document `SquircleConfig` parameters
-- [ ] T362 [PF] [N/A] Add accessibility section: Outline vs border, focus indicators, reduced motion
-- [ ] T363 [PF] [N/A] Add browser compatibility table: Support matrix for all tiers
-- [ ] T364 [PF] [N/A] Add troubleshooting section: Common issues and solutions
-- [ ] T365 [PF] [N/A] Add examples directory: Create `examples/vanilla-js/`, `examples/react-app/`, `examples/vue-app/`
-- [ ] T366 [PF] [N/A] Add CHANGELOG.md: Document version 1.0.0 initial release
-- [ ] T367 [PF] [N/A] Add CONTRIBUTING.md: Development workflow, testing, PR guidelines
-- [ ] T368 [PF] [N/A] Add LICENSE: MIT license file
-- [ ] T369 [PF] [N/A] Test quick start guide: Follow README instructions, verify <5 minutes setup (SC-001)
-- [ ] T370 [PF] [N/A] Success criteria SC-001: Verify developers can apply first squircle in <5 minutes
+- [X] T356 [PF] [N/A] Write README.md: Complete quick start guide based on `quickstart.md`
+- [X] T357 [PF] [N/A] Add installation section: npm, pnpm, yarn commands
+- [X] T358 [PF] [N/A] Add basic usage examples: JavaScript, TypeScript, UMD
+- [X] T359 [PF] [N/A] Add complete example: HTML + CSS + JavaScript working demo
+- [X] T360 [PF] [N/A] Add API reference: Document all 8 methods (constructor, apply, applyAll, auto, update, remove, inspect, destroy)
+- [X] T361 [PF] [N/A] Add configuration reference: Document `SquircleConfig` parameters
+- [X] T362 [PF] [N/A] Add accessibility section: Outline vs border, focus indicators, reduced motion
+- [X] T363 [PF] [N/A] Add browser compatibility table: Support matrix for all tiers
+- [X] T364 [PF] [N/A] Add troubleshooting section: Common issues and solutions
+- [X] T365 [PF] [N/A] Add examples directory: Create `examples/vanilla-js/`, `examples/react-app/`, `examples/vue-app/`
+- [X] T366 [PF] [N/A] Add CHANGELOG.md: Document version 1.0.0 initial release
+- [X] T367 [PF] [N/A] Add CONTRIBUTING.md: Development workflow, testing, PR guidelines
+- [X] T368 [PF] [N/A] Add LICENSE: MIT license file
+- [X] T369 [PF] [N/A] Test quick start guide: Follow README instructions, verify <5 minutes setup (SC-001)
+- [X] T370 [PF] [N/A] Success criteria SC-001: Verify developers can apply first squircle in <5 minutes
 
 **Success Gate**: Complete documentation, quick start tested
 
