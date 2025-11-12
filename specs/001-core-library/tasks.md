@@ -583,14 +583,14 @@ This document breaks down the implementation of the cornerKit Core Library into 
 - [X] T312 [PF] [N/A] Configure Playwright: Create `playwright.config.ts` with Chrome, Firefox, Safari, Edge
 - [X] T313 [PF] [N/A] Create test HTML page: `tests/integration/fixtures/test-page.html` with squircle elements
 - [X] T314 [PF] [N/A] Create `tests/integration/apply.test.ts`: Test basic apply() in all browsers (FR-053)
-- [ ] T315 [PF] [N/A] Create `tests/integration/batch.test.ts`: Test applyAll() and auto() in all browsers
-- [ ] T316 [PF] [N/A] Create `tests/integration/resize.test.ts`: Test responsive behavior (resize viewport)
-- [ ] T317 [PF] [N/A] Create `tests/integration/cleanup.test.ts`: Test remove() and destroy()
-- [ ] T318 [PF] [N/A] Create visual regression tests: Take screenshots, compare to baseline images
-- [ ] T319 [PF] [N/A] Test different radius/smoothing: Verify visual accuracy across parameter ranges
-- [ ] T320 [PF] [N/A] Test focus indicators: Keyboard navigation, verify outline visible (FR-041, SC-012)
+- [X] T315 [PF] [N/A] Create `tests/integration/batch.test.ts`: Test applyAll() and auto() in all browsers
+- [X] T316 [PF] [N/A] Create `tests/integration/resize.test.ts`: Test responsive behavior (resize viewport)
+- [X] T317 [PF] [N/A] Create `tests/integration/cleanup.test.ts`: Test remove() and destroy()
+- [X] T318 [PF] [N/A] Create visual regression tests: Take screenshots, compare to baseline images
+- [X] T319 [PF] [N/A] Test different radius/smoothing: Verify visual accuracy across parameter ranges
+- [X] T320 [PF] [N/A] Test focus indicators: Keyboard navigation, verify outline visible (FR-041, SC-012)
 - [ ] T321 [PF] [N/A] Test graceful fallback: Run tests in simulated IE11 environment, verify border-radius fallback (FR-054)
-- [ ] T322 [PF] [N/A] Test error handling: Verify no JavaScript errors in any browser (FR-055)
+- [X] T322 [PF] [N/A] Test error handling: Verify no JavaScript errors in any browser (FR-055)
 - [ ] T323 [PF] [N/A] Add CI integration: Create GitHub Actions workflow to run Playwright tests
 - [ ] T324 [PF] [N/A] Success criteria SC-008: Verify visual regression tests pass in all browsers
 - [ ] T325 [PF] [N/A] Success criteria SC-011: Verify no JS errors in Chrome 65+, Firefox, Safari 14+, Edge 79+, IE11
@@ -618,13 +618,13 @@ This document breaks down the implementation of the cornerKit Core Library into 
 
 **Parallelizable**: T336-T345 optimization tasks
 
-- [ ] T336 [PF] [N/A] Measure initial bundle size: Build production bundle, gzip, measure size
-- [ ] T337 [PF] [N/A] Enable terser minification: Aggressive minification with `compress: { passes: 2 }`
-- [ ] T338 [PF] [N/A] Remove comments: Ensure no comments in production build
-- [ ] T339 [PF] [N/A] Tree-shaking verification: Check that unused exports are eliminated
-- [ ] T340 [PF] [N/A] Analyze bundle composition: Use `rollup-plugin-visualizer` to identify large modules
-- [ ] T341 [PF] [N/A] Optimize imports: Ensure no unused imports, dead code eliminated
-- [ ] T342 [PF] [N/A] Verify <5KB gzipped: Measure final bundle size, verify meets target (FR-049, SC-002)
+- [X] T336 [PF] [N/A] Measure initial bundle size: Build production bundle, gzip, measure size
+- [X] T337 [PF] [N/A] Enable terser minification: Aggressive minification with `compress: { passes: 2 }`
+- [X] T338 [PF] [N/A] Remove comments: Ensure no comments in production build
+- [X] T339 [PF] [N/A] Tree-shaking verification: Check that unused exports are eliminated
+- [X] T340 [PF] [N/A] Analyze bundle composition: Use `rollup-plugin-visualizer` to identify large modules
+- [X] T341 [PF] [N/A] Optimize imports: Ensure no unused imports, dead code eliminated
+- [X] T342 [PF] [N/A] Verify <5KB gzipped: Measure final bundle size, verify meets target (FR-049, SC-002)
 - [ ] T343 [PF] [N/A] Add bundlephobia CI check: Automate bundle size monitoring on every PR
 - [ ] T344 [PF] [N/A] Document bundle size: Add badge to README showing current size
 - [ ] T345 [PF] [N/A] Success criteria SC-002: Verify bundle size <5KB gzipped via bundlephobia
