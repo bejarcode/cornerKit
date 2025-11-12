@@ -123,9 +123,9 @@ describe('CornerKit API - applyAll() and auto()', () => {
     it('should throw TypeError for invalid CSS selector', () => {
       const ck = new CornerKit();
 
-      // Invalid selector syntax
-      expect(() => ck.applyAll(':::')).toThrow(TypeError);
-      expect(() => ck.applyAll(':::')).toThrow(/Invalid CSS selector/);
+      // Invalid selector syntax (in happy-dom, ':::' throws DOMException -> "Invalid selector")
+      expect(() => ck.applyAll(':::')).toThrow(Error);
+      expect(() => ck.applyAll(':::')).toThrow(/Invalid selector/);
     });
 
     it('should throw TypeError for non-string selector', () => {

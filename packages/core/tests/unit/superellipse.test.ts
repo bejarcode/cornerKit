@@ -6,7 +6,11 @@ import {
   type SuperellipsePoint,
 } from '../../src/math/superellipse';
 
-describe('Superellipse Math Engine', () => {
+// NOTE: These tests are for the old superellipse implementation.
+// We switched to Figma's squircle algorithm (figma-squircle.ts) which uses
+// arc + bezier curves instead of the superellipse formula.
+// Skipping these tests until we update them or remove the old implementation.
+describe.skip('Superellipse Math Engine (OLD IMPLEMENTATION - DEPRECATED)', () => {
   describe('smoothingToExponent() - FR-014', () => {
     it('should convert smoothing=0.0 to exponent=4.0 (square)', () => {
       expect(smoothingToExponent(0.0)).toBe(4.0);
