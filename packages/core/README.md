@@ -590,8 +590,6 @@ MIT License - see [LICENSE](../../LICENSE) for details.
 
 <div align="center">
 
-**Made with  by the CornerKit team**
-
-[GitHub](https://github.com/bejarcode/cornerkit) • [NPM](https://www.npmjs.com/package/@cornerkit/core)
+[Documentation](https://github.com/bejarcode/cornerkit/blob/main/packages/core/README.md) • [GitHub](https://github.com/bejarcode/cornerkit) • [NPM](https://www.npmjs.com/package/@cornerkit/core)
 
 </div>
