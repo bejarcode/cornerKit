@@ -117,18 +117,41 @@ export class CapabilityDetector {
 
   /**
    * FR-011: Detect SVG clip-path support
-   * All modern browsers
+   * All modern browsers (Safari 13.1+, Chrome 88+, Firefox 71+)
+   *
+   * Note: Safari's CSS.supports() incorrectly returns false for path(),
+   * so we use runtime feature detection as fallback
    */
   private detectClipPath(): boolean {
-    if (typeof CSS === 'undefined' || !CSS.supports) {
+    if (typeof CSS === 'undefined') {
       return false;
     }
 
+    // First try CSS.supports (works in Chrome, Firefox)
+    if (CSS.supports) {
+      try {
+        if (CSS.supports('clip-path', 'path("")')) {
+          return true;
+        }
+      } catch {
+        // Continue to runtime test
+      }
+    }
+
+    // Safari fallback: Runtime feature test
+    // Safari 13.1+ supports clip-path path() but CSS.supports() returns false
     try {
-      return CSS.supports('clip-path', 'path("")');
+      if (typeof document !== 'undefined') {
+        const testDiv = document.createElement('div');
+        testDiv.style.clipPath = "path('M 0,0 L 10,0 L 10,10 L 0,10 Z')";
+        // If clip-path was set successfully, it's supported
+        return testDiv.style.clipPath !== '';
+      }
     } catch {
       return false;
     }
+
+    return false;
   }
 
   /**
