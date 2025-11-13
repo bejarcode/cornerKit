@@ -3,67 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CornerKit - Vanilla JS Example</title>
+
+  <!-- SEO Meta Tags -->
+  <title>CornerKit - iOS-style squircle corners for the web</title>
+  <meta name="description" content="A lightweight JavaScript library for implementing iOS-style squircle (continuous curve) corners on web elements. Zero dependencies, 3.66 KB gzipped, 98%+ browser support.">
+  <meta name="keywords" content="squircle, superellipse, rounded corners, iOS design, web components, javascript library, border-radius alternative">
+  <meta name="author" content="CornerKit">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="CornerKit - iOS-style squircle corners for the web">
+  <meta property="og:description" content="Lightweight JavaScript library for iOS-style squircle corners. Zero dependencies, 3.66 KB gzipped, 98%+ browser support.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bejarcode.github.io/cornerkit/">
+  <meta property="og:image" content="https://bejarcode.github.io/cornerkit/assets/og-image.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>CornerKit Vanilla JS Example</h1>
-      <p>iOS-style squircle corners for the web</p>
-    </header>
+  <!-- Hero Section -->
+  <section id="hero">
+    <div class="hero-content">
+      <h1>iOS-style squircle corners for the web</h1>
+      <p class="hero-subtitle">A lightweight, zero-dependency JavaScript library for smooth, continuous curve corners</p>
 
-    <main>
-      <section class="demo-grid">
-        <!-- Basic Squircle -->
-        <div class="demo-card" id="basic-card">
-          <h2>Basic Squircle</h2>
-          <p>radius: 20px, smoothing: 0.8</p>
-          <code>ck.apply('#basic-card', { radius: 20, smoothing: 0.8 });</code>
+      <div class="hero-demo" id="hero-demo">
+        <!-- Animated squircle demo element -->
+      </div>
+
+      <div class="hero-features">
+        <div class="feature">
+          <strong>Zero dependencies</strong>
+          <span>Pure vanilla JavaScript</span>
         </div>
-
-        <!-- High Smoothing -->
-        <div class="demo-card" id="smooth-card">
-          <h2>High Smoothing</h2>
-          <p>radius: 20px, smoothing: 0.95</p>
-          <code>ck.apply('#smooth-card', { radius: 20, smoothing: 0.95 });</code>
+        <div class="feature">
+          <strong>3.66 KB gzipped</strong>
+          <span>Tiny bundle size</span>
         </div>
-
-        <!-- Low Smoothing -->
-        <div class="demo-card" id="sharp-card">
-          <h2>Low Smoothing</h2>
-          <p>radius: 20px, smoothing: 0.6</p>
-          <code>ck.apply('#sharp-card', { radius: 20, smoothing: 0.6 });</code>
+        <div class="feature">
+          <strong>98%+ browser support</strong>
+          <span>Works everywhere</span>
         </div>
-
-        <!-- Large Radius -->
-        <div class="demo-card" id="large-card">
-          <h2>Large Radius</h2>
-          <p>radius: 40px, smoothing: 0.8</p>
-          <code>ck.apply('#large-card', { radius: 40, smoothing: 0.8 });</code>
+        <div class="feature">
+          <strong>Progressive enhancement</strong>
+          <span>4-tier rendering</span>
         </div>
-      </section>
+        <div class="feature">
+          <strong>WCAG 2.1 AA accessible</strong>
+          <span>Screen reader friendly</span>
+        </div>
+      </div>
 
-      <section class="controls">
-        <h2>Interactive Controls</h2>
-        <div class="control-panel">
+      <div class="hero-cta">
+        <a href="#playground" class="btn btn-primary">Try Playground</a>
+        <a href="https://github.com/bejarcode/cornerkit" class="btn btn-secondary">View on GitHub</a>
+        <button class="btn btn-secondary" onclick="copyInstallCommand()">npm Install</button>
+      </div>
+
+      <div class="hero-quickstart">
+        <pre><code id="install-command">npm install @cornerkit/core</code></pre>
+        <button onclick="copyCode('install-command')" aria-label="Copy install command">Copy</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Playground Section -->
+  <section id="playground">
+    <div class="container">
+      <h2>Live Interactive Playground</h2>
+      <p>Adjust the sliders to see real-time updates and generate code snippets</p>
+
+      <div class="playground-layout">
+        <div class="playground-controls">
           <div class="control-group">
             <label for="radius-slider">
-              Radius: <span id="radius-value">20</span>px
+              Corner Radius: <span id="radius-value" aria-live="polite">20</span>px
             </label>
             <input
               type="range"
               id="radius-slider"
               min="0"
-              max="50"
+              max="100"
               value="20"
               step="1"
+              aria-label="Adjust corner radius"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="20"
             >
           </div>
 
           <div class="control-group">
             <label for="smoothing-slider">
-              Smoothing: <span id="smoothing-value">0.80</span>
+              Smoothing: <span id="smoothing-value" aria-live="polite">0.80</span>
             </label>
             <input
               type="range"
@@ -72,61 +107,318 @@
               max="1"
               value="0.8"
               step="0.05"
+              aria-label="Adjust smoothing parameter"
+              aria-valuemin="0"
+              aria-valuemax="1"
+              aria-valuenow="0.8"
             >
           </div>
 
-          <div class="interactive-demo" id="interactive-card">
-            <h2>Interactive Squircle</h2>
-            <p>Adjust the sliders above to see changes in real-time</p>
+          <div class="playground-preview" id="playground-preview">
+            <p>Preview Element</p>
+          </div>
+
+          <div class="playground-metrics">
+            <h3>Performance Metrics</h3>
+            <div id="metrics-display">
+              <p><strong>Render Time:</strong> <span id="render-time">-</span> ms</p>
+              <p><strong>Dimensions:</strong> <span id="dimensions">-</span></p>
+              <p><strong>Browser Tier:</strong> <span id="browser-tier">-</span></p>
+            </div>
           </div>
         </div>
-      </section>
 
-      <section class="code-example">
-        <h2>Usage Example</h2>
-        <pre><code>// Import CornerKit
-import CornerKit from '@cornerkit/core';
+        <div class="playground-code">
+          <h3>Generated Code</h3>
+
+          <div class="code-tabs">
+            <button class="tab-btn active" data-tab="vanilla-js">Vanilla JS</button>
+            <button class="tab-btn" data-tab="html">HTML</button>
+            <button class="tab-btn" data-tab="typescript">TypeScript</button>
+            <button class="tab-btn" data-tab="react">React</button>
+            <button class="tab-btn" data-tab="vue">Vue</button>
+          </div>
+
+          <div class="code-block active" data-content="vanilla-js">
+            <pre><code id="code-vanilla-js" class="language-javascript"></code></pre>
+            <button onclick="copyCode('code-vanilla-js')" aria-label="Copy vanilla JavaScript code">Copy</button>
+          </div>
+
+          <div class="code-block" data-content="html">
+            <pre><code id="code-html" class="language-html"></code></pre>
+            <button onclick="copyCode('code-html')" aria-label="Copy HTML code">Copy</button>
+          </div>
+
+          <div class="code-block" data-content="typescript">
+            <pre><code id="code-typescript" class="language-typescript"></code></pre>
+            <button onclick="copyCode('code-typescript')" aria-label="Copy TypeScript code">Copy</button>
+          </div>
+
+          <div class="code-block" data-content="react">
+            <pre><code id="code-react" class="language-javascript"></code></pre>
+            <button onclick="copyCode('code-react')" aria-label="Copy React code">Copy</button>
+          </div>
+
+          <div class="code-block" data-content="vue">
+            <pre><code id="code-vue" class="language-html"></code></pre>
+            <button onclick="copyCode('code-vue')" aria-label="Copy Vue code">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="playground-shortcuts">
+        <p><strong>Keyboard Shortcuts:</strong> Press <kbd>R</kbd> to reset | Press <kbd>I</kbd> to inspect (logs to console)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery">
+    <div class="container">
+      <h2>Visual Examples Gallery</h2>
+      <p>See squircles applied to real UI components</p>
+
+      <div class="gallery-grid">
+        <!-- Buttons -->
+        <div class="gallery-category">
+          <h3>Buttons</h3>
+          <button id="button-primary" class="demo-button btn-primary">Primary Button</button>
+          <button id="button-secondary" class="demo-button btn-secondary">Secondary Button</button>
+          <button id="button-ghost" class="demo-button btn-ghost">Ghost Button</button>
+          <button id="button-disabled" class="demo-button btn-disabled" disabled>Disabled Button</button>
+        </div>
+
+        <!-- Cards -->
+        <div class="gallery-category">
+          <h3>Cards</h3>
+          <div id="card-product" class="demo-card">
+            <strong>Product Card</strong>
+            <p>radius: 24px, smoothing: 0.85</p>
+          </div>
+          <div id="card-info" class="demo-card">
+            <strong>Info Card</strong>
+            <p>radius: 20px, smoothing: 0.8</p>
+          </div>
+          <div id="card-testimonial" class="demo-card">
+            <strong>Testimonial Card</strong>
+            <p>radius: 28px, smoothing: 0.9</p>
+          </div>
+        </div>
+
+        <!-- More categories will be added in Phase 4 (User Story 2) -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Section -->
+  <section id="comparison">
+    <div class="container">
+      <h2>Side-by-Side Comparison</h2>
+      <p>See the difference between squircles and standard border-radius</p>
+
+      <div class="comparison-controls">
+        <button id="comparison-toggle" class="btn btn-secondary">Toggle View Mode</button>
+      </div>
+
+      <div class="comparison-split">
+        <div class="comparison-item">
+          <div id="comparison-squircle" class="comparison-element">
+            <p>Squircle</p>
+          </div>
+          <p class="comparison-label">Continuous curve (smoothing: 0.8)</p>
+        </div>
+
+        <div class="comparison-item">
+          <div id="comparison-border-radius" class="comparison-element">
+            <p>Border-Radius</p>
+          </div>
+          <p class="comparison-label">Standard CSS border-radius</p>
+        </div>
+      </div>
+
+      <div class="comparison-explanation">
+        <p>
+          Squircles use a superellipse formula to create smoother, more continuous curves than standard border-radius.
+          The <strong>smoothing parameter</strong> (0.0-1.0) controls how closely the curve follows the iOS-style continuous curve characteristic.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compatibility Section -->
+  <section id="compatibility">
+    <div class="container">
+      <h2>Browser Compatibility</h2>
+      <p>CornerKit uses progressive enhancement to support 98%+ of browsers</p>
+
+      <div class="tier-detection">
+        <p><strong>Your browser:</strong> <span id="current-tier-badge" class="tier-badge">Detecting...</span></p>
+      </div>
+
+      <div class="browser-matrix">
+        <h3>Browser Support Matrix</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Browser</th>
+              <th>Version</th>
+              <th>Tier</th>
+              <th>Performance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Chrome</td>
+              <td>65+</td>
+              <td>Houdini / ClipPath</td>
+              <td>Excellent</td>
+            </tr>
+            <tr>
+              <td>Firefox</td>
+              <td>60+</td>
+              <td>ClipPath</td>
+              <td>Excellent</td>
+            </tr>
+            <tr>
+              <td>Safari</td>
+              <td>13.1+</td>
+              <td>ClipPath</td>
+              <td>Excellent</td>
+            </tr>
+            <tr>
+              <td>Edge</td>
+              <td>79+</td>
+              <td>Houdini / ClipPath</td>
+              <td>Excellent</td>
+            </tr>
+            <tr>
+              <td>IE11</td>
+              <td>11</td>
+              <td>Fallback</td>
+              <td>Border-radius only</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tier-hierarchy">
+        <h3>Tier Hierarchy</h3>
+        <ol>
+          <li><strong>Native CSS</strong> - GPU-accelerated, zero JavaScript overhead (Chrome 139+)</li>
+          <li><strong>Houdini Paint API</strong> - Runs on paint thread, near-native performance (Chrome 65+, Edge 79+)</li>
+          <li><strong>SVG ClipPath</strong> - Dynamic path generation, excellent performance (All modern browsers)</li>
+          <li><strong>Border-Radius Fallback</strong> - Standard rounded corners, universal compatibility</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Code Examples Section -->
+  <section id="code">
+    <div class="container">
+      <h2>Code Examples & Installation</h2>
+
+      <div class="install-section">
+        <h3>Installation</h3>
+        <pre><code>npm install @cornerkit/core</code></pre>
+      </div>
+
+      <div class="code-examples-grid">
+        <!-- Vanilla JavaScript -->
+        <div class="code-example">
+          <h4>Vanilla JavaScript</h4>
+          <pre><code class="language-javascript">import CornerKit from '@cornerkit/core';
 
 // Create instance
 const ck = new CornerKit();
 
-// Apply to single element
+// Apply to element
 ck.apply('#my-element', {
   radius: 20,
   smoothing: 0.8
-});
+});</code></pre>
+          <button onclick="copyCode('example-vanilla')" class="btn btn-sm">Copy</button>
+        </div>
 
-// Apply to multiple elements
-ck.applyAll('.buttons', {
-  radius: 16,
-  smoothing: 0.85
-});
+        <!-- HTML Data Attributes -->
+        <div class="code-example">
+          <h4>HTML Data Attributes</h4>
+          <pre><code class="language-html">&lt;div
+  data-squircle
+  data-squircle-radius="20"
+  data-squircle-smoothing="0.8"
+&gt;
+  Your content
+&lt;/div&gt;
 
-// Update existing squircle
-ck.update('#my-element', {
-  radius: 30
-});
+&lt;script&gt;
+  CornerKit.auto();
+&lt;/script&gt;</code></pre>
+          <button onclick="copyCode('example-html')" class="btn btn-sm">Copy</button>
+        </div>
 
-// Remove squircle
-ck.remove('#my-element');
+        <!-- TypeScript -->
+        <div class="code-example">
+          <h4>TypeScript</h4>
+          <pre><code class="language-typescript">import CornerKit, { type SquircleConfig } from '@cornerkit/core';
 
-// Inspect element
-const info = ck.inspect('#my-element');
-console.log(info); // { config, tier, dimensions }</code></pre>
-      </section>
-    </main>
+const ck = new CornerKit();
+const config: SquircleConfig = {
+  radius: 20,
+  smoothing: 0.8
+};
+ck.apply('#my-element', config);</code></pre>
+          <button onclick="copyCode('example-typescript')" class="btn btn-sm">Copy</button>
+        </div>
 
-    <footer>
-      <p>
-        <a href="https://github.com/bejarcode/cornerkit">GitHub</a> |
-        <a href="https://github.com/bejarcode/cornerkit/blob/main/packages/core/README.md">Documentation</a> |
+        <!-- React (teaser) -->
+        <div class="code-example">
+          <h4>React (Coming Soon)</h4>
+          <pre><code class="language-javascript">import { Squircle } from '@cornerkit/react';
+
+function MyComponent() {
+  return (
+    &lt;Squircle radius={20} smoothing={0.8}&gt;
+      &lt;div&gt;Your content&lt;/div&gt;
+    &lt;/Squircle&gt;
+  );
+}</code></pre>
+          <button onclick="copyCode('example-react')" class="btn btn-sm">Copy</button>
+        </div>
+
+        <!-- Vue (teaser) -->
+        <div class="code-example">
+          <h4>Vue (Coming Soon)</h4>
+          <pre><code class="language-html">&lt;template&gt;
+  &lt;Squircle :radius="20" :smoothing="0.8"&gt;
+    &lt;div&gt;Your content&lt;/div&gt;
+  &lt;/Squircle&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { Squircle } from '@cornerkit/vue';
+&lt;/script&gt;</code></pre>
+          <button onclick="copyCode('example-vue')" class="btn btn-sm">Copy</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-links">
+        <a href="https://github.com/bejarcode/cornerkit">GitHub</a>
         <a href="https://www.npmjs.com/package/@cornerkit/core">npm</a>
-      </p>
-    </footer>
-  </div>
+        <a href="https://github.com/bejarcode/cornerkit/blob/main/packages/core/README.md">Documentation</a>
+      </div>
+      <p class="footer-copy">&copy; 2025 CornerKit. MIT License.</p>
+    </div>
+  </footer>
 
-  <!-- Include CornerKit from CDN or local build -->
-  <script src="../../dist/cornerkit.js"></script>
+  <!-- CornerKit from CDN with fallback -->
+  <script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.0/dist/cornerkit.js"
+          onerror="this.onerror=null; this.src='https://unpkg.com/@cornerkit/core@1.0.0/dist/cornerkit.js'"></script>
   <script src="app.js"></script>
 </body>
 </html>
