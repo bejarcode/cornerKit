@@ -1,0 +1,36 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background squircle shape -->
+  <path d="M 100,20
+           C 140,20 160,20 180,40
+           C 200,60 200,80 200,120
+           C 200,160 200,180 180,180
+           C 160,200 140,200 100,200
+           C 60,200 40,200 20,180
+           C 0,160 0,140 0,100
+           C 0,60 0,40 20,20
+           C 40,0 60,0 100,20 Z"
+        fill="#8b5cf6" />
+
+  <!-- Inner decorative squircle -->
+  <path d="M 100,40
+           C 130,40 145,40 160,55
+           C 175,70 175,85 175,115
+           C 175,145 175,160 160,175
+           C 145,190 130,190 100,190
+           C 70,190 55,190 40,175
+           C 25,160 25,145 25,115
+           C 25,85 25,70 40,55
+           C 55,40 70,40 100,40 Z"
+        fill="none"
+        stroke="white"
+        stroke-width="3"
+        opacity="0.6" />
+
+  <!-- Text: CK -->
+  <text x="100" y="125"
+        font-family="system-ui, -apple-system, sans-serif"
+        font-size="72"
+        font-weight="bold"
+        fill="white"
+        text-anchor="middle">CK</text>
+</svg>

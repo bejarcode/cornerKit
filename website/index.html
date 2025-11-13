@@ -17,7 +17,11 @@
   <meta property="og:url" content="https://bejarcode.github.io/cornerkit/">
   <meta property="og:image" content="https://bejarcode.github.io/cornerkit/assets/og-image.png">
 
+  <!-- Security -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';">
+
   <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 
   <!-- Stylesheet -->
@@ -60,7 +64,7 @@
       <div class="hero-cta">
         <a href="#playground" class="btn btn-primary">Try Playground</a>
         <a href="https://github.com/bejarcode/cornerkit" class="btn btn-secondary">View on GitHub</a>
-        <button class="btn btn-secondary" onclick="copyInstallCommand()">npm Install</button>
+        <button class="btn btn-secondary" onclick="copyInstallCommand()" aria-label="Copy npm install command">npm Install</button>
       </div>
 
       <div class="hero-quickstart">
@@ -131,35 +135,35 @@
         <div class="playground-code">
           <h3>Generated Code</h3>
 
-          <div class="code-tabs">
-            <button class="tab-btn active" data-tab="vanilla-js">Vanilla JS</button>
-            <button class="tab-btn" data-tab="html">HTML</button>
-            <button class="tab-btn" data-tab="typescript">TypeScript</button>
-            <button class="tab-btn" data-tab="react">React</button>
-            <button class="tab-btn" data-tab="vue">Vue</button>
+          <div class="code-tabs" role="tablist" aria-label="Code format tabs">
+            <button class="tab-btn active" data-tab="vanilla-js" role="tab" aria-selected="true" aria-controls="code-panel-vanilla-js">Vanilla JS</button>
+            <button class="tab-btn" data-tab="html" role="tab" aria-selected="false" aria-controls="code-panel-html">HTML</button>
+            <button class="tab-btn" data-tab="typescript" role="tab" aria-selected="false" aria-controls="code-panel-typescript">TypeScript</button>
+            <button class="tab-btn" data-tab="react" role="tab" aria-selected="false" aria-controls="code-panel-react">React</button>
+            <button class="tab-btn" data-tab="vue" role="tab" aria-selected="false" aria-controls="code-panel-vue">Vue</button>
           </div>
 
-          <div class="code-block active" data-content="vanilla-js">
+          <div id="code-panel-vanilla-js" class="code-block active" data-content="vanilla-js" role="tabpanel" aria-labelledby="tab-vanilla-js">
             <pre><code id="code-vanilla-js" class="language-javascript"></code></pre>
             <button onclick="copyCode('code-vanilla-js')" aria-label="Copy vanilla JavaScript code">Copy</button>
           </div>
 
-          <div class="code-block" data-content="html">
+          <div id="code-panel-html" class="code-block" data-content="html" role="tabpanel" aria-labelledby="tab-html">
             <pre><code id="code-html" class="language-html"></code></pre>
             <button onclick="copyCode('code-html')" aria-label="Copy HTML code">Copy</button>
           </div>
 
-          <div class="code-block" data-content="typescript">
+          <div id="code-panel-typescript" class="code-block" data-content="typescript" role="tabpanel" aria-labelledby="tab-typescript">
             <pre><code id="code-typescript" class="language-typescript"></code></pre>
             <button onclick="copyCode('code-typescript')" aria-label="Copy TypeScript code">Copy</button>
           </div>
 
-          <div class="code-block" data-content="react">
+          <div id="code-panel-react" class="code-block" data-content="react" role="tabpanel" aria-labelledby="tab-react">
             <pre><code id="code-react" class="language-javascript"></code></pre>
             <button onclick="copyCode('code-react')" aria-label="Copy React code">Copy</button>
           </div>
 
-          <div class="code-block" data-content="vue">
+          <div id="code-panel-vue" class="code-block" data-content="vue" role="tabpanel" aria-labelledby="tab-vue">
             <pre><code id="code-vue" class="language-html"></code></pre>
             <button onclick="copyCode('code-vue')" aria-label="Copy Vue code">Copy</button>
           </div>
@@ -310,7 +314,7 @@
       <p>See the difference between squircles and standard border-radius</p>
 
       <div class="comparison-controls">
-        <button id="comparison-toggle" class="btn btn-secondary">Toggle View Mode</button>
+        <button id="comparison-toggle" class="btn btn-secondary" aria-label="Toggle between side-by-side and overlay comparison modes">Toggle View Mode</button>
       </div>
 
       <div class="comparison-split">

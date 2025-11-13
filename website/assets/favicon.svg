@@ -1,0 +1,21 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Squircle background -->
+  <path d="M 16,3
+           C 22,3 25,3 28,6
+           C 31,9 31,12 31,18
+           C 31,24 31,27 28,30
+           C 25,33 22,33 16,33
+           C 10,33 7,33 4,30
+           C 1,27 1,24 1,18
+           C 1,12 1,9 4,6
+           C 7,3 10,3 16,3 Z"
+        fill="#8b5cf6" />
+
+  <!-- CK text -->
+  <text x="16" y="22"
+        font-family="system-ui, sans-serif"
+        font-size="14"
+        font-weight="bold"
+        fill="white"
+        text-anchor="middle">CK</text>
+</svg>
