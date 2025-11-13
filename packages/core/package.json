@@ -1,6 +1,6 @@
 {
   "name": "@cornerkit/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight library for iOS-style squircle corners",
   "type": "module",
   "sideEffects": false,
