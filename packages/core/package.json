@@ -47,7 +47,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bejarcode/cornerkit.git",
+    "url": "git+https://github.com/bejarcode/cornerkit.git",
     "directory": "packages/core"
   },
   "bugs": {
