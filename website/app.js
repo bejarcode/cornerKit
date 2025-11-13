@@ -226,12 +226,35 @@ function detectBrowserTier() {
   }
 
   // Check for SVG clip-path (Tier 3)
-  if (CSS.supports && CSS.supports('clip-path', 'path("")')) {
+  // Safari has issues with CSS.supports() for path(), so test both methods
+  if (testClipPathSupport()) {
     return 'Tier 3: SVG ClipPath';
   }
 
   // Fallback to border-radius (Tier 4)
   return 'Tier 4: Border-radius Fallback';
+}
+
+/**
+ * Tests clip-path path() support via runtime detection
+ * Safari's CSS.supports() incorrectly returns false, so we test actual support
+ */
+function testClipPathSupport() {
+  // First try CSS.supports (works in Chrome, Firefox)
+  if (CSS.supports && CSS.supports('clip-path', 'path("")')) {
+    return true;
+  }
+
+  // Safari fallback: Runtime feature test
+  // Safari 13.1+ supports clip-path path() but CSS.supports() returns false
+  try {
+    const testDiv = document.createElement('div');
+    testDiv.style.clipPath = "path('M 0,0 L 10,0 L 10,10 L 0,10 Z')";
+    // If clip-path was set successfully, it's supported
+    return testDiv.style.clipPath !== '';
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -659,9 +682,13 @@ function switchCodeTab(tabName) {
   const tabButtons = document.querySelectorAll('.tab-btn');
   tabButtons.forEach(btn => {
     if (btn.getAttribute('data-tab') === tabName) {
-      btn.classList.add('active');
+      btn.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
+      btn.classList.remove('text-gray-700', 'hover:bg-white');
+      btn.setAttribute('aria-selected', 'true');
     } else {
-      btn.classList.remove('active');
+      btn.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
+      btn.classList.add('text-gray-700', 'hover:bg-white');
+      btn.setAttribute('aria-selected', 'false');
     }
   });
 
@@ -669,9 +696,9 @@ function switchCodeTab(tabName) {
   const codeBlocks = document.querySelectorAll('.code-block');
   codeBlocks.forEach(block => {
     if (block.getAttribute('data-content') === tabName) {
-      block.classList.add('active');
+      block.classList.remove('hidden');
     } else {
-      block.classList.remove('active');
+      block.classList.add('hidden');
     }
   });
 }
@@ -929,3 +956,15 @@ window.copyCode = copyCode;
 window.copyStaticExample = copyStaticExample;
 window.resetPlayground = resetPlayground;
 window.inspectPlayground = inspectPlayground;
+
+// ============================================================================
+// Initialize AOS (Animate On Scroll)
+// ============================================================================
+if (typeof AOS !== 'undefined') {
+  AOS.init({
+    duration: 800,
+    easing: 'ease-in-out',
+    once: true,
+    offset: 100
+  });
+}

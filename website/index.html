@@ -18,73 +18,94 @@
   <meta property="og:image" content="https://bejarcode.github.io/cornerkit/assets/og-image.png">
 
   <!-- Security -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; img-src 'self' data: https://ui-avatars.com https://picsum.photos https://i.pravatar.cc; font-src 'self' https:; connect-src 'self'; base-uri 'self'; form-action 'self';">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 
-  <!-- Stylesheet -->
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- AOS (Animate On Scroll) -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <!-- Custom Stylesheet (for minimal overrides only) -->
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="bg-gray-50">
   <!-- Hero Section -->
-  <section id="hero">
-    <div class="hero-content">
-      <h1>iOS-style squircle corners for the web</h1>
-      <p class="hero-subtitle">A lightweight, zero-dependency JavaScript library for smooth, continuous curve corners</p>
+  <section id="hero" class="bg-gray-900 text-white min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight" data-aos="fade-up">
+        iOS-style squircle corners for the web
+      </h1>
+      <p class="text-lg sm:text-xl text-gray-300 mb-12 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+        A lightweight, zero-dependency JavaScript library for smooth, continuous curve corners
+      </p>
 
-      <div class="hero-demo" id="hero-demo">
+      <div class="hero-demo w-48 h-48 sm:w-56 sm:h-56 mx-auto mb-12" id="hero-demo" data-aos="zoom-in" data-aos-delay="200">
         <!-- Animated squircle demo element -->
       </div>
 
-      <div class="hero-features">
-        <div class="feature">
-          <strong>Zero dependencies</strong>
-          <span>Pure vanilla JavaScript</span>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12 text-left" data-aos="fade-up" data-aos-delay="300">
+        <div class="flex flex-col gap-2">
+          <strong class="text-base sm:text-lg font-semibold">Zero dependencies</strong>
+          <span class="text-sm text-gray-400">Pure vanilla JavaScript</span>
         </div>
-        <div class="feature">
-          <strong>3.66 KB gzipped</strong>
-          <span>Tiny bundle size</span>
+        <div class="flex flex-col gap-2">
+          <strong class="text-base sm:text-lg font-semibold">3.66 KB gzipped</strong>
+          <span class="text-sm text-gray-400">Tiny bundle size</span>
         </div>
-        <div class="feature">
-          <strong>98%+ browser support</strong>
-          <span>Works everywhere</span>
+        <div class="flex flex-col gap-2">
+          <strong class="text-base sm:text-lg font-semibold">98%+ browser support</strong>
+          <span class="text-sm text-gray-400">Works everywhere</span>
         </div>
-        <div class="feature">
-          <strong>Progressive enhancement</strong>
-          <span>4-tier rendering</span>
+        <div class="flex flex-col gap-2">
+          <strong class="text-base sm:text-lg font-semibold">Progressive enhancement</strong>
+          <span class="text-sm text-gray-400">4-tier rendering</span>
         </div>
-        <div class="feature">
-          <strong>WCAG 2.1 AA accessible</strong>
-          <span>Screen reader friendly</span>
+        <div class="flex flex-col gap-2">
+          <strong class="text-base sm:text-lg font-semibold">WCAG 2.1 AA accessible</strong>
+          <span class="text-sm text-gray-400">Screen reader friendly</span>
         </div>
       </div>
 
-      <div class="hero-cta">
-        <a href="#playground" class="btn btn-primary">Try Playground</a>
-        <a href="https://github.com/bejarcode/cornerkit" class="btn btn-secondary">View on GitHub</a>
-        <button class="btn btn-secondary" onclick="copyInstallCommand()" aria-label="Copy npm install command">npm Install</button>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8" data-aos="fade-up" data-aos-delay="400">
+        <a href="#playground" class="inline-flex items-center justify-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200 hover:-translate-y-0.5">
+          Try Playground
+        </a>
+        <a href="https://github.com/bejarcode/cornerkit" class="inline-flex items-center justify-center px-8 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5">
+          View on GitHub
+        </a>
+        <button onclick="copyInstallCommand()" class="inline-flex items-center justify-center px-8 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5" aria-label="Copy npm install command">
+          npm Install
+        </button>
       </div>
 
-      <div class="hero-quickstart">
-        <pre><code id="install-command">npm install @cornerkit/core</code></pre>
-        <button onclick="copyCode('install-command')" aria-label="Copy install command">Copy</button>
+      <div class="relative max-w-md mx-auto" data-aos="fade-up" data-aos-delay="500">
+        <pre class="bg-black/30 backdrop-blur-sm px-4 py-3 pr-20 rounded-xl text-left overflow-x-auto"><code id="install-command" class="text-sm sm:text-base">npm install @cornerkit/core</code></pre>
+        <button onclick="copyCode('install-command')" class="absolute top-2 right-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors" aria-label="Copy install command">
+          Copy
+        </button>
       </div>
     </div>
   </section>
 
   <!-- Playground Section -->
-  <section id="playground">
-    <div class="container">
-      <h2>Live Interactive Playground</h2>
-      <p>Adjust the sliders to see real-time updates and generate code snippets</p>
+  <section id="playground" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Live Interactive Playground</h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Adjust the sliders to see real-time updates and generate code snippets</p>
+      </div>
 
-      <div class="playground-layout">
-        <div class="playground-controls">
-          <div class="control-group">
-            <label for="radius-slider">
-              Corner Radius: <span id="radius-value" aria-live="polite">20</span>px
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div class="space-y-6">
+          <div class="space-y-3">
+            <label for="radius-slider" class="block text-base font-medium text-gray-900">
+              Corner Radius: <span id="radius-value" aria-live="polite" class="text-blue-600 font-semibold">20</span>px
             </label>
             <input
               type="range"
@@ -93,6 +114,7 @@
               max="100"
               value="20"
               step="1"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
               aria-label="Adjust corner radius"
               aria-valuemin="0"
               aria-valuemax="100"
@@ -100,9 +122,9 @@
             >
           </div>
 
-          <div class="control-group">
-            <label for="smoothing-slider">
-              Smoothing: <span id="smoothing-value" aria-live="polite">0.80</span>
+          <div class="space-y-3">
+            <label for="smoothing-slider" class="block text-base font-medium text-gray-900">
+              Smoothing: <span id="smoothing-value" aria-live="polite" class="text-blue-600 font-semibold">0.80</span>
             </label>
             <input
               type="range"
@@ -111,6 +133,7 @@
               max="1"
               value="0.8"
               step="0.05"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
               aria-label="Adjust smoothing parameter"
               aria-valuemin="0"
               aria-valuemax="1"
@@ -118,189 +141,220 @@
             >
           </div>
 
-          <div class="playground-preview" id="playground-preview">
+          <div class="playground-preview w-full h-48 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center font-bold text-lg text-white shadow-xl shadow-blue-500/30" id="playground-preview">
             <p>Preview Element</p>
           </div>
 
-          <div class="playground-metrics">
-            <h3>Performance Metrics</h3>
-            <div id="metrics-display">
-              <p><strong>Render Time:</strong> <span id="render-time">-</span> ms</p>
-              <p><strong>Dimensions:</strong> <span id="dimensions">-</span></p>
-              <p><strong>Browser Tier:</strong> <span id="browser-tier">-</span></p>
+          <div class="bg-gray-50 rounded-2xl p-6 shadow-sm">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h3>
+            <div id="metrics-display" class="space-y-2 text-sm">
+              <p class="flex justify-between"><strong class="text-gray-600 font-medium">Render Time:</strong> <span id="render-time" class="font-mono text-gray-900">-</span> ms</p>
+              <p class="flex justify-between"><strong class="text-gray-600 font-medium">Dimensions:</strong> <span id="dimensions" class="font-mono text-gray-900">-</span></p>
+              <p class="flex justify-between"><strong class="text-gray-600 font-medium">Browser Tier:</strong> <span id="browser-tier" class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-xs font-semibold">-</span></p>
             </div>
           </div>
         </div>
 
-        <div class="playground-code">
-          <h3>Generated Code</h3>
+        <div class="space-y-6">
+          <div class="bg-white rounded-2xl shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Generated Code</h3>
 
-          <div class="code-tabs" role="tablist" aria-label="Code format tabs">
-            <button class="tab-btn active" data-tab="vanilla-js" role="tab" aria-selected="true" aria-controls="code-panel-vanilla-js">Vanilla JS</button>
-            <button class="tab-btn" data-tab="html" role="tab" aria-selected="false" aria-controls="code-panel-html">HTML</button>
-            <button class="tab-btn" data-tab="typescript" role="tab" aria-selected="false" aria-controls="code-panel-typescript">TypeScript</button>
-            <button class="tab-btn" data-tab="react" role="tab" aria-selected="false" aria-controls="code-panel-react">React</button>
-            <button class="tab-btn" data-tab="vue" role="tab" aria-selected="false" aria-controls="code-panel-vue">Vue</button>
-          </div>
+            <div class="flex flex-wrap gap-2 bg-gray-100 p-1 rounded-xl mb-4" role="tablist" aria-label="Code format tabs">
+              <button class="tab-btn px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg shadow-sm transition-all" data-tab="vanilla-js" role="tab" aria-selected="true" aria-controls="code-panel-vanilla-js">Vanilla JS</button>
+              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="html" role="tab" aria-selected="false" aria-controls="code-panel-html">HTML</button>
+              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="typescript" role="tab" aria-selected="false" aria-controls="code-panel-typescript">TypeScript</button>
+              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="react" role="tab" aria-selected="false" aria-controls="code-panel-react">React</button>
+              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="vue" role="tab" aria-selected="false" aria-controls="code-panel-vue">Vue</button>
+            </div>
 
-          <div id="code-panel-vanilla-js" class="code-block active" data-content="vanilla-js" role="tabpanel" aria-labelledby="tab-vanilla-js">
-            <pre><code id="code-vanilla-js" class="language-javascript"></code></pre>
-            <button onclick="copyCode('code-vanilla-js')" aria-label="Copy vanilla JavaScript code">Copy</button>
-          </div>
+            <div id="code-panel-vanilla-js" class="code-block relative" data-content="vanilla-js" role="tabpanel" aria-labelledby="tab-vanilla-js">
+              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-vanilla-js" class="language-javascript"></code></pre>
+              <button onclick="copyCode('code-vanilla-js')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy vanilla JavaScript code">Copy</button>
+            </div>
 
-          <div id="code-panel-html" class="code-block" data-content="html" role="tabpanel" aria-labelledby="tab-html">
-            <pre><code id="code-html" class="language-html"></code></pre>
-            <button onclick="copyCode('code-html')" aria-label="Copy HTML code">Copy</button>
-          </div>
+            <div id="code-panel-html" class="code-block hidden relative" data-content="html" role="tabpanel" aria-labelledby="tab-html">
+              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-html" class="language-html"></code></pre>
+              <button onclick="copyCode('code-html')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy HTML code">Copy</button>
+            </div>
 
-          <div id="code-panel-typescript" class="code-block" data-content="typescript" role="tabpanel" aria-labelledby="tab-typescript">
-            <pre><code id="code-typescript" class="language-typescript"></code></pre>
-            <button onclick="copyCode('code-typescript')" aria-label="Copy TypeScript code">Copy</button>
-          </div>
+            <div id="code-panel-typescript" class="code-block hidden relative" data-content="typescript" role="tabpanel" aria-labelledby="tab-typescript">
+              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-typescript" class="language-typescript"></code></pre>
+              <button onclick="copyCode('code-typescript')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy TypeScript code">Copy</button>
+            </div>
 
-          <div id="code-panel-react" class="code-block" data-content="react" role="tabpanel" aria-labelledby="tab-react">
-            <pre><code id="code-react" class="language-javascript"></code></pre>
-            <button onclick="copyCode('code-react')" aria-label="Copy React code">Copy</button>
-          </div>
+            <div id="code-panel-react" class="code-block hidden relative" data-content="react" role="tabpanel" aria-labelledby="tab-react">
+              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-react" class="language-javascript"></code></pre>
+              <button onclick="copyCode('code-react')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy React code">Copy</button>
+            </div>
 
-          <div id="code-panel-vue" class="code-block" data-content="vue" role="tabpanel" aria-labelledby="tab-vue">
-            <pre><code id="code-vue" class="language-html"></code></pre>
-            <button onclick="copyCode('code-vue')" aria-label="Copy Vue code">Copy</button>
+            <div id="code-panel-vue" class="code-block hidden relative" data-content="vue" role="tabpanel" aria-labelledby="tab-vue">
+              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-vue" class="language-html"></code></pre>
+              <button onclick="copyCode('code-vue')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy Vue code">Copy</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="playground-shortcuts">
-        <p><strong>Keyboard Shortcuts:</strong> Press <kbd>R</kbd> to reset | Press <kbd>I</kbd> to inspect (logs to console)</p>
+      <div class="mt-12 bg-gray-50 rounded-2xl p-6 text-center space-y-3">
+        <p class="text-sm text-gray-700">
+          <strong class="font-semibold">Keyboard Shortcuts:</strong> Press <kbd class="px-2 py-1 bg-white text-gray-900 text-xs font-mono rounded shadow-sm">R</kbd> to reset | Press <kbd class="px-2 py-1 bg-white text-gray-900 text-xs font-mono rounded shadow-sm">I</kbd> to inspect (logs to console)
+        </p>
+        <p class="text-sm text-gray-600">
+          <strong class="font-medium">Note:</strong> CornerKit v1.0 focuses on performance and broad compatibility using CSS <code class="px-1.5 py-0.5 bg-white text-gray-900 text-xs font-mono rounded">clip-path</code>. Enhanced rendering options, including border support along squircle paths, are planned for future releases.
+        </p>
       </div>
     </div>
   </section>
 
   <!-- Gallery Section -->
-  <section id="gallery">
-    <div class="container">
-      <h2>Visual Examples Gallery</h2>
-      <p>See squircles applied to real UI components</p>
+  <section id="gallery" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Visual Examples Gallery</h2>
+        <p class="text-lg text-gray-600">See squircles applied to real UI components</p>
+      </div>
 
-      <div class="gallery-grid">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Buttons -->
-        <div class="gallery-category">
-          <h3>Buttons</h3>
-          <button id="button-primary" class="demo-button btn-primary">Primary Button</button>
-          <button id="button-secondary" class="demo-button btn-secondary">Secondary Button</button>
-          <button id="button-ghost" class="demo-button btn-ghost">Ghost Button</button>
-          <button id="button-disabled" class="demo-button btn-disabled" disabled>Disabled Button</button>
+        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-6">Buttons</h3>
+          <div class="flex flex-wrap gap-3">
+            <button id="button-primary" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all hover:-translate-y-0.5">Primary Button</button>
+            <button id="button-secondary" class="px-6 py-3 bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Secondary Button</button>
+            <button id="button-ghost" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Ghost Button</button>
+            <button id="button-disabled" class="px-6 py-3 bg-gray-100 text-gray-400 font-medium rounded-xl opacity-60 cursor-not-allowed" disabled>Disabled Button</button>
+          </div>
+          <p class="text-xs text-gray-500 mt-4 font-mono">radius: 20px, smoothing: 0.8</p>
         </div>
 
         <!-- Cards -->
-        <div class="gallery-category">
-          <h3>Cards</h3>
-          <div id="card-product" class="demo-card">
-            <strong>Product Card</strong>
-            <p class="example-label">radius: 24px, smoothing: 0.85</p>
-          </div>
-          <div id="card-info" class="demo-card">
-            <strong>Info Card</strong>
-            <p class="example-label">radius: 20px, smoothing: 0.8</p>
-          </div>
-          <div id="card-testimonial" class="demo-card">
-            <strong>Testimonial Card</strong>
-            <p class="example-label">radius: 28px, smoothing: 0.9</p>
+        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-6">Cards</h3>
+          <div class="space-y-4">
+            <div id="card-product" class="p-5 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 mb-1">Product Card</strong>
+              <p class="text-xs text-gray-500 font-mono">radius: 24px, smoothing: 0.85</p>
+            </div>
+            <div id="card-info" class="p-5 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 mb-1">Info Card</strong>
+              <p class="text-xs text-gray-500 font-mono">radius: 20px, smoothing: 0.8</p>
+            </div>
+            <div id="card-testimonial" class="p-5 bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 mb-1">Testimonial Card</strong>
+              <p class="text-xs text-gray-500 font-mono">radius: 28px, smoothing: 0.9</p>
+            </div>
           </div>
         </div>
 
         <!-- Modals -->
-        <div class="gallery-category">
-          <h3>Modals</h3>
-          <div id="modal-dialog" class="demo-modal">
-            <strong>Dialog Modal</strong>
-            <p>Confirm your action</p>
-            <p class="example-label">radius: 20px, smoothing: 0.8</p>
-          </div>
-          <div id="modal-alert" class="demo-modal modal-alert">
-            <strong>⚠️ Alert Modal</strong>
-            <p>Important notification</p>
-            <p class="example-label">radius: 16px, smoothing: 0.75</p>
-          </div>
-          <div id="modal-confirmation" class="demo-modal modal-success">
-            <strong>✓ Success Modal</strong>
-            <p>Action completed</p>
-            <p class="example-label">radius: 20px, smoothing: 0.85</p>
+        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-6">Modals</h3>
+          <div class="space-y-4">
+            <div id="modal-dialog" class="p-5 bg-white rounded-xl shadow-lg">
+              <strong class="block text-lg font-semibold text-gray-900 mb-2">Dialog Modal</strong>
+              <p class="text-sm text-gray-600 mb-3">Confirm your action</p>
+              <p class="text-xs text-gray-500 font-mono">radius: 20px, smoothing: 0.8</p>
+            </div>
+            <div id="modal-alert" class="p-5 bg-white rounded-xl shadow-lg border-l-4 border-amber-500">
+              <strong class="block text-lg font-semibold text-gray-900 mb-2">⚠️ Alert Modal</strong>
+              <p class="text-sm text-gray-600 mb-3">Important notification</p>
+              <p class="text-xs text-gray-500 font-mono">radius: 16px, smoothing: 0.75</p>
+            </div>
+            <div id="modal-confirmation" class="p-5 bg-white rounded-xl shadow-lg border-l-4 border-green-500">
+              <strong class="block text-lg font-semibold text-gray-900 mb-2">✓ Success Modal</strong>
+              <p class="text-sm text-gray-600 mb-3">Action completed</p>
+              <p class="text-xs text-gray-500 font-mono">radius: 20px, smoothing: 0.85</p>
+            </div>
           </div>
         </div>
 
         <!-- Navigation -->
-        <div class="gallery-category">
-          <h3>Navigation</h3>
-          <div class="nav-tabs">
-            <button id="nav-tab-1" class="demo-tab active">Tab 1</button>
-            <button id="nav-tab-2" class="demo-tab">Tab 2</button>
-            <button id="nav-tab-3" class="demo-tab">Tab 3</button>
-            <p class="example-label">Tabs: radius 12px, smoothing: 0.8</p>
-          </div>
-          <div class="nav-pills">
-            <button id="nav-pill-1" class="demo-pill active">Pill 1</button>
-            <button id="nav-pill-2" class="demo-pill">Pill 2</button>
-            <button id="nav-pill-3" class="demo-pill">Pill 3</button>
-            <p class="example-label">Pills: radius 20px, smoothing: 0.9</p>
-          </div>
-          <div id="nav-breadcrumbs" class="demo-breadcrumbs">
-            <span class="breadcrumb-item">Home</span>
-            <span class="breadcrumb-separator">›</span>
-            <span class="breadcrumb-item">Products</span>
-            <span class="breadcrumb-separator">›</span>
-            <span class="breadcrumb-item active">Details</span>
-            <p class="example-label">radius: 8px, smoothing: 0.7</p>
+        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-6">Navigation</h3>
+          <div class="space-y-6">
+            <div>
+              <div class="flex gap-2 border-b border-gray-200 pb-3">
+                <button id="nav-tab-1" class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600 transition-colors">Tab 1</button>
+                <button id="nav-tab-2" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent transition-colors">Tab 2</button>
+                <button id="nav-tab-3" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent transition-colors">Tab 3</button>
+              </div>
+              <p class="text-xs text-gray-500 mt-2 font-mono">Tabs: radius 12px, smoothing: 0.8</p>
+            </div>
+            <div>
+              <div class="flex flex-wrap gap-2">
+                <button id="nav-pill-1" class="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-full shadow-sm">Pill 1</button>
+                <button id="nav-pill-2" class="px-4 py-2 text-sm font-medium bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors">Pill 2</button>
+                <button id="nav-pill-3" class="px-4 py-2 text-sm font-medium bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors">Pill 3</button>
+              </div>
+              <p class="text-xs text-gray-500 mt-2 font-mono">Pills: radius 20px, smoothing: 0.9</p>
+            </div>
+            <div>
+              <div id="nav-breadcrumbs" class="flex flex-wrap items-center gap-2 text-sm">
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg">Home</span>
+                <span class="text-gray-400">›</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg">Products</span>
+                <span class="text-gray-400">›</span>
+                <span class="px-3 py-1 bg-blue-600 text-white rounded-lg">Details</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-2 font-mono">radius: 8px, smoothing: 0.7</p>
+            </div>
           </div>
         </div>
 
         <!-- Images -->
-        <div class="gallery-category">
-          <h3>Images</h3>
-          <div class="demo-image-wrapper">
-            <img id="image-avatar-1" class="demo-avatar" src="https://via.placeholder.com/80" alt="Avatar 1">
-            <p class="example-label">Avatar: radius 40px, smoothing: 0.85</p>
-          </div>
-          <div class="demo-image-wrapper">
-            <img id="image-avatar-2" class="demo-avatar" src="https://via.placeholder.com/80" alt="Avatar 2">
-            <p class="example-label">Avatar: radius 40px, smoothing: 0.85</p>
-          </div>
-          <div class="demo-image-wrapper">
-            <img id="image-thumbnail-1" class="demo-thumbnail" src="https://via.placeholder.com/200x150" alt="Thumbnail 1">
-            <p class="example-label">Thumbnail: radius 16px, smoothing: 0.8</p>
-          </div>
-          <div class="demo-image-wrapper">
-            <img id="image-thumbnail-2" class="demo-thumbnail" src="https://via.placeholder.com/200x150" alt="Thumbnail 2">
-            <p class="example-label">Thumbnail: radius 16px, smoothing: 0.8</p>
-          </div>
-          <div class="demo-image-wrapper full-width">
-            <img id="image-hero" class="demo-hero" src="https://via.placeholder.com/600x300" alt="Hero image">
-            <p class="example-label">Hero: radius 24px, smoothing: 0.85</p>
+        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-6">Images</h3>
+          <div class="space-y-6">
+            <div class="flex items-center gap-4">
+              <div>
+                <img id="image-avatar-1" class="w-20 h-20 object-cover rounded-2xl shadow-md" src="https://i.pravatar.cc/80?img=12" alt="Avatar 1" loading="lazy">
+                <p class="text-xs text-gray-500 mt-2 font-mono">Avatar: 40px, 0.85</p>
+              </div>
+              <div>
+                <img id="image-avatar-2" class="w-20 h-20 object-cover rounded-2xl shadow-md" src="https://i.pravatar.cc/80?img=45" alt="Avatar 2" loading="lazy">
+                <p class="text-xs text-gray-500 mt-2 font-mono">Avatar: 40px, 0.85</p>
+              </div>
+              <div>
+                <img id="image-avatar-3" class="w-20 h-20 object-cover rounded-2xl shadow-md" src="https://i.pravatar.cc/80?img=33" alt="Avatar 3" loading="lazy">
+                <p class="text-xs text-gray-500 mt-2 font-mono">Avatar: 40px, 0.85</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <img id="image-thumbnail-1" class="w-full h-auto object-cover rounded-xl shadow-md" src="https://picsum.photos/seed/nature1/200/150" alt="Nature thumbnail" loading="lazy">
+                <p class="text-xs text-gray-500 mt-2 font-mono">16px, 0.8</p>
+              </div>
+              <div>
+                <img id="image-thumbnail-2" class="w-full h-auto object-cover rounded-xl shadow-md" src="https://picsum.photos/seed/city2/200/150" alt="City thumbnail" loading="lazy">
+                <p class="text-xs text-gray-500 mt-2 font-mono">16px, 0.8</p>
+              </div>
+            </div>
+            <div>
+              <img id="image-hero" class="w-full h-auto object-cover rounded-2xl shadow-lg" src="https://picsum.photos/seed/landscape3/600/300" alt="Hero landscape image" loading="lazy">
+              <p class="text-xs text-gray-500 mt-2 font-mono">Hero: 24px, 0.85</p>
+            </div>
           </div>
         </div>
 
         <!-- Forms -->
-        <div class="gallery-category">
-          <h3>Form Elements</h3>
-          <div class="form-example">
-            <label for="form-text-1">Text Input</label>
-            <input id="form-text-1" type="text" class="demo-input" placeholder="Enter text here">
-            <p class="example-label">radius: 12px, smoothing: 0.8</p>
-          </div>
-          <div class="form-example">
-            <label for="form-text-2">Email Input</label>
-            <input id="form-text-2" type="email" class="demo-input" placeholder="your@email.com">
-            <p class="example-label">radius: 12px, smoothing: 0.8</p>
-          </div>
-          <div class="form-example">
-            <label for="form-textarea-1">Textarea</label>
-            <textarea id="form-textarea-1" class="demo-textarea" rows="3" placeholder="Enter multiple lines..."></textarea>
-            <p class="example-label">radius: 16px, smoothing: 0.85</p>
-          </div>
-          <div class="form-example">
-            <label for="form-textarea-2">Large Textarea</label>
-            <textarea id="form-textarea-2" class="demo-textarea" rows="5" placeholder="Enter longer content..."></textarea>
-            <p class="example-label">radius: 16px, smoothing: 0.85</p>
+        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-6">Form Elements</h3>
+          <div class="space-y-4">
+            <div>
+              <label for="form-text-1" class="block text-sm font-semibold text-gray-900 mb-2">Text Input</label>
+              <input id="form-text-1" type="text" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900" placeholder="Enter text here">
+              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 12px, smoothing: 0.8</p>
+            </div>
+            <div>
+              <label for="form-text-2" class="block text-sm font-semibold text-gray-900 mb-2">Email Input</label>
+              <input id="form-text-2" type="email" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900" placeholder="your@email.com">
+              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 12px, smoothing: 0.8</p>
+            </div>
+            <div>
+              <label for="form-textarea-1" class="block text-sm font-semibold text-gray-900 mb-2">Textarea</label>
+              <textarea id="form-textarea-1" rows="3" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-vertical text-gray-900" placeholder="Enter multiple lines..."></textarea>
+              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 16px, smoothing: 0.85</p>
+            </div>
           </div>
         </div>
       </div>
@@ -308,123 +362,135 @@
   </section>
 
   <!-- Comparison Section -->
-  <section id="comparison">
-    <div class="container">
-      <h2>Side-by-Side Comparison</h2>
-      <p>See the difference between squircles and standard border-radius</p>
-
-      <div class="comparison-controls">
-        <button id="comparison-toggle" class="btn btn-secondary" aria-label="Toggle between side-by-side and overlay comparison modes">Toggle View Mode</button>
+  <section id="comparison" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Side-by-Side Comparison</h2>
+        <p class="text-lg text-gray-600">See the difference between squircles and standard border-radius</p>
       </div>
 
-      <div class="comparison-split">
-        <div class="comparison-item">
-          <div id="comparison-squircle" class="comparison-element">
+      <div class="text-center mb-8">
+        <button id="comparison-toggle" class="px-6 py-3 bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium rounded-xl shadow-sm hover:shadow-md transition-all" aria-label="Toggle between side-by-side and overlay comparison modes">
+          Toggle View Mode
+        </button>
+      </div>
+
+      <div class="comparison-split grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div class="text-center">
+          <div id="comparison-squircle" class="w-full h-48 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center font-bold text-lg text-amber-900 shadow-xl shadow-amber-500/30 mb-4">
             <p>Squircle</p>
           </div>
-          <p class="comparison-label">Continuous curve (smoothing: 0.8)</p>
+          <p class="text-sm text-gray-600">Continuous curve (smoothing: 0.8)</p>
         </div>
 
-        <div class="comparison-item">
-          <div id="comparison-border-radius" class="comparison-element">
+        <div class="text-center">
+          <div id="comparison-border-radius" class="w-full h-48 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center font-bold text-lg text-amber-900 shadow-xl shadow-amber-500/30 mb-4">
             <p>Border-Radius</p>
           </div>
-          <p class="comparison-label">Standard CSS border-radius</p>
+          <p class="text-sm text-gray-600">Standard CSS border-radius</p>
         </div>
       </div>
 
-      <div class="comparison-explanation">
-        <p>
+      <div class="mt-12 max-w-3xl mx-auto bg-blue-50 rounded-2xl p-6 text-center">
+        <p class="text-gray-700 leading-relaxed">
           Squircles use a superellipse formula to create smoother, more continuous curves than standard border-radius.
-          The <strong>smoothing parameter</strong> (0.0-1.0) controls how closely the curve follows the iOS-style continuous curve characteristic.
+          The <strong class="font-semibold text-gray-900">smoothing parameter</strong> (0.0-1.0) controls how closely the curve follows the iOS-style continuous curve characteristic.
         </p>
       </div>
     </div>
   </section>
 
   <!-- Compatibility Section -->
-  <section id="compatibility">
-    <div class="container">
-      <h2>Browser Compatibility</h2>
-      <p>CornerKit uses progressive enhancement to support 98%+ of browsers</p>
-
-      <div class="tier-detection">
-        <p><strong>Your browser:</strong> <span id="current-tier-badge" class="tier-badge">Detecting...</span></p>
+  <section id="compatibility" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Browser Compatibility</h2>
+        <p class="text-lg text-gray-600">CornerKit uses progressive enhancement to support 98%+ of browsers</p>
       </div>
 
-      <div class="browser-matrix">
-        <h3>Browser Support Matrix</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Browser</th>
-              <th>Version</th>
-              <th>Tier</th>
-              <th>Performance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Chrome</td>
-              <td>65+</td>
-              <td>Houdini / ClipPath</td>
-              <td>Excellent</td>
-            </tr>
-            <tr>
-              <td>Firefox</td>
-              <td>60+</td>
-              <td>ClipPath</td>
-              <td>Excellent</td>
-            </tr>
-            <tr>
-              <td>Safari</td>
-              <td>13.1+</td>
-              <td>ClipPath</td>
-              <td>Excellent</td>
-            </tr>
-            <tr>
-              <td>Edge</td>
-              <td>79+</td>
-              <td>Houdini / ClipPath</td>
-              <td>Excellent</td>
-            </tr>
-            <tr>
-              <td>IE11</td>
-              <td>11</td>
-              <td>Fallback</td>
-              <td>Border-radius only</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="text-center mb-12">
+        <p class="text-gray-700 mb-3"><strong class="font-semibold">Your browser:</strong> <span id="current-tier-badge" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold">Detecting...</span></p>
       </div>
 
-      <div class="tier-hierarchy">
-        <h3>Tier Hierarchy</h3>
-        <ol>
-          <li><strong>Native CSS</strong> - GPU-accelerated, zero JavaScript overhead (Chrome 139+)</li>
-          <li><strong>Houdini Paint API</strong> - Runs on paint thread, near-native performance (Chrome 65+, Edge 79+)</li>
-          <li><strong>SVG ClipPath</strong> - Dynamic path generation, excellent performance (All modern browsers)</li>
-          <li><strong>Border-Radius Fallback</strong> - Standard rounded corners, universal compatibility</li>
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-12">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h3 class="text-xl font-semibold text-gray-900">Browser Support Matrix</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Browser</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Version</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Tier</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Performance</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Chrome</td>
+                <td class="px-6 py-4 text-sm text-gray-600">65+</td>
+                <td class="px-6 py-4 text-sm text-gray-600">Houdini / ClipPath</td>
+                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Firefox</td>
+                <td class="px-6 py-4 text-sm text-gray-600">60+</td>
+                <td class="px-6 py-4 text-sm text-gray-600">ClipPath</td>
+                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Safari</td>
+                <td class="px-6 py-4 text-sm text-gray-600">13.1+</td>
+                <td class="px-6 py-4 text-sm text-gray-600">ClipPath</td>
+                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Edge</td>
+                <td class="px-6 py-4 text-sm text-gray-600">79+</td>
+                <td class="px-6 py-4 text-sm text-gray-600">Houdini / ClipPath</td>
+                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm text-gray-900 font-medium">IE11</td>
+                <td class="px-6 py-4 text-sm text-gray-600">11</td>
+                <td class="px-6 py-4 text-sm text-gray-600">Fallback</td>
+                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">Border-radius only</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-8 shadow-sm">
+        <h3 class="text-xl font-semibold text-gray-900 mb-6">Tier Hierarchy</h3>
+        <ol class="space-y-4 ml-6 list-decimal text-gray-700">
+          <li><strong class="font-semibold text-gray-900">Native CSS</strong> - GPU-accelerated, zero JavaScript overhead (Chrome 139+)</li>
+          <li><strong class="font-semibold text-gray-900">Houdini Paint API</strong> - Runs on paint thread, near-native performance (Chrome 65+, Edge 79+)</li>
+          <li><strong class="font-semibold text-gray-900">SVG ClipPath</strong> - Dynamic path generation, excellent performance (All modern browsers)</li>
+          <li><strong class="font-semibold text-gray-900">Border-Radius Fallback</strong> - Standard rounded corners, universal compatibility</li>
         </ol>
       </div>
     </div>
   </section>
 
   <!-- Code Examples Section -->
-  <section id="code">
-    <div class="container">
-      <h2>Code Examples & Installation</h2>
-
-      <div class="install-section">
-        <h3>Installation</h3>
-        <pre><code>npm install @cornerkit/core</code></pre>
+  <section id="code" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Code Examples & Installation</h2>
       </div>
 
-      <div class="code-examples-grid">
+      <div class="max-w-2xl mx-auto mb-16">
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">Installation</h3>
+        <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">npm install @cornerkit/core</code></pre>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Vanilla JavaScript -->
-        <div class="code-example">
-          <h4>Vanilla JavaScript</h4>
-          <pre><code class="language-javascript">import CornerKit from '@cornerkit/core';
+        <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
+          <h4 class="text-lg font-semibold text-gray-900 mb-4">Vanilla JavaScript</h4>
+          <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-javascript">import CornerKit from '@cornerkit/core';
 
 // Create instance
 const ck = new CornerKit();
@@ -434,13 +500,13 @@ ck.apply('#my-element', {
   radius: 20,
   smoothing: 0.8
 });</code></pre>
-          <button onclick="copyStaticExample('example-vanilla')" class="btn btn-sm">Copy</button>
+          <button onclick="copyStaticExample('example-vanilla')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- HTML Data Attributes -->
-        <div class="code-example">
-          <h4>HTML Data Attributes</h4>
-          <pre><code class="language-html">&lt;div
+        <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
+          <h4 class="text-lg font-semibold text-gray-900 mb-4">HTML Data Attributes</h4>
+          <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-html">&lt;div
   data-squircle
   data-squircle-radius="20"
   data-squircle-smoothing="0.8"
@@ -451,13 +517,13 @@ ck.apply('#my-element', {
 &lt;script&gt;
   CornerKit.auto();
 &lt;/script&gt;</code></pre>
-          <button onclick="copyStaticExample('example-html')" class="btn btn-sm">Copy</button>
+          <button onclick="copyStaticExample('example-html')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- TypeScript -->
-        <div class="code-example">
-          <h4>TypeScript</h4>
-          <pre><code class="language-typescript">import CornerKit, { type SquircleConfig } from '@cornerkit/core';
+        <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
+          <h4 class="text-lg font-semibold text-gray-900 mb-4">TypeScript</h4>
+          <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-typescript">import CornerKit, { type SquircleConfig } from '@cornerkit/core';
 
 const ck = new CornerKit();
 const config: SquircleConfig = {
@@ -465,13 +531,13 @@ const config: SquircleConfig = {
   smoothing: 0.8
 };
 ck.apply('#my-element', config);</code></pre>
-          <button onclick="copyStaticExample('example-typescript')" class="btn btn-sm">Copy</button>
+          <button onclick="copyStaticExample('example-typescript')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- React (teaser) -->
-        <div class="code-example">
-          <h4>React (Coming Soon)</h4>
-          <pre><code class="language-javascript">import { Squircle } from '@cornerkit/react';
+        <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
+          <h4 class="text-lg font-semibold text-gray-900 mb-4">React <span class="text-sm text-gray-500 font-normal">(Coming Soon)</span></h4>
+          <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-javascript">import { Squircle } from '@cornerkit/react';
 
 function MyComponent() {
   return (
@@ -480,13 +546,13 @@ function MyComponent() {
     &lt;/Squircle&gt;
   );
 }</code></pre>
-          <button onclick="copyStaticExample('example-react')" class="btn btn-sm">Copy</button>
+          <button onclick="copyStaticExample('example-react')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- Vue (teaser) -->
-        <div class="code-example">
-          <h4>Vue (Coming Soon)</h4>
-          <pre><code class="language-html">&lt;template&gt;
+        <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm lg:col-span-2">
+          <h4 class="text-lg font-semibold text-gray-900 mb-4">Vue <span class="text-sm text-gray-500 font-normal">(Coming Soon)</span></h4>
+          <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-html">&lt;template&gt;
   &lt;Squircle :radius="20" :smoothing="0.8"&gt;
     &lt;div&gt;Your content&lt;/div&gt;
   &lt;/Squircle&gt;
@@ -495,27 +561,26 @@ function MyComponent() {
 &lt;script setup&gt;
 import { Squircle } from '@cornerkit/vue';
 &lt;/script&gt;</code></pre>
-          <button onclick="copyStaticExample('example-vue')" class="btn btn-sm">Copy</button>
+          <button onclick="copyStaticExample('example-vue')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer id="footer">
-    <div class="container">
-      <div class="footer-links">
-        <a href="https://github.com/bejarcode/cornerkit">GitHub</a>
-        <a href="https://www.npmjs.com/package/@cornerkit/core">npm</a>
-        <a href="https://github.com/bejarcode/cornerkit/blob/main/packages/core/README.md">Documentation</a>
+  <footer id="footer" class="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto text-center">
+      <div class="flex flex-wrap justify-center gap-8 mb-6">
+        <a href="https://github.com/bejarcode/cornerkit" class="text-gray-300 hover:text-white font-medium transition-colors">GitHub</a>
+        <a href="https://www.npmjs.com/package/@cornerkit/core" class="text-gray-300 hover:text-white font-medium transition-colors">npm</a>
+        <a href="https://github.com/bejarcode/cornerkit/blob/main/packages/core/README.md" class="text-gray-300 hover:text-white font-medium transition-colors">Documentation</a>
       </div>
-      <p class="footer-copy">&copy; 2025 CornerKit. MIT License.</p>
+      <p class="text-sm text-gray-400">&copy; 2025 CornerKit. MIT License.</p>
     </div>
   </footer>
 
-  <!-- CornerKit from CDN with fallback -->
-  <script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.0/dist/cornerkit.js"
-          onerror="this.onerror=null; this.src='https://unpkg.com/@cornerkit/core@1.0.0/dist/cornerkit.js'"></script>
+  <!-- CornerKit library (local build until published to npm) -->
+  <script src="cornerkit.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
