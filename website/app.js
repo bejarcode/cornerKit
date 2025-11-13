@@ -601,45 +601,54 @@ function displayPerformanceMetrics(renderTime) {
   }
 }
 
+// Debounced update functions for expensive operations
+const debouncedUpdatePreview = debounce((radius, smoothing) => {
+  updatePlaygroundPreview(radius, smoothing);
+}, 16); // ~60fps for smooth animation
+
 /**
- * Handles radius slider input with debouncing
+ * Handles radius slider input with immediate visual feedback
  */
-const handleRadiusChange = debounce((e) => {
+function handleRadiusChange(e) {
   const radius = parseInt(e.target.value, 10);
   const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
 
-  // Update display value
+  // Immediate visual feedback (no debounce)
   const radiusValue = document.getElementById('radius-value');
   if (radiusValue) {
     radiusValue.textContent = radius;
   }
 
-  // Update ARIA value
+  // Update ARIA value immediately
   e.target.setAttribute('aria-valuenow', radius);
 
-  // Update preview and code
-  updatePlaygroundPreview(radius, smoothing);
-}, 100); // 100ms debounce per FR-002
+  // Use requestAnimationFrame for smooth updates
+  requestAnimationFrame(() => {
+    debouncedUpdatePreview(radius, smoothing);
+  });
+}
 
 /**
- * Handles smoothing slider input with debouncing
+ * Handles smoothing slider input with immediate visual feedback
  */
-const handleSmoothingChange = debounce((e) => {
+function handleSmoothingChange(e) {
   const smoothing = parseFloat(e.target.value);
   const radius = parseInt(document.getElementById('radius-slider').value, 10);
 
-  // Update display value
+  // Immediate visual feedback (no debounce)
   const smoothingValue = document.getElementById('smoothing-value');
   if (smoothingValue) {
     smoothingValue.textContent = smoothing.toFixed(2);
   }
 
-  // Update ARIA value
+  // Update ARIA value immediately
   e.target.setAttribute('aria-valuenow', smoothing);
 
-  // Update preview and code
-  updatePlaygroundPreview(radius, smoothing);
-}, 100); // 100ms debounce per FR-002
+  // Use requestAnimationFrame for smooth updates
+  requestAnimationFrame(() => {
+    debouncedUpdatePreview(radius, smoothing);
+  });
+}
 
 /**
  * Handles code tab switching
