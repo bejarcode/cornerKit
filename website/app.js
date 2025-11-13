@@ -420,6 +420,64 @@ function applyToGalleryExamples() {
 }
 
 // ============================================================================
+// Phase 5: User Story 3 - Side-by-Side Comparison
+// ============================================================================
+
+/**
+ * Current comparison mode (split or overlay)
+ */
+let comparisonMode = 'split';
+
+/**
+ * Toggles between split and overlay comparison modes
+ */
+function toggleComparisonMode() {
+  const comparisonContainer = document.querySelector('.comparison-split');
+  const toggleButton = document.getElementById('comparison-toggle');
+
+  if (!comparisonContainer) return;
+
+  if (comparisonMode === 'split') {
+    comparisonMode = 'overlay';
+    comparisonContainer.classList.add('overlay-mode');
+    if (toggleButton) {
+      toggleButton.textContent = 'Switch to Split View';
+    }
+    console.log('🔄 Comparison mode: Overlay');
+  } else {
+    comparisonMode = 'split';
+    comparisonContainer.classList.remove('overlay-mode');
+    if (toggleButton) {
+      toggleButton.textContent = 'Switch to Overlay View';
+    }
+    console.log('🔄 Comparison mode: Split');
+  }
+}
+
+/**
+ * Initializes the comparison section
+ */
+function initializeComparison() {
+  // Apply squircle to left comparison element
+  ck.apply('#comparison-squircle', { radius: 32, smoothing: 0.8 });
+
+  // Apply border-radius to right comparison element via CSS
+  const borderRadiusElement = document.getElementById('comparison-border-radius');
+  if (borderRadiusElement) {
+    borderRadiusElement.style.borderRadius = '32px';
+  }
+
+  // Attach toggle button click handler
+  const toggleButton = document.getElementById('comparison-toggle');
+  if (toggleButton) {
+    toggleButton.addEventListener('click', toggleComparisonMode);
+    toggleButton.textContent = 'Switch to Overlay View';
+  }
+
+  console.log('✅ Comparison section initialized');
+}
+
+// ============================================================================
 // Phase 3: User Story 1 - Live Interactive Playground
 // ============================================================================
 
@@ -603,6 +661,9 @@ function initializeDemo() {
   // Initialize gallery examples
   const galleryCount = applyToGalleryExamples();
   console.log(`📸 Gallery ready with ${galleryCount} examples`);
+
+  // Initialize comparison section
+  initializeComparison();
 
   // Log available keyboard shortcuts
   console.log('⌨️ Keyboard shortcuts:');
