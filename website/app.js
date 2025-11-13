@@ -680,6 +680,9 @@ function initializeDemo() {
   // Display browser tier
   displayBrowserTier();
 
+  // Initialize hero section
+  initializeHero();
+
   // Initialize playground
   const radiusSlider = document.getElementById('radius-slider');
   const smoothingSlider = document.getElementById('smoothing-slider');
@@ -731,6 +734,97 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initializeDemo);
 } else {
   initializeDemo();
+}
+
+// ============================================================================
+// Phase 8: User Story 6 - Landing Page & Hero Section
+// ============================================================================
+
+/**
+ * Initializes the hero section
+ */
+function initializeHero() {
+  // Apply animated squircle to hero demo element
+  ck.apply('#hero-demo', {
+    radius: 40,
+    smoothing: 0.85
+  });
+
+  // Setup smooth scroll for CTA buttons
+  const playgroundCTA = document.querySelector('a[href="#playground"]');
+  if (playgroundCTA) {
+    playgroundCTA.addEventListener('click', (e) => {
+      e.preventDefault();
+      const playgroundSection = document.getElementById('playground');
+      if (playgroundSection) {
+        playgroundSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
+  console.log('✅ Hero section initialized');
+}
+
+/**
+ * Copies the npm install command to clipboard
+ */
+function copyInstallCommand() {
+  const command = 'npm install @cornerkit/core';
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(command).then(() => {
+      console.log('📋 Install command copied to clipboard');
+      showInstallCopyFeedback('success');
+    }).catch(error => {
+      console.error('Copy failed:', error);
+      showInstallCopyFeedback('error');
+    });
+  } else {
+    // Fallback
+    const textarea = document.createElement('textarea');
+    textarea.value = command;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    const success = document.execCommand('copy');
+    document.body.removeChild(textarea);
+
+    if (success) {
+      showInstallCopyFeedback('success');
+    } else {
+      showInstallCopyFeedback('fallback');
+    }
+  }
+}
+
+/**
+ * Shows feedback for install command copy
+ * @param {string} status - Status (success, fallback, error)
+ */
+function showInstallCopyFeedback(status) {
+  const button = document.querySelector('.hero-quickstart button');
+  if (!button) return;
+
+  const originalText = button.textContent;
+  const originalBg = button.style.backgroundColor;
+
+  if (status === 'success') {
+    button.textContent = 'Copied!';
+    button.style.backgroundColor = '#10b981';
+  } else if (status === 'fallback') {
+    button.textContent = 'Select & copy manually';
+    button.style.backgroundColor = '#f59e0b';
+  } else {
+    button.textContent = 'Copy failed';
+    button.style.backgroundColor = '#ef4444';
+  }
+
+  setTimeout(() => {
+    button.textContent = originalText;
+    button.style.backgroundColor = originalBg;
+  }, 2000);
 }
 
 // ============================================================================
