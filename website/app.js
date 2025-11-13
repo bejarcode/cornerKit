@@ -133,14 +133,18 @@ function updateAllCodeSnippets(radius, smoothing) {
 // ----------------------------------------------------------------------------
 /**
  * Copies code snippet to clipboard
- * @param {string} format - Code format to copy
+ * @param {string} formatOrId - Code format (vanilla-js, html, etc.) or element ID (code-vanilla-js)
  * @returns {Promise<void>}
  */
-async function copyCode(format) {
+async function copyCode(formatOrId) {
   try {
-    const codeElement = document.getElementById(`code-${format}`);
+    // Handle both formats: 'vanilla-js' or 'code-vanilla-js'
+    const format = formatOrId.startsWith('code-') ? formatOrId.substring(5) : formatOrId;
+    const elementId = formatOrId.startsWith('code-') ? formatOrId : `code-${formatOrId}`;
+
+    const codeElement = document.getElementById(elementId);
     if (!codeElement) {
-      throw new Error(`Code element not found: code-${format}`);
+      throw new Error(`Code element not found: ${elementId}`);
     }
 
     const code = codeElement.textContent;
@@ -169,6 +173,7 @@ async function copyCode(format) {
     }
   } catch (error) {
     console.error('Copy failed:', error);
+    const format = formatOrId.startsWith('code-') ? formatOrId.substring(5) : formatOrId;
     showCopyFeedback(format, 'error');
   }
 }
@@ -326,6 +331,141 @@ function inspectPlayground() {
 }
 
 // ============================================================================
+// Phase 3: User Story 1 - Live Interactive Playground
+// ============================================================================
+
+/**
+ * Debounce helper to limit function call frequency
+ * @param {Function} func - Function to debounce
+ * @param {number} wait - Wait time in milliseconds
+ * @returns {Function} Debounced function
+ */
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+/**
+ * Updates playground preview with new squircle parameters
+ * @param {number} radius - Corner radius
+ * @param {number} smoothing - Smoothing parameter
+ */
+function updatePlaygroundPreview(radius, smoothing) {
+  const startTime = performance.now();
+
+  // Update preview element
+  ck.update('#playground-preview', { radius, smoothing });
+
+  const endTime = performance.now();
+  const renderTime = (endTime - startTime).toFixed(2);
+
+  // Update performance metrics
+  displayPerformanceMetrics(renderTime);
+
+  // Update code snippets
+  updateAllCodeSnippets(radius, smoothing);
+}
+
+/**
+ * Displays performance metrics in the UI
+ * @param {string} renderTime - Render time in milliseconds
+ */
+function displayPerformanceMetrics(renderTime) {
+  const renderTimeElement = document.getElementById('render-time');
+  const dimensionsElement = document.getElementById('dimensions');
+  const previewElement = document.getElementById('playground-preview');
+
+  if (renderTimeElement) {
+    renderTimeElement.textContent = renderTime;
+
+    // Color-code based on performance target (<100ms)
+    if (parseFloat(renderTime) < 100) {
+      renderTimeElement.style.color = '#10b981'; // Green
+    } else {
+      renderTimeElement.style.color = '#f59e0b'; // Orange
+    }
+  }
+
+  if (dimensionsElement && previewElement) {
+    const rect = previewElement.getBoundingClientRect();
+    dimensionsElement.textContent = `${Math.round(rect.width)}×${Math.round(rect.height)}px`;
+  }
+}
+
+/**
+ * Handles radius slider input with debouncing
+ */
+const handleRadiusChange = debounce((e) => {
+  const radius = parseInt(e.target.value, 10);
+  const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+
+  // Update display value
+  const radiusValue = document.getElementById('radius-value');
+  if (radiusValue) {
+    radiusValue.textContent = radius;
+  }
+
+  // Update ARIA value
+  e.target.setAttribute('aria-valuenow', radius);
+
+  // Update preview and code
+  updatePlaygroundPreview(radius, smoothing);
+}, 100); // 100ms debounce per FR-002
+
+/**
+ * Handles smoothing slider input with debouncing
+ */
+const handleSmoothingChange = debounce((e) => {
+  const smoothing = parseFloat(e.target.value);
+  const radius = parseInt(document.getElementById('radius-slider').value, 10);
+
+  // Update display value
+  const smoothingValue = document.getElementById('smoothing-value');
+  if (smoothingValue) {
+    smoothingValue.textContent = smoothing.toFixed(2);
+  }
+
+  // Update ARIA value
+  e.target.setAttribute('aria-valuenow', smoothing);
+
+  // Update preview and code
+  updatePlaygroundPreview(radius, smoothing);
+}, 100); // 100ms debounce per FR-002
+
+/**
+ * Handles code tab switching
+ * @param {string} tabName - Tab name (vanilla-js, html, typescript, react, vue)
+ */
+function switchCodeTab(tabName) {
+  // Update tab buttons
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  tabButtons.forEach(btn => {
+    if (btn.getAttribute('data-tab') === tabName) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  // Update code blocks
+  const codeBlocks = document.querySelectorAll('.code-block');
+  codeBlocks.forEach(block => {
+    if (block.getAttribute('data-content') === tabName) {
+      block.classList.add('active');
+    } else {
+      block.classList.remove('active');
+    }
+  });
+}
+
+// ============================================================================
 // Initialization
 // ============================================================================
 
@@ -338,7 +478,7 @@ function initializeDemo() {
   // Display browser tier
   displayBrowserTier();
 
-  // Initialize playground (will be connected to sliders in Phase 3)
+  // Initialize playground
   const radiusSlider = document.getElementById('radius-slider');
   const smoothingSlider = document.getElementById('smoothing-slider');
 
@@ -346,9 +486,30 @@ function initializeDemo() {
     const initialRadius = parseInt(radiusSlider.value, 10);
     const initialSmoothing = parseFloat(smoothingSlider.value);
 
+    // Apply squircle to playground preview
+    ck.apply('#playground-preview', { radius: initialRadius, smoothing: initialSmoothing });
+
     // Initialize code snippets with default values
     updateAllCodeSnippets(initialRadius, initialSmoothing);
+
+    // Display initial performance metrics
+    displayPerformanceMetrics('0.00');
+
+    // Attach slider event listeners
+    radiusSlider.addEventListener('input', handleRadiusChange);
+    smoothingSlider.addEventListener('input', handleSmoothingChange);
+
+    console.log('✅ Playground initialized with radius:', initialRadius, 'smoothing:', initialSmoothing);
   }
+
+  // Initialize code tab switching
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabName = btn.getAttribute('data-tab');
+      switchCodeTab(tabName);
+    });
+  });
 
   // Log available keyboard shortcuts
   console.log('⌨️ Keyboard shortcuts:');
