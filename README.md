@@ -12,6 +12,12 @@
 
 CornerKit is a lightweight JavaScript library that brings the smooth, continuous curve corners (squircles) from iOS design to the web. At just **3.66 KB gzipped** with **zero runtime dependencies**, it delivers pixel-perfect rounded corners that look better than standard CSS `border-radius`.
 
+## Live Demo
+
+**[Try the Interactive Demo →](https://bejarcode.github.io/cornerKit/)**
+
+Experiment with squircles in real-time, see side-by-side comparisons, and generate ready-to-use code snippets.
+
 ## Why Squircles?
 
 **Standard `border-radius`** creates circular arcs that can look harsh and disconnect from the straight edges.
