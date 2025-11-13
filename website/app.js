@@ -239,22 +239,27 @@ function detectBrowserTier() {
  */
 function displayBrowserTier() {
   const tier = detectBrowserTier();
-  const tierBadge = document.getElementById('browser-tier');
+  const tierBadges = [
+    document.getElementById('browser-tier'),
+    document.getElementById('current-tier-badge')
+  ];
 
-  if (tierBadge) {
-    tierBadge.textContent = tier;
+  tierBadges.forEach(tierBadge => {
+    if (tierBadge) {
+      tierBadge.textContent = tier;
 
-    // Color-code tier badge
-    if (tier.includes('Tier 1')) {
-      tierBadge.style.backgroundColor = '#10b981'; // Green
-    } else if (tier.includes('Tier 2')) {
-      tierBadge.style.backgroundColor = '#3b82f6'; // Blue
-    } else if (tier.includes('Tier 3')) {
-      tierBadge.style.backgroundColor = '#8b5cf6'; // Purple
-    } else {
-      tierBadge.style.backgroundColor = '#6b7280'; // Gray
+      // Color-code tier badge
+      if (tier.includes('Tier 1')) {
+        tierBadge.style.backgroundColor = '#10b981'; // Green
+      } else if (tier.includes('Tier 2')) {
+        tierBadge.style.backgroundColor = '#3b82f6'; // Blue
+      } else if (tier.includes('Tier 3')) {
+        tierBadge.style.backgroundColor = '#8b5cf6'; // Purple
+      } else {
+        tierBadge.style.backgroundColor = '#6b7280'; // Gray
+      }
     }
-  }
+  });
 
   console.log('Browser tier detected:', tier);
 }
@@ -417,6 +422,56 @@ function applyToGalleryExamples() {
 
   console.log(`✅ Gallery initialized: ${successCount} components, ${errorCount} errors`);
   return successCount;
+}
+
+// ============================================================================
+// Phase 6: User Story 4 - Browser Compatibility Information
+// ============================================================================
+
+/**
+ * Tier definitions with characteristics
+ */
+const tierDefinitions = {
+  tier1: {
+    name: 'Native CSS',
+    description: 'GPU-accelerated corner-shape: squircle',
+    performance: 'Native (0ms JS overhead)',
+    browsers: ['Chrome 139+'],
+    features: ['Zero JavaScript', 'GPU-accelerated', 'Future-proof']
+  },
+  tier2: {
+    name: 'Houdini Paint API',
+    description: 'CSS Paint Worklet on dedicated thread',
+    performance: 'Near-native (~2ms init)',
+    browsers: ['Chrome 65+', 'Edge 79+'],
+    features: ['Off main thread', 'High performance', 'Dynamic']
+  },
+  tier3: {
+    name: 'SVG ClipPath',
+    description: 'Dynamic SVG path generation',
+    performance: 'Excellent (<10ms per element)',
+    browsers: ['All modern browsers', 'Firefox 60+', 'Safari 13.1+'],
+    features: ['Wide compatibility', 'Responsive', 'Performant']
+  },
+  tier4: {
+    name: 'Border-Radius Fallback',
+    description: 'Standard CSS border-radius',
+    performance: 'Native (not true squircles)',
+    browsers: ['IE11', 'Legacy browsers'],
+    features: ['Universal compatibility', 'Graceful degradation', 'Standard CSS']
+  }
+};
+
+/**
+ * Displays current tier information in the compatibility section
+ * This function is called after detectBrowserTier() and displayBrowserTier()
+ */
+function displayCurrentTier() {
+  // Tier is already displayed by displayBrowserTier()
+  // This function is for potential future enhancements like showing
+  // detailed tier information in a modal or tooltip
+  const tier = detectBrowserTier();
+  console.log('✅ Compatibility section updated with tier:', tier);
 }
 
 // ============================================================================
@@ -679,8 +734,95 @@ if (document.readyState === 'loading') {
 }
 
 // ============================================================================
+// Phase 7: User Story 5 - Code Examples & Installation
+// ============================================================================
+
+/**
+ * Copy code from static code examples in the Code Examples section
+ * @param {string} exampleType - Type of example (example-vanilla, example-html, etc.)
+ */
+function copyStaticExample(exampleType) {
+  try {
+    // Find the code example by button context
+    const button = event.target;
+    const codeExample = button.closest('.code-example');
+
+    if (!codeExample) {
+      throw new Error('Could not find code example container');
+    }
+
+    const codeElement = codeExample.querySelector('code');
+    if (!codeElement) {
+      throw new Error('Could not find code element');
+    }
+
+    const code = codeElement.textContent;
+
+    // Use modern Clipboard API or fallback
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(() => {
+        showCopyFeedbackForButton(button, 'success');
+      }).catch(error => {
+        console.error('Copy failed:', error);
+        showCopyFeedbackForButton(button, 'error');
+      });
+    } else {
+      // Fallback for older browsers
+      const textarea = document.createElement('textarea');
+      textarea.value = code;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+
+      const success = document.execCommand('copy');
+      document.body.removeChild(textarea);
+
+      if (success) {
+        showCopyFeedbackForButton(button, 'success');
+      } else {
+        showCopyFeedbackForButton(button, 'fallback');
+      }
+    }
+  } catch (error) {
+    console.error('Static example copy failed:', error);
+    if (event.target) {
+      showCopyFeedbackForButton(event.target, 'error');
+    }
+  }
+}
+
+/**
+ * Shows visual feedback directly on a button element
+ * @param {HTMLElement} button - Button element
+ * @param {string} status - Feedback status (success, fallback, error)
+ */
+function showCopyFeedbackForButton(button, status) {
+  const originalText = button.textContent;
+  const originalBg = button.style.backgroundColor;
+
+  if (status === 'success') {
+    button.textContent = 'Copied!';
+    button.style.backgroundColor = '#10b981';
+  } else if (status === 'fallback') {
+    button.textContent = 'Select & copy manually';
+    button.style.backgroundColor = '#f59e0b';
+  } else {
+    button.textContent = 'Copy failed';
+    button.style.backgroundColor = '#ef4444';
+  }
+
+  // Reset button after 2 seconds
+  setTimeout(() => {
+    button.textContent = originalText;
+    button.style.backgroundColor = originalBg;
+  }, 2000);
+}
+
+// ============================================================================
 // Global API (for inline onclick handlers and debugging)
 // ============================================================================
 window.copyCode = copyCode;
+window.copyStaticExample = copyStaticExample;
 window.resetPlayground = resetPlayground;
 window.inspectPlayground = inspectPlayground;
