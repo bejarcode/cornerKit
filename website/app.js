@@ -331,6 +331,95 @@ function inspectPlayground() {
 }
 
 // ============================================================================
+// Phase 4: User Story 2 - Visual Examples Gallery
+// ============================================================================
+
+/**
+ * Gallery example components configuration
+ * Each object defines an element to apply squircles to
+ */
+const exampleComponents = [
+  // Buttons
+  { id: 'button-primary', category: 'button', variant: 'primary', radius: 20, smoothing: 0.8 },
+  { id: 'button-secondary', category: 'button', variant: 'secondary', radius: 20, smoothing: 0.8 },
+  { id: 'button-ghost', category: 'button', variant: 'ghost', radius: 20, smoothing: 0.8 },
+  { id: 'button-disabled', category: 'button', variant: 'disabled', radius: 20, smoothing: 0.8 },
+
+  // Cards
+  { id: 'card-product', category: 'card', variant: 'product', radius: 24, smoothing: 0.85 },
+  { id: 'card-info', category: 'card', variant: 'info', radius: 20, smoothing: 0.8 },
+  { id: 'card-testimonial', category: 'card', variant: 'testimonial', radius: 28, smoothing: 0.9 },
+
+  // Modals
+  { id: 'modal-dialog', category: 'modal', variant: 'dialog', radius: 20, smoothing: 0.8 },
+  { id: 'modal-alert', category: 'modal', variant: 'alert', radius: 16, smoothing: 0.75 },
+  { id: 'modal-confirmation', category: 'modal', variant: 'success', radius: 20, smoothing: 0.85 },
+
+  // Navigation - Tabs
+  { id: 'nav-tab-1', category: 'navigation', variant: 'tab', radius: 12, smoothing: 0.8 },
+  { id: 'nav-tab-2', category: 'navigation', variant: 'tab', radius: 12, smoothing: 0.8 },
+  { id: 'nav-tab-3', category: 'navigation', variant: 'tab', radius: 12, smoothing: 0.8 },
+
+  // Navigation - Pills
+  { id: 'nav-pill-1', category: 'navigation', variant: 'pill', radius: 20, smoothing: 0.9 },
+  { id: 'nav-pill-2', category: 'navigation', variant: 'pill', radius: 20, smoothing: 0.9 },
+  { id: 'nav-pill-3', category: 'navigation', variant: 'pill', radius: 20, smoothing: 0.9 },
+
+  // Navigation - Breadcrumbs
+  { id: 'nav-breadcrumbs', category: 'navigation', variant: 'breadcrumbs', radius: 8, smoothing: 0.7 },
+
+  // Images - Avatars
+  { id: 'image-avatar-1', category: 'image', variant: 'avatar', radius: 40, smoothing: 0.85 },
+  { id: 'image-avatar-2', category: 'image', variant: 'avatar', radius: 40, smoothing: 0.85 },
+
+  // Images - Thumbnails
+  { id: 'image-thumbnail-1', category: 'image', variant: 'thumbnail', radius: 16, smoothing: 0.8 },
+  { id: 'image-thumbnail-2', category: 'image', variant: 'thumbnail', radius: 16, smoothing: 0.8 },
+
+  // Images - Hero
+  { id: 'image-hero', category: 'image', variant: 'hero', radius: 24, smoothing: 0.85 },
+
+  // Forms - Text Inputs
+  { id: 'form-text-1', category: 'form', variant: 'text', radius: 12, smoothing: 0.8 },
+  { id: 'form-text-2', category: 'form', variant: 'email', radius: 12, smoothing: 0.8 },
+
+  // Forms - Textareas
+  { id: 'form-textarea-1', category: 'form', variant: 'textarea', radius: 16, smoothing: 0.85 },
+  { id: 'form-textarea-2', category: 'form', variant: 'textarea-large', radius: 16, smoothing: 0.85 }
+];
+
+/**
+ * Applies squircles to all gallery example components
+ * @returns {number} Number of components successfully initialized
+ */
+function applyToGalleryExamples() {
+  let successCount = 0;
+  let errorCount = 0;
+
+  exampleComponents.forEach(component => {
+    try {
+      const element = document.getElementById(component.id);
+      if (element) {
+        ck.apply(`#${component.id}`, {
+          radius: component.radius,
+          smoothing: component.smoothing
+        });
+        successCount++;
+      } else {
+        console.warn(`Gallery element not found: ${component.id}`);
+        errorCount++;
+      }
+    } catch (error) {
+      console.error(`Failed to apply squircle to ${component.id}:`, error);
+      errorCount++;
+    }
+  });
+
+  console.log(`✅ Gallery initialized: ${successCount} components, ${errorCount} errors`);
+  return successCount;
+}
+
+// ============================================================================
 // Phase 3: User Story 1 - Live Interactive Playground
 // ============================================================================
 
@@ -510,6 +599,10 @@ function initializeDemo() {
       switchCodeTab(tabName);
     });
   });
+
+  // Initialize gallery examples
+  const galleryCount = applyToGalleryExamples();
+  console.log(`📸 Gallery ready with ${galleryCount} examples`);
 
   // Log available keyboard shortcuts
   console.log('⌨️ Keyboard shortcuts:');
