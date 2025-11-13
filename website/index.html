@@ -18,7 +18,7 @@
   <meta property="og:image" content="https://bejarcode.github.io/cornerkit/assets/og-image.png">
 
   <!-- Security -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://via.placeholder.com; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self';">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -513,9 +513,8 @@ import { Squircle } from '@cornerkit/vue';
     </div>
   </footer>
 
-  <!-- CornerKit from CDN with fallback -->
-  <script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.0/dist/cornerkit.js"
-          onerror="this.onerror=null; this.src='https://unpkg.com/@cornerkit/core@1.0.0/dist/cornerkit.js'"></script>
+  <!-- CornerKit library (local build until published to npm) -->
+  <script src="cornerkit.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
