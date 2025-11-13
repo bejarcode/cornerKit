@@ -4,10 +4,10 @@
 
 We release security updates for the following versions of CornerKit:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.0.x   | :white_check_mark: |
-| < 1.0   | :x:                |
+| Version | Supported |
+| ------- | --------- |
+| 1.0.x   | Yes       |
+| < 1.0   | No        |
 
 ## Security Model
 
@@ -42,7 +42,7 @@ We take security seriously. If you discover a security vulnerability in CornerKi
 
 Instead, please email security details to:
 
-📧 **me@victorbejar.com** (preferred)
+**me@victorbejar.com** (preferred)
 
 Or create a private security advisory:
 
@@ -131,13 +131,13 @@ npm audit --package=cornerkit
 When contributing code to CornerKit:
 
 #### 1. Never Use Unsafe APIs
-❌ **Avoid**:
+**Avoid**:
 - `eval()` or `Function()` constructors
 - `innerHTML` or `outerHTML` for user content
 - `document.write()`
 - Inline event handlers (`onclick`, etc.)
 
-✅ **Use**:
+**Use instead**:
 - DOM APIs (`.style`, `.setAttribute()`)
 - Type validation
 - Input sanitization
@@ -190,8 +190,8 @@ Detailed security audit reports are available in:
 
 For security-related questions or concerns:
 
-📧 **me@victorbejar.com**
-🔗 **GitHub Security**: https://github.com/bejarcode/cornerkit/security
+**Email**: me@victorbejar.com
+**GitHub Security**: https://github.com/bejarcode/cornerkit/security
 
 ## Acknowledgments
 
@@ -200,7 +200,7 @@ We appreciate responsible disclosure of security vulnerabilities. Contributors w
 - Release notes
 - CONTRIBUTORS.md file
 
-Thank you for helping keep CornerKit secure! 🔒
+Thank you for helping keep CornerKit secure!
 
 ---
 
