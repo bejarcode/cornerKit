@@ -1116,3 +1116,171 @@ kbd {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+/* ============================================================================
+   Copy Button State Classes (for feedback)
+   ============================================================================ */
+.btn-copy-success {
+  background-color: #10b981 !important;
+  color: white !important;
+}
+
+.btn-copy-error {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
+
+.btn-copy-fallback {
+  background-color: #f59e0b !important;
+  color: white !important;
+}
+
+/* ============================================================================
+   Skip to Content Link (Accessibility)
+   ============================================================================ */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================================================
+   Print Styles
+   ============================================================================ */
+@media print {
+  /* Hide non-essential elements */
+  header,
+  footer,
+  nav,
+  aside,
+  .no-print,
+  button,
+  .hero-demo,
+  .playground-preview {
+    display: none !important;
+  }
+
+  /* Reset colors for print */
+  * {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Add page breaks */
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+
+  /* Show URLs for links */
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  /* Optimize layout */
+  body {
+    margin: 0;
+    padding: 20px;
+  }
+
+  section {
+    page-break-inside: avoid;
+  }
+}
+
+/* ============================================================================
+   Dark Mode Support
+   ============================================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #111827;
+    --color-text: #f3f4f6;
+    --color-text-muted: #9ca3af;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+  }
+
+  /* Adjust specific components for dark mode */
+  .bg-white {
+    background-color: #1f2937 !important;
+  }
+
+  .bg-gray-50 {
+    background-color: #111827 !important;
+  }
+
+  .bg-gray-100 {
+    background-color: #1f2937 !important;
+  }
+
+  .text-gray-900 {
+    color: #f3f4f6 !important;
+  }
+
+  .text-gray-700 {
+    color: #d1d5db !important;
+  }
+
+  .text-gray-600 {
+    color: #9ca3af !important;
+  }
+
+  .border-gray-200 {
+    border-color: #374151 !important;
+  }
+
+  .border-gray-300 {
+    border-color: #4b5563 !important;
+  }
+
+  /* Code blocks - keep dark */
+  .bg-gray-900,
+  pre {
+    background-color: #000 !important;
+  }
+
+  /* Inputs and forms */
+  input,
+  textarea,
+  select {
+    background-color: #1f2937 !important;
+    border-color: #4b5563 !important;
+    color: #f3f4f6 !important;
+  }
+
+  /* Cards and boxes */
+  .shadow-sm,
+  .shadow,
+  .shadow-lg {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5) !important;
+  }
+}
+
+/* ============================================================================
+   Smooth Scroll (Respect prefers-reduced-motion)
+   ============================================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

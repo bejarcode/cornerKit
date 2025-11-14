@@ -9,6 +9,7 @@
   <meta name="description" content="A lightweight JavaScript library for implementing iOS-style squircle (continuous curve) corners on web elements. Zero dependencies, 3.66 KB gzipped, 98%+ browser support.">
   <meta name="keywords" content="squircle, superellipse, rounded corners, iOS design, web components, javascript library, border-radius alternative">
   <meta name="author" content="CornerKit">
+  <link rel="canonical" href="https://bejarcode.github.io/cornerkit/">
 
   <!-- Open Graph Meta Tags -->
   <meta property="og:title" content="CornerKit - iOS-style squircle corners for the web">
@@ -18,7 +19,7 @@
   <meta property="og:image" content="https://bejarcode.github.io/cornerkit/assets/og-image.png">
 
   <!-- Security -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; img-src 'self' data: https://ui-avatars.com https://picsum.photos https://i.pravatar.cc; font-src 'self' https:; connect-src 'self'; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; img-src 'self' data: https://ui-avatars.com https://picsum.photos https://i.pravatar.cc; font-src 'self' https:; connect-src 'self'; base-uri 'self'; form-action 'self';">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -33,10 +34,41 @@
 
   <!-- Custom Stylesheet (for minimal overrides only) -->
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Structured Data (JSON-LD) for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CornerKit",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web",
+    "description": "A lightweight JavaScript library for implementing iOS-style squircle corners on web elements",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "CornerKit"
+    }
+  }
+  </script>
 </head>
 <body class="bg-gray-50">
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Noscript fallback -->
+  <noscript>
+    <div style="padding: 20px; background: #fef3c7; border: 2px solid #f59e0b; margin: 20px; border-radius: 8px;">
+      <strong>JavaScript Required:</strong> This interactive demo requires JavaScript to be enabled.
+      Please enable JavaScript in your browser settings to view the full experience.
+    </div>
+  </noscript>
   <!-- Hero Section -->
-  <section id="hero" class="bg-gray-900 text-white min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+  <section id="hero" role="banner" class="bg-gray-900 text-white min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto text-center">
       <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight" data-aos="fade-up">
         iOS-style squircle corners for the web
@@ -79,14 +111,14 @@
         <a href="https://github.com/bejarcode/cornerkit" class="inline-flex items-center justify-center px-8 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5">
           View on GitHub
         </a>
-        <button onclick="copyInstallCommand()" class="inline-flex items-center justify-center px-8 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5" aria-label="Copy npm install command">
+        <button data-action="copy-install" class="inline-flex items-center justify-center px-8 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5" aria-label="Copy npm install command">
           npm Install
         </button>
       </div>
 
       <div class="relative max-w-md mx-auto" data-aos="fade-up" data-aos-delay="500">
         <pre class="bg-black/30 backdrop-blur-sm px-4 py-3 pr-20 rounded-xl text-left overflow-x-auto"><code id="install-command" class="text-sm sm:text-base">npm install @cornerkit/core</code></pre>
-        <button onclick="copyCode('install-command')" class="absolute top-2 right-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors" aria-label="Copy install command">
+        <button data-action="copy-code" data-target="install-command" class="absolute top-2 right-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors" aria-label="Copy install command">
           Copy
         </button>
       </div>
@@ -94,8 +126,8 @@
   </section>
 
   <!-- Playground Section -->
-  <section id="playground" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
-    <div class="max-w-7xl mx-auto">
+  <section id="playground" role="main" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+    <div id="main-content" class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Live Interactive Playground</h2>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">Adjust the sliders to see real-time updates and generate code snippets</p>
@@ -160,36 +192,36 @@
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Generated Code</h3>
 
             <div class="flex flex-wrap gap-2 bg-gray-100 p-1 rounded-xl mb-4" role="tablist" aria-label="Code format tabs">
-              <button class="tab-btn px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg shadow-sm transition-all" data-tab="vanilla-js" role="tab" aria-selected="true" aria-controls="code-panel-vanilla-js">Vanilla JS</button>
-              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="html" role="tab" aria-selected="false" aria-controls="code-panel-html">HTML</button>
-              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="typescript" role="tab" aria-selected="false" aria-controls="code-panel-typescript">TypeScript</button>
-              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="react" role="tab" aria-selected="false" aria-controls="code-panel-react">React</button>
-              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="vue" role="tab" aria-selected="false" aria-controls="code-panel-vue">Vue</button>
+              <button id="tab-vanilla-js" class="tab-btn px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg shadow-sm transition-all" data-tab="vanilla-js" role="tab" aria-selected="true" aria-controls="code-panel-vanilla-js">Vanilla JS</button>
+              <button id="tab-html" class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="html" role="tab" aria-selected="false" aria-controls="code-panel-html">HTML</button>
+              <button id="tab-typescript" class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="typescript" role="tab" aria-selected="false" aria-controls="code-panel-typescript">TypeScript</button>
+              <button id="tab-react" class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="react" role="tab" aria-selected="false" aria-controls="code-panel-react">React</button>
+              <button id="tab-vue" class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="vue" role="tab" aria-selected="false" aria-controls="code-panel-vue">Vue</button>
             </div>
 
             <div id="code-panel-vanilla-js" class="code-block relative" data-content="vanilla-js" role="tabpanel" aria-labelledby="tab-vanilla-js">
               <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-vanilla-js" class="language-javascript"></code></pre>
-              <button onclick="copyCode('code-vanilla-js')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy vanilla JavaScript code">Copy</button>
+              <button data-action="copy-code" data-target="code-vanilla-js" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy vanilla JavaScript code">Copy</button>
             </div>
 
             <div id="code-panel-html" class="code-block hidden relative" data-content="html" role="tabpanel" aria-labelledby="tab-html">
               <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-html" class="language-html"></code></pre>
-              <button onclick="copyCode('code-html')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy HTML code">Copy</button>
+              <button data-action="copy-code" data-target="code-html" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy HTML code">Copy</button>
             </div>
 
             <div id="code-panel-typescript" class="code-block hidden relative" data-content="typescript" role="tabpanel" aria-labelledby="tab-typescript">
               <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-typescript" class="language-typescript"></code></pre>
-              <button onclick="copyCode('code-typescript')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy TypeScript code">Copy</button>
+              <button data-action="copy-code" data-target="code-typescript" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy TypeScript code">Copy</button>
             </div>
 
             <div id="code-panel-react" class="code-block hidden relative" data-content="react" role="tabpanel" aria-labelledby="tab-react">
               <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-react" class="language-javascript"></code></pre>
-              <button onclick="copyCode('code-react')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy React code">Copy</button>
+              <button data-action="copy-code" data-target="code-react" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy React code">Copy</button>
             </div>
 
             <div id="code-panel-vue" class="code-block hidden relative" data-content="vue" role="tabpanel" aria-labelledby="tab-vue">
               <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-vue" class="language-html"></code></pre>
-              <button onclick="copyCode('code-vue')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy Vue code">Copy</button>
+              <button data-action="copy-code" data-target="code-vue" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy Vue code">Copy</button>
             </div>
           </div>
         </div>
@@ -500,7 +532,7 @@ ck.apply('#my-element', {
   radius: 20,
   smoothing: 0.8
 });</code></pre>
-          <button onclick="copyStaticExample('example-vanilla')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
+          <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- HTML Data Attributes -->
@@ -517,7 +549,7 @@ ck.apply('#my-element', {
 &lt;script&gt;
   CornerKit.auto();
 &lt;/script&gt;</code></pre>
-          <button onclick="copyStaticExample('example-html')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
+          <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- TypeScript -->
@@ -531,7 +563,7 @@ const config: SquircleConfig = {
   smoothing: 0.8
 };
 ck.apply('#my-element', config);</code></pre>
-          <button onclick="copyStaticExample('example-typescript')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
+          <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- React (teaser) -->
@@ -546,7 +578,7 @@ function MyComponent() {
     &lt;/Squircle&gt;
   );
 }</code></pre>
-          <button onclick="copyStaticExample('example-react')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
+          <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- Vue (teaser) -->
@@ -561,7 +593,7 @@ function MyComponent() {
 &lt;script setup&gt;
 import { Squircle } from '@cornerkit/vue';
 &lt;/script&gt;</code></pre>
-          <button onclick="copyStaticExample('example-vue')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
+          <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
       </div>
     </div>
@@ -580,7 +612,7 @@ import { Squircle } from '@cornerkit/vue';
   </footer>
 
   <!-- CornerKit library (local build until published to npm) -->
-  <script src="cornerkit.js"></script>
-  <script src="app.js"></script>
+  <script src="cornerkit.js" defer></script>
+  <script src="app.js" defer></script>
 </body>
 </html>
