@@ -1,4 +1,10 @@
 // ============================================================================
+// CornerKit Demo Website - Wrapped in IIFE to prevent global pollution
+// ============================================================================
+(function() {
+'use strict';
+
+// ============================================================================
 // Phase 2: Foundational Infrastructure
 // ============================================================================
 
@@ -133,18 +139,15 @@ function updateAllCodeSnippets(radius, smoothing) {
 // ----------------------------------------------------------------------------
 /**
  * Copies code snippet to clipboard
- * @param {string} formatOrId - Code format (vanilla-js, html, etc.) or element ID (code-vanilla-js)
+ * @param {string} targetId - Element ID to copy from
+ * @param {HTMLElement} button - Button that triggered the copy
  * @returns {Promise<void>}
  */
-async function copyCode(formatOrId) {
+async function copyCode(targetId, button) {
   try {
-    // Handle both formats: 'vanilla-js' or 'code-vanilla-js'
-    const format = formatOrId.startsWith('code-') ? formatOrId.substring(5) : formatOrId;
-    const elementId = formatOrId.startsWith('code-') ? formatOrId : `code-${formatOrId}`;
-
-    const codeElement = document.getElementById(elementId);
+    const codeElement = document.getElementById(targetId);
     if (!codeElement) {
-      throw new Error(`Code element not found: ${elementId}`);
+      throw new Error(`Code element not found: ${targetId}`);
     }
 
     const code = codeElement.textContent;
@@ -152,7 +155,7 @@ async function copyCode(formatOrId) {
     // Modern Clipboard API (Chrome 63+, Firefox 53+, Safari 13.1+)
     if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(code);
-      showCopyFeedback(format, 'success');
+      showCopyFeedback(button, 'success');
     } else {
       // Fallback for older browsers
       const textarea = document.createElement('textarea');
@@ -166,44 +169,45 @@ async function copyCode(formatOrId) {
       document.body.removeChild(textarea);
 
       if (success) {
-        showCopyFeedback(format, 'success');
+        showCopyFeedback(button, 'success');
       } else {
-        showCopyFeedback(format, 'fallback');
+        showCopyFeedback(button, 'fallback');
       }
     }
   } catch (error) {
     console.error('Copy failed:', error);
-    const format = formatOrId.startsWith('code-') ? formatOrId.substring(5) : formatOrId;
-    showCopyFeedback(format, 'error');
+    showCopyFeedback(button, 'error');
   }
 }
 
 /**
  * Shows visual feedback for copy action
- * @param {string} format - Code format
+ * @param {HTMLElement} button - Button element to show feedback on
  * @param {string} status - Feedback status (success, fallback, error)
  */
-function showCopyFeedback(format, status) {
-  const button = document.querySelector(`button[onclick*="copyCode('${format}')"]`);
+function showCopyFeedback(button, status) {
   if (!button) return;
 
   const originalText = button.textContent;
 
+  // Remove any existing state classes
+  button.classList.remove('btn-copy-success', 'btn-copy-error', 'btn-copy-fallback');
+
   if (status === 'success') {
     button.textContent = 'Copied!';
-    button.style.backgroundColor = 'var(--color-success, #10b981)';
+    button.classList.add('btn-copy-success');
   } else if (status === 'fallback') {
     button.textContent = 'Select & copy manually';
-    button.style.backgroundColor = 'var(--color-warning, #f59e0b)';
+    button.classList.add('btn-copy-fallback');
   } else {
     button.textContent = 'Copy failed';
-    button.style.backgroundColor = 'var(--color-error, #ef4444)';
+    button.classList.add('btn-copy-error');
   }
 
   // Reset button after 2 seconds
   setTimeout(() => {
     button.textContent = originalText;
-    button.style.backgroundColor = '';
+    button.classList.remove('btn-copy-success', 'btn-copy-error', 'btn-copy-fallback');
   }, 2000);
 }
 
@@ -278,16 +282,23 @@ document.addEventListener('keydown', (e) => {
     return;
   }
 
+  // Ignore if modifier keys are pressed (don't interfere with browser shortcuts)
+  if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) {
+    return;
+  }
+
   const key = e.key.toLowerCase();
 
   if (key === 'r') {
     // Reset to defaults
+    e.preventDefault();
     resetPlayground();
     console.log('⌨️ Keyboard shortcut: Reset to defaults (R)');
   }
 
   if (key === 'i') {
     // Inspect playground element
+    e.preventDefault();
     inspectPlayground();
     console.log('⌨️ Keyboard shortcut: Inspect element (I)');
   }
@@ -545,9 +556,10 @@ function initializeComparison() {
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
+    const context = this; // Preserve context
     const later = () => {
       clearTimeout(timeout);
-      func(...args);
+      func.apply(context, args);
     };
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
@@ -776,17 +788,18 @@ function initializeHero() {
 
 /**
  * Copies the npm install command to clipboard
+ * @param {HTMLElement} button - Button that triggered the copy
  */
-function copyInstallCommand() {
+function copyInstallCommand(button) {
   const command = 'npm install @cornerkit/core';
 
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(command).then(() => {
       console.log('📋 Install command copied to clipboard');
-      showInstallCopyFeedback('success');
+      showCopyFeedback(button, 'success');
     }).catch(error => {
       console.error('Copy failed:', error);
-      showInstallCopyFeedback('error');
+      showCopyFeedback(button, 'error');
     });
   } else {
     // Fallback
@@ -801,39 +814,11 @@ function copyInstallCommand() {
     document.body.removeChild(textarea);
 
     if (success) {
-      showInstallCopyFeedback('success');
+      showCopyFeedback(button, 'success');
     } else {
-      showInstallCopyFeedback('fallback');
+      showCopyFeedback(button, 'fallback');
     }
   }
-}
-
-/**
- * Shows feedback for install command copy
- * @param {string} status - Status (success, fallback, error)
- */
-function showInstallCopyFeedback(status) {
-  const button = document.querySelector('.hero-quickstart button');
-  if (!button) return;
-
-  const originalText = button.textContent;
-  const originalBg = button.style.backgroundColor;
-
-  if (status === 'success') {
-    button.textContent = 'Copied!';
-    button.style.backgroundColor = '#10b981';
-  } else if (status === 'fallback') {
-    button.textContent = 'Select & copy manually';
-    button.style.backgroundColor = '#f59e0b';
-  } else {
-    button.textContent = 'Copy failed';
-    button.style.backgroundColor = '#ef4444';
-  }
-
-  setTimeout(() => {
-    button.textContent = originalText;
-    button.style.backgroundColor = originalBg;
-  }, 2000);
 }
 
 // ============================================================================
@@ -842,12 +827,10 @@ function showInstallCopyFeedback(status) {
 
 /**
  * Copy code from static code examples in the Code Examples section
- * @param {string} exampleType - Type of example (example-vanilla, example-html, etc.)
+ * @param {HTMLElement} button - Button that triggered the copy
  */
-function copyStaticExample(exampleType) {
+function copyStaticExample(button) {
   try {
-    // Find the code example by button context
-    const button = event.target;
     const codeExample = button.closest('.code-example');
 
     if (!codeExample) {
@@ -864,10 +847,10 @@ function copyStaticExample(exampleType) {
     // Use modern Clipboard API or fallback
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(code).then(() => {
-        showCopyFeedbackForButton(button, 'success');
+        showCopyFeedback(button, 'success');
       }).catch(error => {
         console.error('Copy failed:', error);
-        showCopyFeedbackForButton(button, 'error');
+        showCopyFeedback(button, 'error');
       });
     } else {
       // Fallback for older browsers
@@ -882,50 +865,52 @@ function copyStaticExample(exampleType) {
       document.body.removeChild(textarea);
 
       if (success) {
-        showCopyFeedbackForButton(button, 'success');
+        showCopyFeedback(button, 'success');
       } else {
-        showCopyFeedbackForButton(button, 'fallback');
+        showCopyFeedback(button, 'fallback');
       }
     }
   } catch (error) {
     console.error('Static example copy failed:', error);
-    if (event.target) {
-      showCopyFeedbackForButton(event.target, 'error');
-    }
+    showCopyFeedback(button, 'error');
   }
 }
 
-/**
- * Shows visual feedback directly on a button element
- * @param {HTMLElement} button - Button element
- * @param {string} status - Feedback status (success, fallback, error)
- */
-function showCopyFeedbackForButton(button, status) {
-  const originalText = button.textContent;
-  const originalBg = button.style.backgroundColor;
 
-  if (status === 'success') {
-    button.textContent = 'Copied!';
-    button.style.backgroundColor = '#10b981';
-  } else if (status === 'fallback') {
-    button.textContent = 'Select & copy manually';
-    button.style.backgroundColor = '#f59e0b';
-  } else {
-    button.textContent = 'Copy failed';
-    button.style.backgroundColor = '#ef4444';
+// ============================================================================
+// Event Delegation - Handle all button clicks via delegation
+// ============================================================================
+document.addEventListener('click', (e) => {
+  const button = e.target.closest('[data-action]');
+  if (!button) return;
+
+  const action = button.dataset.action;
+
+  switch (action) {
+    case 'copy-code':
+      e.preventDefault();
+      const targetId = button.dataset.target;
+      if (targetId) {
+        copyCode(targetId, button);
+      }
+      break;
+
+    case 'copy-install':
+      e.preventDefault();
+      copyInstallCommand(button);
+      break;
+
+    case 'copy-static-example':
+      e.preventDefault();
+      copyStaticExample(button);
+      break;
+
+    default:
+      console.warn('Unknown action:', action);
   }
-
-  // Reset button after 2 seconds
-  setTimeout(() => {
-    button.textContent = originalText;
-    button.style.backgroundColor = originalBg;
-  }, 2000);
-}
+});
 
 // ============================================================================
-// Global API (for inline onclick handlers and debugging)
+// End of IIFE
 // ============================================================================
-window.copyCode = copyCode;
-window.copyStaticExample = copyStaticExample;
-window.resetPlayground = resetPlayground;
-window.inspectPlayground = inspectPlayground;
+})();

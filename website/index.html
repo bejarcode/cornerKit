@@ -9,6 +9,7 @@
   <meta name="description" content="A lightweight JavaScript library for implementing iOS-style squircle (continuous curve) corners on web elements. Zero dependencies, 3.66 KB gzipped, 98%+ browser support.">
   <meta name="keywords" content="squircle, superellipse, rounded corners, iOS design, web components, javascript library, border-radius alternative">
   <meta name="author" content="CornerKit">
+  <link rel="canonical" href="https://bejarcode.github.io/cornerkit/">
 
   <!-- Open Graph Meta Tags -->
   <meta property="og:title" content="CornerKit - iOS-style squircle corners for the web">
@@ -18,7 +19,7 @@
   <meta property="og:image" content="https://bejarcode.github.io/cornerkit/assets/og-image.png">
 
   <!-- Security -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -26,10 +27,33 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Structured Data (JSON-LD) for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CornerKit",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web",
+    "description": "A lightweight JavaScript library for implementing iOS-style squircle corners on web elements",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "CornerKit"
+    }
+  }
+  </script>
 </head>
 <body>
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
   <!-- Hero Section -->
-  <section id="hero">
+  <section id="hero" role="banner">
     <div class="hero-content">
       <h1>iOS-style squircle corners for the web</h1>
       <p class="hero-subtitle">A lightweight, zero-dependency JavaScript library for smooth, continuous curve corners</p>
@@ -64,19 +88,19 @@
       <div class="hero-cta">
         <a href="#playground" class="btn btn-primary">Try Playground</a>
         <a href="https://github.com/bejarcode/cornerkit" class="btn btn-secondary">View on GitHub</a>
-        <button class="btn btn-secondary" onclick="copyInstallCommand()" aria-label="Copy npm install command">npm Install</button>
+        <button class="btn btn-secondary" data-action="copy-install" aria-label="Copy npm install command">npm Install</button>
       </div>
 
       <div class="hero-quickstart">
         <pre><code id="install-command">npm install @cornerkit/core</code></pre>
-        <button onclick="copyCode('install-command')" aria-label="Copy install command">Copy</button>
+        <button data-action="copy-code" data-target="install-command" aria-label="Copy install command">Copy</button>
       </div>
     </div>
   </section>
 
   <!-- Playground Section -->
-  <section id="playground">
-    <div class="container">
+  <section id="playground" role="main">
+    <div id="main-content" class="container">
       <h2>Live Interactive Playground</h2>
       <p>Adjust the sliders to see real-time updates and generate code snippets</p>
 
@@ -136,36 +160,36 @@
           <h3>Generated Code</h3>
 
           <div class="code-tabs" role="tablist" aria-label="Code format tabs">
-            <button class="tab-btn active" data-tab="vanilla-js" role="tab" aria-selected="true" aria-controls="code-panel-vanilla-js">Vanilla JS</button>
-            <button class="tab-btn" data-tab="html" role="tab" aria-selected="false" aria-controls="code-panel-html">HTML</button>
-            <button class="tab-btn" data-tab="typescript" role="tab" aria-selected="false" aria-controls="code-panel-typescript">TypeScript</button>
-            <button class="tab-btn" data-tab="react" role="tab" aria-selected="false" aria-controls="code-panel-react">React</button>
-            <button class="tab-btn" data-tab="vue" role="tab" aria-selected="false" aria-controls="code-panel-vue">Vue</button>
+            <button id="tab-vanilla-js" class="tab-btn active" data-tab="vanilla-js" role="tab" aria-selected="true" aria-controls="code-panel-vanilla-js">Vanilla JS</button>
+            <button id="tab-html" class="tab-btn" data-tab="html" role="tab" aria-selected="false" aria-controls="code-panel-html">HTML</button>
+            <button id="tab-typescript" class="tab-btn" data-tab="typescript" role="tab" aria-selected="false" aria-controls="code-panel-typescript">TypeScript</button>
+            <button id="tab-react" class="tab-btn" data-tab="react" role="tab" aria-selected="false" aria-controls="code-panel-react">React</button>
+            <button id="tab-vue" class="tab-btn" data-tab="vue" role="tab" aria-selected="false" aria-controls="code-panel-vue">Vue</button>
           </div>
 
           <div id="code-panel-vanilla-js" class="code-block active" data-content="vanilla-js" role="tabpanel" aria-labelledby="tab-vanilla-js">
             <pre><code id="code-vanilla-js" class="language-javascript"></code></pre>
-            <button onclick="copyCode('code-vanilla-js')" aria-label="Copy vanilla JavaScript code">Copy</button>
+            <button data-action="copy-code" data-target="code-vanilla-js" aria-label="Copy vanilla JavaScript code">Copy</button>
           </div>
 
           <div id="code-panel-html" class="code-block" data-content="html" role="tabpanel" aria-labelledby="tab-html">
             <pre><code id="code-html" class="language-html"></code></pre>
-            <button onclick="copyCode('code-html')" aria-label="Copy HTML code">Copy</button>
+            <button data-action="copy-code" data-target="code-html" aria-label="Copy HTML code">Copy</button>
           </div>
 
           <div id="code-panel-typescript" class="code-block" data-content="typescript" role="tabpanel" aria-labelledby="tab-typescript">
             <pre><code id="code-typescript" class="language-typescript"></code></pre>
-            <button onclick="copyCode('code-typescript')" aria-label="Copy TypeScript code">Copy</button>
+            <button data-action="copy-code" data-target="code-typescript" aria-label="Copy TypeScript code">Copy</button>
           </div>
 
           <div id="code-panel-react" class="code-block" data-content="react" role="tabpanel" aria-labelledby="tab-react">
             <pre><code id="code-react" class="language-javascript"></code></pre>
-            <button onclick="copyCode('code-react')" aria-label="Copy React code">Copy</button>
+            <button data-action="copy-code" data-target="code-react" aria-label="Copy React code">Copy</button>
           </div>
 
           <div id="code-panel-vue" class="code-block" data-content="vue" role="tabpanel" aria-labelledby="tab-vue">
             <pre><code id="code-vue" class="language-html"></code></pre>
-            <button onclick="copyCode('code-vue')" aria-label="Copy Vue code">Copy</button>
+            <button data-action="copy-code" data-target="code-vue" aria-label="Copy Vue code">Copy</button>
           </div>
         </div>
       </div>
@@ -258,23 +282,52 @@
         <div class="gallery-category">
           <h3>Images</h3>
           <div class="demo-image-wrapper">
-            <img id="image-avatar-1" class="demo-avatar" src="https://via.placeholder.com/80" alt="Avatar 1">
+            <svg id="image-avatar-1" class="demo-avatar" width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-label="Avatar placeholder 1">
+              <rect width="80" height="80" fill="#e0f2fe"/>
+              <circle cx="40" cy="30" r="12" fill="#3b82f6"/>
+              <path d="M 20 60 Q 40 50 60 60 L 60 80 L 20 80 Z" fill="#3b82f6"/>
+            </svg>
             <p class="example-label">Avatar: radius 40px, smoothing: 0.85</p>
           </div>
           <div class="demo-image-wrapper">
-            <img id="image-avatar-2" class="demo-avatar" src="https://via.placeholder.com/80" alt="Avatar 2">
+            <svg id="image-avatar-2" class="demo-avatar" width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-label="Avatar placeholder 2">
+              <rect width="80" height="80" fill="#fef3c7"/>
+              <circle cx="40" cy="30" r="12" fill="#f59e0b"/>
+              <path d="M 20 60 Q 40 50 60 60 L 60 80 L 20 80 Z" fill="#f59e0b"/>
+            </svg>
             <p class="example-label">Avatar: radius 40px, smoothing: 0.85</p>
           </div>
           <div class="demo-image-wrapper">
-            <img id="image-thumbnail-1" class="demo-thumbnail" src="https://via.placeholder.com/200x150" alt="Thumbnail 1">
+            <svg id="image-thumbnail-1" class="demo-thumbnail" width="200" height="150" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" aria-label="Thumbnail placeholder 1">
+              <rect width="200" height="150" fill="#e0e7ff"/>
+              <circle cx="60" cy="50" r="20" fill="#6366f1"/>
+              <rect x="120" y="30" width="60" height="8" fill="#6366f1"/>
+              <rect x="120" y="45" width="50" height="6" fill="#a5b4fc"/>
+              <rect x="120" y="57" width="55" height="6" fill="#a5b4fc"/>
+            </svg>
             <p class="example-label">Thumbnail: radius 16px, smoothing: 0.8</p>
           </div>
           <div class="demo-image-wrapper">
-            <img id="image-thumbnail-2" class="demo-thumbnail" src="https://via.placeholder.com/200x150" alt="Thumbnail 2">
+            <svg id="image-thumbnail-2" class="demo-thumbnail" width="200" height="150" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" aria-label="Thumbnail placeholder 2">
+              <rect width="200" height="150" fill="#f0fdf4"/>
+              <circle cx="60" cy="50" r="20" fill="#10b981"/>
+              <rect x="120" y="30" width="60" height="8" fill="#10b981"/>
+              <rect x="120" y="45" width="50" height="6" fill="#6ee7b7"/>
+              <rect x="120" y="57" width="55" height="6" fill="#6ee7b7"/>
+            </svg>
             <p class="example-label">Thumbnail: radius 16px, smoothing: 0.8</p>
           </div>
           <div class="demo-image-wrapper full-width">
-            <img id="image-hero" class="demo-hero" src="https://via.placeholder.com/600x300" alt="Hero image">
+            <svg id="image-hero" class="demo-hero" width="600" height="300" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" aria-label="Hero image placeholder">
+              <defs>
+                <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <rect width="600" height="300" fill="url(#heroGradient)"/>
+              <text x="300" y="150" font-family="Arial, sans-serif" font-size="48" fill="white" text-anchor="middle" dominant-baseline="middle" opacity="0.9">Hero Image</text>
+            </svg>
             <p class="example-label">Hero: radius 24px, smoothing: 0.85</p>
           </div>
         </div>
@@ -434,7 +487,7 @@ ck.apply('#my-element', {
   radius: 20,
   smoothing: 0.8
 });</code></pre>
-          <button onclick="copyStaticExample('example-vanilla')" class="btn btn-sm">Copy</button>
+          <button data-action="copy-static-example" class="btn btn-sm">Copy</button>
         </div>
 
         <!-- HTML Data Attributes -->
@@ -451,7 +504,7 @@ ck.apply('#my-element', {
 &lt;script&gt;
   CornerKit.auto();
 &lt;/script&gt;</code></pre>
-          <button onclick="copyStaticExample('example-html')" class="btn btn-sm">Copy</button>
+          <button data-action="copy-static-example" class="btn btn-sm">Copy</button>
         </div>
 
         <!-- TypeScript -->
@@ -465,7 +518,7 @@ const config: SquircleConfig = {
   smoothing: 0.8
 };
 ck.apply('#my-element', config);</code></pre>
-          <button onclick="copyStaticExample('example-typescript')" class="btn btn-sm">Copy</button>
+          <button data-action="copy-static-example" class="btn btn-sm">Copy</button>
         </div>
 
         <!-- React (teaser) -->
@@ -480,7 +533,7 @@ function MyComponent() {
     &lt;/Squircle&gt;
   );
 }</code></pre>
-          <button onclick="copyStaticExample('example-react')" class="btn btn-sm">Copy</button>
+          <button data-action="copy-static-example" class="btn btn-sm">Copy</button>
         </div>
 
         <!-- Vue (teaser) -->
@@ -495,7 +548,7 @@ function MyComponent() {
 &lt;script setup&gt;
 import { Squircle } from '@cornerkit/vue';
 &lt;/script&gt;</code></pre>
-          <button onclick="copyStaticExample('example-vue')" class="btn btn-sm">Copy</button>
+          <button data-action="copy-static-example" class="btn btn-sm">Copy</button>
         </div>
       </div>
     </div>
@@ -513,9 +566,16 @@ import { Squircle } from '@cornerkit/vue';
     </div>
   </footer>
 
-  <!-- CornerKit from CDN with fallback -->
-  <script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.0/dist/cornerkit.js"
-          onerror="this.onerror=null; this.src='https://unpkg.com/@cornerkit/core@1.0.0/dist/cornerkit.js'"></script>
-  <script src="app.js"></script>
+  <!-- Noscript fallback for users without JavaScript -->
+  <noscript>
+    <div style="padding: 40px; text-align: center; background: #fef3c7; border: 2px solid #f59e0b; margin: 20px; border-radius: 8px;">
+      <h2>JavaScript Required</h2>
+      <p>This interactive demo requires JavaScript to be enabled. CornerKit itself works with JavaScript, but you can still view the documentation and examples on our <a href="https://github.com/bejarcode/cornerkit">GitHub repository</a>.</p>
+    </div>
+  </noscript>
+
+  <!-- CornerKit from CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.0/dist/cornerkit.js"></script>
+  <script defer src="app.js"></script>
 </body>
 </html>

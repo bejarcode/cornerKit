@@ -8,10 +8,12 @@
   --color-secondary: #64748b;
   --color-text: #1f2937;
   --color-text-light: #6b7280;
+  --color-text-muted: #9ca3af;
   --color-bg: #ffffff;
   --color-bg-alt: #f9fafb;
   --color-border: #e5e7eb;
   --color-success: #10b981;
+  --color-warning: #f59e0b;
   --color-error: #ef4444;
 
   /* Spacing */
@@ -74,7 +76,13 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
+}
+
+/* Smooth scroll only for users who don't prefer reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
@@ -149,11 +157,30 @@ input, textarea, select {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
   }
+}
+
+/* =============================================================================
+   Accessibility - Skip Link
+   ============================================================================= */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 var(--radius-sm) 0;
+}
+
+.skip-link:focus {
+  top: 0;
 }
 
 /* =============================================================================
@@ -214,6 +241,22 @@ section {
 .btn:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* Copy button states */
+.btn-copy-success {
+  background: var(--color-success) !important;
+  color: white !important;
+}
+
+.btn-copy-error {
+  background: var(--color-error) !important;
+  color: white !important;
+}
+
+.btn-copy-fallback {
+  background: var(--color-warning) !important;
+  color: white !important;
 }
 
 kbd {
@@ -367,6 +410,7 @@ kbd {
   border-radius: 3px;
   background: var(--color-bg-alt);
   outline: none;
+  appearance: none;
   -webkit-appearance: none;
 }
 
@@ -538,44 +582,20 @@ kbd {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* Button Styles */
-.btn-primary {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-primary:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
-}
-
-.btn-secondary {
-  background: transparent;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
-  cursor: pointer;
-}
-
-.btn-secondary:hover {
-  background: var(--color-primary);
-  color: white;
-}
-
-.btn-ghost {
+/* Gallery Button Styles */
+.demo-button.btn-ghost {
   background: transparent;
   color: var(--color-text);
   border: 2px solid #cbd5e1;
   cursor: pointer;
 }
 
-.btn-ghost:hover {
+.demo-button.btn-ghost:hover {
   background: var(--color-bg-alt);
   border-color: #94a3b8;
 }
 
-.btn-disabled {
+.demo-button.btn-disabled {
   background: #f1f5f9;
   color: #94a3b8;
   border: 2px solid #e2e8f0;
@@ -1039,4 +1059,126 @@ kbd {
 *:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* =============================================================================
+   Dark Mode Support
+   ============================================================================= */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text: #f9fafb;
+    --color-text-light: #d1d5db;
+    --color-text-muted: #6b7280;
+    --color-bg: #111827;
+    --color-bg-alt: #1f2937;
+    --color-border: #374151;
+  }
+
+  .hero-demo {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .demo-card,
+  .code-example,
+  .demo-modal,
+  .tier-hierarchy,
+  .browser-matrix table {
+    background: var(--color-bg-alt);
+    border-color: var(--color-border);
+  }
+
+  .code-block pre,
+  .install-section pre,
+  .code-example pre {
+    background: #0f172a;
+    border-color: var(--color-border);
+  }
+
+  .playground-preview {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d3748 100%);
+    border-color: var(--color-primary);
+  }
+
+  .comparison-element {
+    background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%);
+    border-color: var(--color-warning);
+  }
+
+  .demo-input,
+  .demo-textarea {
+    background: var(--color-bg-alt);
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+}
+
+/* =============================================================================
+   Print Styles
+   ============================================================================= */
+@media print {
+  /* Hide interactive elements */
+  .hero-cta,
+  .playground-controls,
+  .code-tabs,
+  .code-block button,
+  .code-example button,
+  button,
+  .comparison-controls,
+  .skip-link {
+    display: none !important;
+  }
+
+  /* Simplify colors for print */
+  body {
+    background: white;
+    color: black;
+  }
+
+  #hero {
+    background: white;
+    color: black;
+    min-height: auto;
+    padding: 20px;
+  }
+
+  .hero-demo {
+    display: none;
+  }
+
+  /* Show all code panels for print */
+  .code-block {
+    display: block !important;
+    page-break-inside: avoid;
+    margin-bottom: 20px;
+  }
+
+  .code-block pre {
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+  }
+
+  /* Clean up sections */
+  section {
+    page-break-inside: avoid;
+    padding: 20px 0;
+  }
+
+  /* Remove shadows and gradients */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Ensure links are visible */
+  a {
+    text-decoration: underline;
+    color: #0000EE;
+  }
+
+  /* Add URL after links */
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
 }
