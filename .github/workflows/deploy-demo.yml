@@ -2,7 +2,7 @@ name: Deploy Demo to GitHub Pages
 
 on:
   push:
-    branches: [002-demo-website]  # Deploy from demo branch
+    branches: [main]  # Deploy from main branch
     paths:
       - 'website/**'
   workflow_dispatch:  # Allow manual trigger
