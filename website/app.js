@@ -11,7 +11,16 @@
 // ----------------------------------------------------------------------------
 // T010: Initialize CornerKit
 // ----------------------------------------------------------------------------
+console.log('🔍 Debug: window.CornerKit =', window.CornerKit);
+console.log('🔍 Debug: window.CornerKit.default =', window.CornerKit?.default);
+
+if (!window.CornerKit || !window.CornerKit.default) {
+  console.error('❌ CornerKit library not loaded! Check if cornerkit.js is loaded before app.js');
+  throw new Error('CornerKit library not available');
+}
+
 const ck = new window.CornerKit.default();
+console.log('✅ CornerKit instance created:', ck);
 
 // ----------------------------------------------------------------------------
 // T015: Code Generation Engine (5 format templates)
@@ -118,6 +127,7 @@ function generateCode(format, radius, smoothing) {
  * @param {number} smoothing - Current smoothing value
  */
 function updateAllCodeSnippets(radius, smoothing) {
+  console.log('🔍 updateAllCodeSnippets called with radius:', radius, 'smoothing:', smoothing);
   const formats = ['vanilla-js', 'html', 'typescript', 'react', 'vue'];
 
   formats.forEach(format => {
@@ -126,10 +136,13 @@ function updateAllCodeSnippets(radius, smoothing) {
       try {
         const code = generateCode(format, radius, smoothing);
         codeElement.textContent = code;
+        console.log(`✅ Generated ${format} code (${code.length} chars)`);
       } catch (error) {
-        console.error(`Failed to generate ${format} code:`, error);
+        console.error(`❌ Failed to generate ${format} code:`, error);
         codeElement.textContent = '// Error generating code';
       }
+    } else {
+      console.warn(`⚠️ Code element #code-${format} not found in DOM`);
     }
   });
 }
@@ -405,10 +418,6 @@ const exampleComponents = [
 
   // Navigation - Breadcrumbs
   { id: 'nav-breadcrumbs', category: 'navigation', variant: 'breadcrumbs', radius: 8, smoothing: 0.7 },
-
-  // Images - Avatars
-  { id: 'image-avatar-1', category: 'image', variant: 'avatar', radius: 40, smoothing: 0.85 },
-  { id: 'image-avatar-2', category: 'image', variant: 'avatar', radius: 40, smoothing: 0.85 },
 
   // Images - Thumbnails
   { id: 'image-thumbnail-1', category: 'image', variant: 'thumbnail', radius: 16, smoothing: 0.8 },
@@ -723,6 +732,8 @@ function switchCodeTab(tabName) {
  */
 function initializeDemo() {
   console.log('🚀 CornerKit Demo Website initialized');
+  console.log('🔍 DOM ready state:', document.readyState);
+  console.log('🔍 CornerKit instance:', ck);
 
   // Display browser tier
   displayBrowserTier();
@@ -763,6 +774,9 @@ function initializeDemo() {
     });
   });
 
+  // Ensure first tab (vanilla-js) is visible and active
+  switchCodeTab('vanilla-js');
+
   // Initialize gallery examples
   const galleryCount = applyToGalleryExamples();
   console.log(`📸 Gallery ready with ${galleryCount} examples`);
@@ -776,12 +790,18 @@ function initializeDemo() {
   console.log('  I - Inspect playground element');
 }
 
-// Wait for DOM to be ready, then initialize
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeDemo);
-} else {
-  initializeDemo();
-}
+  // Wait for DOM to be ready, then initialize
+  // Use a small delay to ensure all scripts are loaded
+  function startInitialization() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeDemo);
+    } else {
+      // DOM is already ready, but wait a tick to ensure scripts are fully loaded
+      setTimeout(initializeDemo, 0);
+    }
+  }
+
+  startInitialization();
 
 // ============================================================================
 // Phase 8: User Story 6 - Landing Page & Hero Section

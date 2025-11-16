@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2025-11-16
+
+### Fixed
+- Safari clip-path detection now uses runtime feature test as fallback
+- Safari's CSS.supports() incorrectly returns false for path(), causing fallback to border-radius
+- Added dual detection: CSS.supports first, then runtime element test for Safari compatibility
+- Safari 13.1+ now correctly uses SVG clip-path tier instead of border-radius fallback
+
+### Added
+- Interactive demo website at https://bejarcode.github.io/cornerKit/
+- Live playground with adjustable radius and smoothing sliders
+- Visual gallery with 36+ UI component examples
+- Side-by-side comparison: squircles vs standard border-radius
+- Browser compatibility detector
+- Code generator for 5 formats (Vanilla JS, HTML, TypeScript, React, Vue)
+
 ## [1.0.0] - 2025-11-12
 
 ### Added
@@ -134,5 +150,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Working vanilla JavaScript example with interactive demo
 - CHANGELOG.md following Keep a Changelog format
 
-[Unreleased]: https://github.com/bejarcode/cornerkit/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/bejarcode/cornerkit/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/bejarcode/cornerkit/compare/v1.0.0...v1.0.2
 [1.0.0]: https://github.com/bejarcode/cornerkit/releases/tag/v1.0.0

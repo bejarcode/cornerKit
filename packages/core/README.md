@@ -132,13 +132,13 @@ ck.destroy();
 ```html
 <!-- ES Module -->
 <script type="module">
-  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.0/dist/cornerkit.esm.js';
+  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.2/dist/cornerkit.esm.js';
   const ck = new CornerKit();
   ck.apply('.squircle', { radius: 24, smoothing: 0.6 });
 </script>
 
 <!-- UMD (Global) -->
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.0/dist/cornerkit.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.2/dist/cornerkit.js"></script>
 <script>
   const ck = new CornerKit();
   ck.apply('.squircle', { radius: 24, smoothing: 0.6 });

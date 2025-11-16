@@ -10,6 +10,8 @@
 [![Test Coverage](https://img.shields.io/badge/coverage-97.9%25-brightgreen)](packages/core/tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+**[Live Demo](https://bejarcode.github.io/cornerKit/)** - Interactive playground with 36+ UI examples
+
 CornerKit is a lightweight JavaScript library that brings the smooth, continuous curve corners (squircles) from iOS design to the web. At just **3.66 KB gzipped** with **zero runtime dependencies**, it delivers pixel-perfect rounded corners that look better than standard CSS `border-radius`.
 
 ## Why Squircles?
@@ -263,13 +265,13 @@ Working examples with interactive demos:
 ```html
 <!-- ES Module -->
 <script type="module">
-  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.0/dist/cornerkit.esm.js';
+  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.2/dist/cornerkit.esm.js';
   const ck = new CornerKit();
   ck.apply('.card', { radius: 24, smoothing: 0.6 });
 </script>
 
 <!-- UMD (Global) -->
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.0/dist/cornerkit.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.2/dist/cornerkit.js"></script>
 <script>
   const ck = new CornerKit();
   ck.apply('.card', { radius: 24, smoothing: 0.6 });

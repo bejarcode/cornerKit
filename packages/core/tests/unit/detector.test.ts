@@ -104,7 +104,8 @@ describe('CapabilityDetector', () => {
       expect(CSS.supports).toHaveBeenCalledWith('clip-path', 'path("")');
     });
 
-    it('should return false when clip-path is not supported', () => {
+    it('should detect clip-path via runtime DOM test when CSS.supports returns false', () => {
+      // Simulates Safari behavior: CSS.supports() returns false but DOM supports clip-path
       global.CSS = {
         supports: vi.fn(() => false),
       } as any;
@@ -112,7 +113,8 @@ describe('CapabilityDetector', () => {
       const detector = CapabilityDetector.getInstance();
       const support = detector.supports();
 
-      expect(support.clippath).toBe(false);
+      // In happy-dom (and Safari), the runtime DOM test will detect clip-path support
+      expect(support.clippath).toBe(true);
     });
   });
 
@@ -205,13 +207,16 @@ describe('CapabilityDetector', () => {
       expect(detector.detectTier()).toBe(RendererTier.CLIPPATH);
     });
 
-    it('should return FALLBACK when no modern features are supported', () => {
+    it('should return CLIPPATH when CSS.supports returns false but runtime DOM test succeeds', () => {
+      // Simulates Safari behavior: CSS.supports() returns false but DOM supports clip-path
       global.CSS = {
         supports: vi.fn(() => false),
       } as any;
 
       const detector = CapabilityDetector.getInstance();
-      expect(detector.detectTier()).toBe(RendererTier.FALLBACK);
+      // In happy-dom (and Safari), the runtime DOM test will detect clip-path support
+      // even when CSS.supports() returns false
+      expect(detector.detectTier()).toBe(RendererTier.CLIPPATH);
     });
 
     it('should return FALLBACK when CSS is undefined', () => {
