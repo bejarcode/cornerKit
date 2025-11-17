@@ -62,6 +62,49 @@
 }
 
 /* =============================================================================
+   Squircle Fallback (Prevents FOUC - Flash of Unstyled Content)
+   Pre-applies border-radius while JavaScript loads the squircle mask
+   ============================================================================= */
+[data-squircle] {
+  border-radius: var(--squircle-radius, 20px);
+}
+
+/* Playground preview element */
+#playground-preview {
+  border-radius: var(--squircle-radius, 20px);
+}
+
+/* Hero showcase element */
+#hero-showcase {
+  border-radius: var(--squircle-radius, 24px);
+}
+
+/* Gallery elements - apply fallback border-radius immediately */
+[id^="gallery-"],
+[id^="button-"],
+[id^="card-"],
+[id^="modal-"],
+[id^="nav-"],
+[id^="image-"],
+[id^="form-"] {
+  border-radius: var(--squircle-radius, 20px);
+}
+
+/* Smooth transition when clip-path is applied */
+#playground-preview,
+#hero-showcase,
+[data-squircle],
+[id^="gallery-"],
+[id^="button-"],
+[id^="card-"],
+[id^="modal-"],
+[id^="nav-"],
+[id^="image-"],
+[id^="form-"] {
+  transition: clip-path 0.15s ease-out;
+}
+
+/* =============================================================================
    CSS Reset & Base Styles
    ============================================================================= */
 *, *::before, *::after {

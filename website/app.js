@@ -231,17 +231,11 @@ function showCopyFeedback(button, status) {
  * @returns {string} Browser tier (Tier 1, Tier 2, Tier 3, or Tier 4)
  */
 function detectBrowserTier() {
-  // Check for Native CSS corner-shape (Tier 1)
-  if (CSS.supports && CSS.supports('corner-shape', 'squircle')) {
-    return 'Tier 1: Native CSS';
-  }
+  // Note: Native CSS corner-shape (Tier 1) and Houdini Paint API (Tier 2) are disabled
+  // Chrome falsely reports CSS.supports('corner-shape', 'squircle') as true but doesn't render it
+  // Houdini detection only checks for paintWorklet API, not actual squircle worklet registration
 
-  // Check for Houdini Paint API (Tier 2)
-  if ('paintWorklet' in CSS) {
-    return 'Tier 2: Houdini Paint API';
-  }
-
-  // Check for SVG clip-path (Tier 3)
+  // Check for SVG clip-path (Tier 3) - Current primary implementation
   // Safari has issues with CSS.supports() for path(), so test both methods
   if (testClipPathSupport()) {
     return 'Tier 3: SVG ClipPath';
@@ -752,6 +746,13 @@ function initializeDemo() {
     // Apply squircle to playground preview
     ck.apply('#playground-preview', { radius: initialRadius, smoothing: initialSmoothing });
 
+    // Mark as ready to prevent FOUC - swap pending class for ready class
+    const preview = document.getElementById('playground-preview');
+    if (preview) {
+      preview.classList.remove('squircle-pending');
+      preview.classList.add('squircle-ready');
+    }
+
     // Initialize code snippets with default values
     updateAllCodeSnippets(initialRadius, initialSmoothing);
 
@@ -816,6 +817,13 @@ function initializeHero() {
     radius: 40,
     smoothing: 0.85
   });
+
+  // Mark as ready to prevent FOUC
+  const heroDemo = document.getElementById('hero-demo');
+  if (heroDemo) {
+    heroDemo.classList.remove('squircle-pending');
+    heroDemo.classList.add('squircle-ready');
+  }
 
   // Setup smooth scroll for CTA buttons
   const playgroundCTA = document.querySelector('a[href="#playground"]');

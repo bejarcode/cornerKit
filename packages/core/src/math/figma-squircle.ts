@@ -32,14 +32,29 @@ function toRadians(degrees: number): number {
  *
  * @param cornerRadius - Corner radius in pixels
  * @param cornerSmoothing - Smoothing factor 0-1 (0.6 = iOS squircle)
+ * @param roundingAndSmoothingBudget - Maximum space available for the corner path
+ * @param preserveSmoothing - If true, maintain smoothing aesthetic by adjusting bezier handles instead of reducing smoothing
  * @returns Path parameters for drawing the corner
  */
 export function getPathParamsForCorner(
   cornerRadius: number,
-  cornerSmoothing: number
+  cornerSmoothing: number,
+  roundingAndSmoothingBudget: number = Infinity,
+  preserveSmoothing: boolean = true
 ): CornerPathParams {
   // Total corner path length
-  const p = (1 + cornerSmoothing) * cornerRadius;
+  let p = (1 + cornerSmoothing) * cornerRadius;
+
+  // When there's not enough space (p > budget), we have two options:
+  // 1. preserveSmoothing = false (Figma's default): reduce smoothing to fit budget
+  //    This changes the arcMeasure angle, making corners look like circular arcs
+  // 2. preserveSmoothing = true: keep original smoothing, adjust bezier handles
+  //    This maintains the squircle aesthetic even when space is limited
+  if (!preserveSmoothing && p > roundingAndSmoothingBudget) {
+    const maxCornerSmoothing = roundingAndSmoothingBudget / cornerRadius - 1;
+    cornerSmoothing = Math.max(0, Math.min(cornerSmoothing, maxCornerSmoothing));
+    p = Math.min(p, roundingAndSmoothingBudget);
+  }
 
   // Arc angle in degrees (90° when smoothing=0, 0° when smoothing=1)
   const arcMeasure = 90 * (1 - cornerSmoothing);
@@ -63,8 +78,36 @@ export function getPathParamsForCorner(
 
   // Bezier handle lengths
   // The remaining length after arc and transitions is split into 3 parts (1/3 for b, 2/3 for a)
-  const b = (p - arcSectionLength - c - d) / 3;
-  const a = 2 * b;
+  let b = (p - arcSectionLength - c - d) / 3;
+  let a = 2 * b;
+
+  // Adjust bezier handles if preserveSmoothing is enabled and we exceed the budget
+  // This maintains the squircle S-curve characteristic while fitting within space constraints
+  if (preserveSmoothing && p > roundingAndSmoothingBudget) {
+    // Calculate how much we need to scale down
+    const scaleFactor = roundingAndSmoothingBudget / p;
+
+    // Proportionally scale all components to maintain smooth curve character
+    // This keeps the relative proportions between a, b, c, d the same
+    // This approach maintains the smooth S-curve without kinks
+    const scaledA = a * scaleFactor;
+    const scaledB = b * scaleFactor;
+    const scaledC = c * scaleFactor;
+    const scaledD = d * scaleFactor;
+    const scaledArcLength = arcSectionLength * scaleFactor;
+
+    // Use proportional scaling - this maintains smooth curves
+    // by keeping the same relative proportions between all parameters
+    return {
+      a: scaledA,
+      b: scaledB,
+      c: scaledC,
+      d: scaledD,
+      p: roundingAndSmoothingBudget,
+      arcSectionLength: scaledArcLength,
+      cornerRadius,
+    };
+  }
 
   return {
     a,
@@ -95,11 +138,15 @@ export function drawTopRightCorner(params: CornerPathParams): string {
   }
 
   // First bezier curve (horizontal to arc transition)
-  // Then arc
+  // Then arc (skip if degenerate to avoid rendering artifacts)
   // Then second bezier curve (arc to vertical transition)
+  const arcCommand = arcSectionLength > 0.01
+    ? `a ${round(cornerRadius)} ${round(cornerRadius)} 0 0 1 ${round(arcSectionLength)} ${round(arcSectionLength)}`
+    : '';
+
   return `
     c ${round(a)} 0 ${round(a + b)} 0 ${round(a + b + c)} ${round(d)}
-    a ${round(cornerRadius)} ${round(cornerRadius)} 0 0 1 ${round(arcSectionLength)} ${round(arcSectionLength)}
+    ${arcCommand}
     c ${round(d)} ${round(c)} ${round(d)} ${round(b + c)} ${round(d)} ${round(a + b + c)}
   `.trim().replace(/\s+/g, ' ');
 }
@@ -114,9 +161,13 @@ export function drawBottomRightCorner(params: CornerPathParams): string {
     return `l 0 ${round(params.p)}`;
   }
 
+  const arcCommand = arcSectionLength > 0.01
+    ? `a ${round(cornerRadius)} ${round(cornerRadius)} 0 0 1 ${round(-arcSectionLength)} ${round(arcSectionLength)}`
+    : '';
+
   return `
     c 0 ${round(a)} 0 ${round(a + b)} ${round(-d)} ${round(a + b + c)}
-    a ${round(cornerRadius)} ${round(cornerRadius)} 0 0 1 ${round(-arcSectionLength)} ${round(arcSectionLength)}
+    ${arcCommand}
     c ${round(-c)} ${round(d)} ${round(-b - c)} ${round(d)} ${round(-a - b - c)} ${round(d)}
   `.trim().replace(/\s+/g, ' ');
 }
@@ -131,9 +182,13 @@ export function drawBottomLeftCorner(params: CornerPathParams): string {
     return `l ${round(-params.p)} 0`;
   }
 
+  const arcCommand = arcSectionLength > 0.01
+    ? `a ${round(cornerRadius)} ${round(cornerRadius)} 0 0 1 ${round(-arcSectionLength)} ${round(-arcSectionLength)}`
+    : '';
+
   return `
     c ${round(-a)} 0 ${round(-a - b)} 0 ${round(-a - b - c)} ${round(-d)}
-    a ${round(cornerRadius)} ${round(cornerRadius)} 0 0 1 ${round(-arcSectionLength)} ${round(-arcSectionLength)}
+    ${arcCommand}
     c ${round(-d)} ${round(-c)} ${round(-d)} ${round(-b - c)} ${round(-d)} ${round(-a - b - c)}
   `.trim().replace(/\s+/g, ' ');
 }
@@ -148,9 +203,13 @@ export function drawTopLeftCorner(params: CornerPathParams): string {
     return `l 0 ${round(-params.p)}`;
   }
 
+  const arcCommand = arcSectionLength > 0.01
+    ? `a ${round(cornerRadius)} ${round(cornerRadius)} 0 0 1 ${round(arcSectionLength)} ${round(-arcSectionLength)}`
+    : '';
+
   return `
     c 0 ${round(-a)} 0 ${round(-a - b)} ${round(d)} ${round(-a - b - c)}
-    a ${round(cornerRadius)} ${round(cornerRadius)} 0 0 1 ${round(arcSectionLength)} ${round(-arcSectionLength)}
+    ${arcCommand}
     c ${round(c)} ${round(-d)} ${round(b + c)} ${round(-d)} ${round(a + b + c)} ${round(-d)}
   `.trim().replace(/\s+/g, ' ');
 }
@@ -176,11 +235,18 @@ export function generateFigmaSquirclePath(
   // Clamp smoothing to valid range
   const clampedSmoothing = Math.max(0, Math.min(1, smoothing));
 
-  // Calculate path parameters for all corners (assume uniform corners for now)
-  const topLeftParams = getPathParamsForCorner(clampedRadius, clampedSmoothing);
-  const topRightParams = getPathParamsForCorner(clampedRadius, clampedSmoothing);
-  const bottomRightParams = getPathParamsForCorner(clampedRadius, clampedSmoothing);
-  const bottomLeftParams = getPathParamsForCorner(clampedRadius, clampedSmoothing);
+  // Calculate the budget for rounding and smoothing
+  // Each corner's path extends along the edge, so budget is half the edge length
+  const horizontalBudget = width / 2;
+  const verticalBudget = height / 2;
+
+  // Calculate path parameters for all corners with budget constraints
+  // Top-left and top-right share the top edge, so they compete for width/2
+  // Left and right edges have height/2 budget
+  const topLeftParams = getPathParamsForCorner(clampedRadius, clampedSmoothing, Math.min(horizontalBudget, verticalBudget));
+  const topRightParams = getPathParamsForCorner(clampedRadius, clampedSmoothing, Math.min(horizontalBudget, verticalBudget));
+  const bottomRightParams = getPathParamsForCorner(clampedRadius, clampedSmoothing, Math.min(horizontalBudget, verticalBudget));
+  const bottomLeftParams = getPathParamsForCorner(clampedRadius, clampedSmoothing, Math.min(horizontalBudget, verticalBudget));
 
   // Build the complete path
   // Start from top-right corner, move counter-clockwise

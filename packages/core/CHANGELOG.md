@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.3] - 2025-11-17
+
+### Fixed
+- Fixed 100% smoothing spike artifact - corners no longer show thin lines at maximum smoothing
+- Implemented proportional scaling for large radius values - maintains smooth S-curves when space is constrained
+- Fixed Chrome false-positive native CSS detection - disabled corner-shape: squircle detection until browsers actually render it
+- Disabled Houdini Paint API detection - waiting for actual paint worklet implementation in Phase 2
+- Improved FOUC (Flash of Unstyled Content) prevention for demo website
+
+### Changed
+- Enhanced Figma squircle algorithm with preserveSmoothing mode (default: true)
+- When corner radius is large relative to element dimensions, bezier handles are proportionally scaled instead of reducing smoothing
+- This maintains the characteristic iOS-style continuous S-curve even when space is limited
+
 ## [1.0.2] - 2025-11-16
 
 ### Fixed

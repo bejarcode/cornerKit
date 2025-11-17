@@ -18,6 +18,7 @@ describe('CapabilityDetector', () => {
 
   describe('Native CSS detection (FR-009)', () => {
     it('should detect native corner-shape: squircle support', () => {
+      // Native CSS detection is disabled because Chrome falsely reports support
       // Mock CSS.supports to return true for corner-shape: squircle
       global.CSS = {
         supports: vi.fn((property: string, value: string) => {
@@ -28,8 +29,8 @@ describe('CapabilityDetector', () => {
       const detector = CapabilityDetector.getInstance();
       const support = detector.supports();
 
-      expect(support.native).toBe(true);
-      expect(CSS.supports).toHaveBeenCalledWith('corner-shape', 'squircle');
+      // Native detection is disabled until browsers actually render corner-shape: squircle
+      expect(support.native).toBe(false);
     });
 
     it('should return false when CSS.supports is unavailable', () => {
@@ -56,6 +57,7 @@ describe('CapabilityDetector', () => {
 
   describe('Houdini detection (FR-010)', () => {
     it('should detect paintWorklet support', () => {
+      // Houdini detection is disabled until we have an actual paint worklet (Phase 2)
       global.CSS = {
         paintWorklet: {},
         supports: vi.fn(() => false),
@@ -64,7 +66,8 @@ describe('CapabilityDetector', () => {
       const detector = CapabilityDetector.getInstance();
       const support = detector.supports();
 
-      expect(support.houdini).toBe(true);
+      // Houdini detection is disabled until paint worklet is implemented
+      expect(support.houdini).toBe(false);
     });
 
     it('should return false when paintWorklet is unavailable', () => {
@@ -168,14 +171,16 @@ describe('CapabilityDetector', () => {
       CapabilityDetector.supports();
       CapabilityDetector.supports();
 
-      // Detection should only run once (2 checks: native, clippath)
-      // Note: Houdini detection uses 'paintWorklet' in CSS, not CSS.supports
-      expect(supportsSpy).toHaveBeenCalledTimes(2);
+      // Detection should only run once (1 check: clippath only)
+      // Note: Native and Houdini detection are disabled
+      expect(supportsSpy).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('detectTier()', () => {
     it('should return NATIVE when native CSS is supported', () => {
+      // Native detection is disabled, so even if CSS.supports returns true,
+      // it will fall through to ClipPath
       global.CSS = {
         supports: vi.fn((property: string, value: string) => {
           return property === 'corner-shape' && value === 'squircle';
@@ -183,17 +188,21 @@ describe('CapabilityDetector', () => {
       } as any;
 
       const detector = CapabilityDetector.getInstance();
-      expect(detector.detectTier()).toBe(RendererTier.NATIVE);
+      // Native is disabled, so it returns CLIPPATH (via runtime DOM test)
+      expect(detector.detectTier()).toBe(RendererTier.CLIPPATH);
     });
 
     it('should return HOUDINI when paintWorklet is supported but not native', () => {
+      // Houdini detection is disabled, so even if paintWorklet exists,
+      // it will fall through to ClipPath
       global.CSS = {
         paintWorklet: {},
         supports: vi.fn(() => false),
       } as any;
 
       const detector = CapabilityDetector.getInstance();
-      expect(detector.detectTier()).toBe(RendererTier.HOUDINI);
+      // Houdini is disabled, so it returns CLIPPATH (via runtime DOM test)
+      expect(detector.detectTier()).toBe(RendererTier.CLIPPATH);
     });
 
     it('should return CLIPPATH when clip-path is supported', () => {

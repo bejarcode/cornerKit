@@ -35,6 +35,31 @@
   <!-- Custom Stylesheet (for minimal overrides only) -->
   <link rel="stylesheet" href="styles.css">
 
+  <!-- Critical CSS: Prevent FOUC for squircle elements -->
+  <!-- Hide elements initially, reveal after JS applies squircles -->
+  <style>
+    /* Hide squircle elements until JavaScript enhances them */
+    /* This prevents FOUC - elements appear already styled */
+    .squircle-pending {
+      opacity: 0 !important;
+    }
+
+    /* Reveal with smooth fade after squircle is applied */
+    .squircle-ready {
+      opacity: 1 !important;
+      transition: opacity 0.15s ease-out !important;
+    }
+
+    /* Fallback: If JS fails or is disabled, show after 500ms */
+    @keyframes squircle-fallback-reveal {
+      to { opacity: 1; }
+    }
+
+    .squircle-pending {
+      animation: squircle-fallback-reveal 0s 0.5s forwards;
+    }
+  </style>
+
   <!-- Structured Data (JSON-LD) for SEO -->
   <script type="application/ld+json">
   {
@@ -77,7 +102,7 @@
         A lightweight, zero-dependency JavaScript library for smooth, continuous curve corners
       </p>
 
-      <div class="hero-demo w-32 h-32 sm:w-48 sm:h-48 lg:w-56 lg:h-56 mx-auto mb-8 sm:mb-12" id="hero-demo" data-aos="zoom-in" data-aos-delay="200">
+      <div class="hero-demo squircle-pending w-32 h-32 sm:w-48 sm:h-48 lg:w-56 lg:h-56 mx-auto mb-8 sm:mb-12" id="hero-demo" data-aos="zoom-in" data-aos-delay="200">
         <!-- Animated squircle demo element -->
       </div>
 
@@ -173,7 +198,7 @@
             >
           </div>
 
-          <div class="playground-preview w-full h-48 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center font-bold text-lg text-white shadow-xl shadow-blue-500/30" id="playground-preview">
+          <div class="playground-preview squircle-pending w-full h-72 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center font-bold text-lg text-white shadow-xl shadow-blue-500/30" id="playground-preview">
             <p>Preview Element</p>
           </div>
 
@@ -642,7 +667,8 @@ import { Squircle } from '@cornerkit/vue';
   </footer>
 
   <!-- CornerKit library -->
-  <script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.2/dist/cornerkit.js"></script>
-  <script src="app.js?v=20251116"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.2/dist/cornerkit.js"></script> -->
+  <script src="cornerkit.js?v=20251117"></script>
+  <script src="app.js?v=20251117"></script>
 </body>
 </html>

@@ -86,8 +86,18 @@ export class CapabilityDetector {
   /**
    * FR-009: Detect Native CSS corner-shape: squircle support
    * Chrome 139+ (when available)
+   *
+   * Note: As of 2025, no browser actually renders corner-shape: squircle yet.
+   * Chrome falsely reports CSS.supports() as true, so we disable native detection
+   * until browsers actually implement rendering.
    */
   private detectNative(): boolean {
+    // Disabled until browsers actually render corner-shape: squircle
+    // Chrome reports CSS.supports('corner-shape', 'squircle') as true but doesn't render it
+    // TODO: Re-enable when Chrome 139+ is released with actual rendering support
+    return false;
+
+    /* Original detection (re-enable when browsers support rendering):
     if (typeof CSS === 'undefined' || !CSS.supports) {
       return false;
     }
@@ -97,13 +107,22 @@ export class CapabilityDetector {
     } catch {
       return false;
     }
+    */
   }
 
   /**
    * FR-010: Detect CSS Houdini Paint API support
    * Chrome 65+, Edge 79+
+   *
+   * Note: Paint API support doesn't mean squircle worklet is registered.
+   * Disabled until we have an actual paint worklet implementation (Phase 2).
    */
   private detectHoudini(): boolean {
+    // Disabled until we have an actual squircle paint worklet (Phase 2)
+    // Detecting paintWorklet support doesn't mean squircle rendering is available
+    return false;
+
+    /* Original detection (re-enable with paint worklet implementation):
     if (typeof CSS === 'undefined') {
       return false;
     }
@@ -113,6 +132,7 @@ export class CapabilityDetector {
     } catch {
       return false;
     }
+    */
   }
 
   /**
