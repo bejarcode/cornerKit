@@ -258,6 +258,18 @@ ck.apply('#element', { smoothing: 1.0 });   // Circular
 - **0.85**: Figma default
 - **0.9-0.95**: Very smooth
 
+### Automatic Proportional Scaling
+
+When the corner radius is large relative to the element's dimensions, CornerKit automatically scales the bezier curve handles proportionally to maintain the smooth S-curve aesthetic. This prevents the "angular corner" artifact that occurs when smoothing is artificially reduced.
+
+**Example behavior:**
+- Element: 200px × 100px, radius: 80px, smoothing: 1.0
+- Budget available: min(200/2, 100/2) = 50px
+- Required path length: (1 + 1.0) × 80 = 160px
+- **Result**: All curve parameters scale by 50/160 = 0.3125
+
+This preserves the characteristic iOS-style continuous curvature even when space is constrained, rather than degrading to circular arcs with sharp transitions.
+
 ---
 
 ## Performance Benchmarks
