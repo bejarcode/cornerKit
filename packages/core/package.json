@@ -53,6 +53,7 @@
   "bugs": {
     "url": "https://github.com/bejarcode/cornerkit/issues"
   },
+  "homepage": "https://bejarcode.github.io/cornerKit/",
   "devDependencies": {
     "@playwright/test": "^1.56.1",
     "@rollup/plugin-replace": "^5.0.5",

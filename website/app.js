@@ -42,7 +42,7 @@ ck.apply('#my-element', {
   Your content here
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.3"></script>
 <script>
   // Auto-init will apply squircles to all [data-squircle] elements
   CornerKit.auto();

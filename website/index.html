@@ -570,7 +570,20 @@
 
       <div class="max-w-2xl mx-auto mb-16">
         <h3 class="text-xl font-semibold text-gray-900 mb-4">Installation</h3>
-        <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">npm install @cornerkit/core</code></pre>
+        <div class="space-y-4">
+          <div>
+            <p class="text-sm text-gray-600 mb-2 font-medium">npm / yarn / pnpm:</p>
+            <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">npm install @cornerkit/core</code></pre>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 mb-2 font-medium">CDN (unpkg):</p>
+            <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">&lt;script src="https://unpkg.com/@cornerkit/core@1.0.3"&gt;&lt;/script&gt;</code></pre>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 mb-2 font-medium">CDN (jsDelivr):</p>
+            <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">&lt;script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.3"&gt;&lt;/script&gt;</code></pre>
+          </div>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -667,8 +680,7 @@ import { Squircle } from '@cornerkit/vue';
   </footer>
 
   <!-- CornerKit library -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.2/dist/cornerkit.js"></script> -->
-  <script src="cornerkit.js?v=20251117"></script>
+  <script src="https://unpkg.com/@cornerkit/core@1.0.3/dist/cornerkit.js"></script>
   <script src="app.js?v=20251117"></script>
 </body>
 </html>
