@@ -55,7 +55,8 @@ website/
 
 ## Features
 
-- **Live Interactive Playground**: Adjust radius/smoothing sliders, see real-time updates
+- **Live Interactive Playground**: Adjust radius/smoothing sliders, toggle borders with width/color controls, see real-time updates
+- **Border Support**: Squircle borders that follow the curve path with customizable width and color
 - **Visual Examples Gallery**: 15+ UI components with squircles (buttons, cards, modals, etc.)
 - **Side-by-Side Comparison**: Squircles vs border-radius
 - **Browser Compatibility Info**: Automatic tier detection (Native/Houdini/ClipPath/Fallback)

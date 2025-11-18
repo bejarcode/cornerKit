@@ -2,14 +2,14 @@
 
 > Lightweight, framework-agnostic library for iOS-style squircle corners on the web
 
-[![Bundle Size](https://img.shields.io/badge/bundle%20size-3.66%20KB-success)](https://bundlephobia.com/package/cornerkit)
+[![Bundle Size](https://img.shields.io/badge/bundle%20size-4.58%20KB-success)](https://bundlephobia.com/package/cornerkit)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3%2B-blue)](https://www.typescriptlang.org/)
 [![Security: A+](https://img.shields.io/badge/security-A%2B-success)](security/SECURITY-AUDIT.md)
 [![Test Coverage](https://img.shields.io/badge/coverage-97.9%25-brightgreen)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../../LICENSE)
 
-**CornerKit** brings the beautiful, continuous curve corners (squircles) of iOS design to your web applications. At just **3.66 KB gzipped** with **zero runtime dependencies**, it delivers professional-grade rounded corners with exceptional performance.
+**CornerKit** brings the beautiful, continuous curve corners (squircles) of iOS design to your web applications. At just **4.58 KB gzipped** with **zero runtime dependencies**, it delivers professional-grade rounded corners with exceptional performance.
 
 ```bash
 npm install @cornerkit/core
@@ -20,7 +20,7 @@ npm install @cornerkit/core
 ## Key Strengths
 
 ### Exceptionally Tiny Bundle
-- **3.66 KB gzipped** (27% under budget!)
+- **4.58 KB gzipped** (8% under budget!)
 - Zero runtime dependencies
 - Tree-shakeable ES modules
 - Perfect for performance-conscious projects
@@ -132,13 +132,13 @@ ck.destroy();
 ```html
 <!-- ES Module -->
 <script type="module">
-  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.2/dist/cornerkit.esm.js';
+  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.1.0/dist/cornerkit.esm.js';
   const ck = new CornerKit();
   ck.apply('.squircle', { radius: 24, smoothing: 0.6 });
 </script>
 
 <!-- UMD (Global) -->
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.2/dist/cornerkit.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.1.0/dist/cornerkit.js"></script>
 <script>
   const ck = new CornerKit();
   ck.apply('.squircle', { radius: 24, smoothing: 0.6 });
@@ -158,9 +158,11 @@ const ck = new CornerKit(config?: SquircleConfig);
 **Default Configuration:**
 ```typescript
 {
-  radius: 16,        // Corner radius in pixels
-  smoothing: 0.6,    // Curve smoothness 0.0-1.0 (0.6 = iOS standard)
-  tier?: 'auto'      // Rendering tier: 'auto' | 'native' | 'houdini' | 'clippath' | 'fallback'
+  radius: 16,          // Corner radius in pixels
+  smoothing: 0.6,      // Curve smoothness 0.0-1.0 (0.6 = iOS standard)
+  borderWidth?: number, // Optional: Border width in pixels
+  borderColor?: string, // Optional: Border color (any valid CSS color)
+  tier?: 'auto'        // Rendering tier: 'auto' | 'native' | 'houdini' | 'clippath' | 'fallback'
 }
 ```
 
@@ -173,6 +175,12 @@ Apply squircle corners to element(s).
 ck.apply('#button');                                    // Use defaults
 ck.apply('.card', { radius: 20 });                     // Override radius
 ck.apply(element, { radius: 24, smoothing: 0.85 });    // Custom config
+ck.apply('.bordered', {                                 // With border
+  radius: 20,
+  smoothing: 0.8,
+  borderWidth: 2,
+  borderColor: '#3b82f6'
+});
 ```
 
 #### `applyAll(selector, config?)`
@@ -270,6 +278,69 @@ When the corner radius is large relative to the element's dimensions, CornerKit 
 
 This preserves the characteristic iOS-style continuous curvature even when space is constrained, rather than degrading to circular arcs with sharp transitions.
 
+### Border Support
+
+CornerKit supports borders that follow the squircle path using a pseudo-element rendering technique.
+
+**Basic Usage:**
+```javascript
+ck.apply('#element', {
+  radius: 24,
+  smoothing: 0.6,
+  borderWidth: 2,          // Border width in pixels
+  borderColor: '#3b82f6'   // Any valid CSS color
+});
+```
+
+**HTML Data Attributes:**
+```html
+<div
+  data-squircle
+  data-squircle-radius="24"
+  data-squircle-smoothing="0.6"
+  data-squircle-border-width="2"
+  data-squircle-border-color="#3b82f6"
+>
+  Your content
+</div>
+```
+
+**How It Works:**
+- Uses `::before` and `::after` pseudo-elements for layered rendering
+- `::before` renders the border (z-index: 0, larger squircle)
+- `::after` renders the background (z-index: 1, normal size)
+- Content is positioned on top (z-index: 2)
+- Border extends outward from element boundaries (outer stroke positioning)
+
+**Important Notes:**
+- Elements with borders automatically get `position: relative` if needed
+- Original background is preserved on the `::after` pseudo-element
+- Pseudo-elements `::before` and `::after` are used by CornerKit for borders
+- Performance: ~0.4ms additional render time per bordered element
+
+**Example with React:**
+```jsx
+import CornerKit from '@cornerkit/core';
+
+function BorderedCard({ children }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const ck = new CornerKit();
+    ck.apply(ref.current, {
+      radius: 24,
+      smoothing: 0.6,
+      borderWidth: 2,
+      borderColor: '#3b82f6'
+    });
+
+    return () => ck.remove(ref.current);
+  }, []);
+
+  return <div ref={ref}>{children}</div>;
+}
+```
+
 ---
 
 ## Performance Benchmarks
@@ -280,9 +351,9 @@ All metrics verified by automated performance tests and documented in SUCCESS-CR
 
 | Format | Raw Size | Gzipped | Target | Result |
 |--------|----------|---------|--------|--------|
-| **ESM** (cornerkit.esm.js) | 12.02 KB | **3.66 KB** | <5KB | **27% under budget** |
-| **UMD** (cornerkit.js) | 12.41 KB | **3.78 KB** | <5KB | **24% under budget** |
-| **CJS** (cornerkit.cjs) | 12.31 KB | **3.69 KB** | <5KB | **26% under budget** |
+| **ESM** (cornerkit.esm.js) | 15.77 KB | **4.58 KB** | <5KB | **8% under budget** |
+| **UMD** (cornerkit.js) | 16.17 KB | **4.73 KB** | <5KB | **5% under budget** |
+| **CJS** (cornerkit.cjs) | 16.08 KB | **4.62 KB** | <5KB | **8% under budget** |
 
 **Verification**: Automated bundle size monitoring in CI ensures every build stays under the 5KB gzipped target.
 
@@ -555,15 +626,15 @@ npm run analyze-bundle
 ═══════════════════════════════════════
 
 cornerkit.esm.js
-  Raw size:     12.02 KB
-  Gzipped size: 3.63 KB  PASS
+  Raw size:     15.77 KB
+  Gzipped size: 4.58 KB  PASS
 
 Summary:
   Target:           5.00 KB (5KB gzipped)
-  Actual (ESM):     3.63 KB
-  Usage:            72.7% of target
+  Actual (ESM):     4.58 KB
+  Usage:            91.6% of target
    SUCCESS: Bundle size meets target (<5KB)
-  Remaining budget: 1.37 KB
+  Remaining budget: 0.42 KB
 
  Tree-Shaking Verification
    OK   Debug code removed

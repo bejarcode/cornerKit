@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-11-18
+
+### Added
+- **Border support** - Squircle borders that follow the curve path using pseudo-element rendering
+  - New `borderWidth` config option (pixels)
+  - New `borderColor` config option (any valid CSS color)
+  - Borders extend outward from element boundaries (outer stroke positioning)
+  - Automatic background preservation using individual CSS properties
+  - Interactive border controls in playground (toggle, width slider, color picker)
+  - Code generation updated to include border parameters
+
+### Changed
+- Bundle size increased from 3.66 KB to 4.58 KB gzipped (+0.92 KB for border feature)
+- Pseudo-element architecture: `::before` for border (z-index: 0), `::after` for background (z-index: 1)
+- Elements with borders automatically get `position: relative` if needed
+- Child elements positioned with `z-index: 2` to stay on top of border layers
+
+### Technical Details
+- Border rendering uses layered pseudo-elements to work around clip-path masking
+- Background split into individual CSS properties (backgroundColor, backgroundImage, etc.)
+- Original background stored in dataset to prevent recapture issues
+- Performance: ~0.4ms additional render time per bordered element
+
 ## [1.0.3] - 2025-11-17
 
 ### Fixed
