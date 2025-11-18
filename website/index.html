@@ -198,7 +198,62 @@
             >
           </div>
 
-          <div class="playground-preview squircle-pending w-full h-72 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center font-bold text-lg text-white shadow-xl shadow-blue-500/30" id="playground-preview">
+          <!-- Border Controls -->
+          <div class="space-y-3 p-4 bg-gray-50 rounded-xl">
+            <div class="flex items-center justify-between">
+              <label for="border-toggle" class="text-base font-medium text-gray-900">
+                Enable Border
+              </label>
+              <input
+                type="checkbox"
+                id="border-toggle"
+                class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                aria-label="Toggle squircle border"
+              >
+            </div>
+
+            <div id="border-controls" class="space-y-3 hidden">
+              <div class="space-y-2">
+                <label for="border-width-slider" class="block text-sm font-medium text-gray-700">
+                  Border Width: <span id="border-width-value" class="text-blue-600 font-semibold">2</span>px
+                </label>
+                <input
+                  type="range"
+                  id="border-width-slider"
+                  min="1"
+                  max="10"
+                  value="2"
+                  step="1"
+                  class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                  aria-label="Adjust border width"
+                >
+              </div>
+
+              <div class="space-y-2">
+                <label for="border-color-picker" class="block text-sm font-medium text-gray-700">
+                  Border Color: <span id="border-color-value" class="text-blue-600 font-semibold">#000000</span>
+                </label>
+                <div class="flex items-center gap-3">
+                  <input
+                    type="color"
+                    id="border-color-picker"
+                    value="#000000"
+                    class="w-12 h-10 rounded cursor-pointer border border-gray-300"
+                    aria-label="Choose border color"
+                  >
+                  <input
+                    type="text"
+                    id="border-color-input"
+                    value="#000000"
+                    class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="#000000"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="playground-preview squircle-pending relative w-full h-72 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center font-bold text-lg text-white shadow-xl shadow-blue-500/30" id="playground-preview">
             <p>Preview Element</p>
           </div>
 
@@ -438,9 +493,9 @@
               <p class="text-xs text-gray-500 mt-1 font-mono">radius: 12px, smoothing: 0.8</p>
             </div>
             <div>
-              <label for="form-textarea-1" class="block text-sm font-semibold text-gray-900 mb-2">Textarea</label>
-              <textarea id="form-textarea-1" rows="3" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-vertical text-gray-900" placeholder="Enter multiple lines..."></textarea>
-              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 16px, smoothing: 0.85</p>
+              <label for="form-textarea-1" class="block text-sm font-semibold text-gray-900 mb-2">Textarea (with squircle border)</label>
+              <textarea id="form-textarea-1" rows="3" class="w-full px-4 py-3 bg-white border-0 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-vertical text-gray-900" placeholder="Enter multiple lines..."></textarea>
+              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 16px, smoothing: 0.85, borderWidth: 2px</p>
             </div>
           </div>
         </div>
@@ -680,7 +735,8 @@ import { Squircle } from '@cornerkit/vue';
   </footer>
 
   <!-- CornerKit library -->
-  <script src="https://unpkg.com/@cornerkit/core@1.0.3/dist/cornerkit.js"></script>
+  <!-- <script src="https://unpkg.com/@cornerkit/core@1.0.3/dist/cornerkit.js"></script> -->
+  <script src="cornerkit.js?v=20251117-border"></script>
   <script src="app.js?v=20251117"></script>
 </body>
 </html>

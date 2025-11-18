@@ -437,6 +437,15 @@ export default class CornerKit {
       validatedConfig.smoothing = validateSmoothing(config.smoothing);
     }
 
+    // Handle border properties
+    if (config.borderWidth !== undefined) {
+      validatedConfig.borderWidth = config.borderWidth;
+    }
+
+    if (config.borderColor !== undefined) {
+      validatedConfig.borderColor = config.borderColor;
+    }
+
     // Allow tier override (for advanced users)
     if (config.tier !== undefined) {
       validatedConfig.tier = config.tier;

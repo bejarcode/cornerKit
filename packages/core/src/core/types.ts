@@ -29,6 +29,21 @@ export interface SquircleConfig {
   smoothing: number;
 
   /**
+   * Optional: Border width in pixels
+   * Creates a squircle-shaped border using ::before pseudo-element
+   * @minimum 0
+   * @optional
+   */
+  borderWidth?: number;
+
+  /**
+   * Optional: Border color (any valid CSS color)
+   * Only used when borderWidth is specified
+   * @optional
+   */
+  borderColor?: string;
+
+  /**
    * Optional: Force specific renderer tier
    * Normally auto-detected, but can be overridden for testing
    * @optional
@@ -45,7 +60,7 @@ export type PartialSquircleConfig = Partial<SquircleConfig>;
 /**
  * Default configuration values
  */
-export const DEFAULT_CONFIG: Readonly<Required<Omit<SquircleConfig, 'tier'>>> = {
+export const DEFAULT_CONFIG: Readonly<Required<Pick<SquircleConfig, 'radius' | 'smoothing'>>> = {
   radius: 20,    // iOS-typical size for buttons
   smoothing: 0.8, // iOS-like appearance (n ≈ 2.4)
 } as const;

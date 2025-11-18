@@ -125,16 +125,17 @@ function generateCode(format, radius, smoothing) {
  * Updates all code snippet DOM elements with newly generated code
  * @param {number} radius - Current radius value
  * @param {number} smoothing - Current smoothing value
+ * @param {Object} borderConfig - Optional border configuration
  */
-function updateAllCodeSnippets(radius, smoothing) {
-  console.log('🔍 updateAllCodeSnippets called with radius:', radius, 'smoothing:', smoothing);
+function updateAllCodeSnippets(radius, smoothing, borderConfig = null) {
+  console.log('🔍 updateAllCodeSnippets called with radius:', radius, 'smoothing:', smoothing, 'border:', borderConfig);
   const formats = ['vanilla-js', 'html', 'typescript', 'react', 'vue'];
 
   formats.forEach(format => {
     const codeElement = document.getElementById(`code-${format}`);
     if (codeElement) {
       try {
-        const code = generateCode(format, radius, smoothing);
+        const code = generateCodeWithBorder(format, radius, smoothing, borderConfig);
         codeElement.textContent = code;
         console.log(`✅ Generated ${format} code (${code.length} chars)`);
       } catch (error) {
@@ -145,6 +146,124 @@ function updateAllCodeSnippets(radius, smoothing) {
       console.warn(`⚠️ Code element #code-${format} not found in DOM`);
     }
   });
+}
+
+/**
+ * Generates code with optional border configuration
+ * @param {string} format - Code format
+ * @param {number} radius - Corner radius
+ * @param {number} smoothing - Smoothing value
+ * @param {Object} borderConfig - Border configuration
+ * @returns {string} Generated code
+ */
+function generateCodeWithBorder(format, radius, smoothing, borderConfig) {
+  const hasBorder = borderConfig && borderConfig.enabled;
+
+  const codeTemplatesWithBorder = {
+    'vanilla-js': () => {
+      if (hasBorder) {
+        return `import CornerKit from '@cornerkit/core';
+
+// Create instance
+const ck = new CornerKit();
+
+// Apply to element with border
+ck.apply('#my-element', {
+  radius: ${radius},
+  smoothing: ${smoothing},
+  borderWidth: ${borderConfig.width},
+  borderColor: '${borderConfig.color}'
+});`;
+      }
+      return codeTemplates['vanilla-js'](radius, smoothing);
+    },
+
+    'html': () => {
+      if (hasBorder) {
+        return `<div
+  data-squircle
+  data-squircle-radius="${radius}"
+  data-squircle-smoothing="${smoothing}"
+  style="border: none;"
+>
+  Your content here
+</div>
+
+<!-- Note: Border support requires JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.3"></script>
+<script>
+  const ck = new CornerKit();
+  ck.apply('[data-squircle]', {
+    radius: ${radius},
+    smoothing: ${smoothing},
+    borderWidth: ${borderConfig.width},
+    borderColor: '${borderConfig.color}'
+  });
+</script>`;
+      }
+      return codeTemplates['html'](radius, smoothing);
+    },
+
+    'typescript': () => {
+      if (hasBorder) {
+        return `import CornerKit, { type SquircleConfig } from '@cornerkit/core';
+
+const ck = new CornerKit();
+const config: SquircleConfig = {
+  radius: ${radius},
+  smoothing: ${smoothing},
+  borderWidth: ${borderConfig.width},
+  borderColor: '${borderConfig.color}'
+};
+ck.apply('#my-element', config);`;
+      }
+      return codeTemplates['typescript'](radius, smoothing);
+    },
+
+    'react': () => {
+      if (hasBorder) {
+        return `import { Squircle } from '@cornerkit/react';
+
+function App() {
+  return (
+    <Squircle
+      radius={${radius}}
+      smoothing={${smoothing}}
+      borderWidth={${borderConfig.width}}
+      borderColor="${borderConfig.color}"
+      style={{ border: 'none' }}
+    >
+      Your content here
+    </Squircle>
+  );
+}`;
+      }
+      return codeTemplates['react'](radius, smoothing);
+    },
+
+    'vue': () => {
+      if (hasBorder) {
+        return `<template>
+  <Squircle
+    :radius="${radius}"
+    :smoothing="${smoothing}"
+    :borderWidth="${borderConfig.width}"
+    borderColor="${borderConfig.color}"
+    style="border: none"
+  >
+    Your content here
+  </Squircle>
+</template>
+
+<script setup>
+import { Squircle } from '@cornerkit/vue';
+</script>`;
+      }
+      return codeTemplates['vue'](radius, smoothing);
+    }
+  };
+
+  return codeTemplatesWithBorder[format]();
 }
 
 // ----------------------------------------------------------------------------
@@ -425,8 +544,8 @@ const exampleComponents = [
   { id: 'form-text-2', category: 'form', variant: 'email', radius: 12, smoothing: 0.8 },
 
   // Forms - Textareas
-  { id: 'form-textarea-1', category: 'form', variant: 'textarea', radius: 16, smoothing: 0.85 },
-  { id: 'form-textarea-2', category: 'form', variant: 'textarea-large', radius: 16, smoothing: 0.85 }
+  { id: 'form-textarea-1', category: 'form', variant: 'textarea', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' },
+  { id: 'form-textarea-2', category: 'form', variant: 'textarea-large', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' }
 ];
 
 /**
@@ -595,12 +714,25 @@ function debounce(func, wait) {
  * Updates playground preview with new squircle parameters
  * @param {number} radius - Corner radius
  * @param {number} smoothing - Smoothing parameter
+ * @param {Object} borderConfig - Optional border configuration
+ * @param {boolean} borderConfig.enabled - Whether border is enabled
+ * @param {number} borderConfig.width - Border width in pixels
+ * @param {string} borderConfig.color - Border color
  */
-function updatePlaygroundPreview(radius, smoothing) {
+function updatePlaygroundPreview(radius, smoothing, borderConfig = null) {
   const startTime = performance.now();
 
+  // Build config object
+  const config = { radius, smoothing };
+
+  // Add border properties if enabled
+  if (borderConfig && borderConfig.enabled) {
+    config.borderWidth = borderConfig.width;
+    config.borderColor = borderConfig.color;
+  }
+
   // Update preview element
-  ck.update('#playground-preview', { radius, smoothing });
+  ck.update('#playground-preview', config);
 
   const endTime = performance.now();
   const renderTime = (endTime - startTime).toFixed(2);
@@ -608,8 +740,8 @@ function updatePlaygroundPreview(radius, smoothing) {
   // Update performance metrics
   displayPerformanceMetrics(renderTime);
 
-  // Update code snippets
-  updateAllCodeSnippets(radius, smoothing);
+  // Update code snippets with border info
+  updateAllCodeSnippets(radius, smoothing, borderConfig);
 }
 
 /**
@@ -639,9 +771,25 @@ function displayPerformanceMetrics(renderTime) {
 }
 
 // Debounced update functions for expensive operations
-const debouncedUpdatePreview = debounce((radius, smoothing) => {
-  updatePlaygroundPreview(radius, smoothing);
+const debouncedUpdatePreview = debounce((radius, smoothing, borderConfig) => {
+  updatePlaygroundPreview(radius, smoothing, borderConfig);
 }, 16); // ~60fps for smooth animation
+
+/**
+ * Gets current border configuration from UI controls
+ * @returns {Object} Border configuration object
+ */
+function getBorderConfig() {
+  const toggle = document.getElementById('border-toggle');
+  const widthSlider = document.getElementById('border-width-slider');
+  const colorInput = document.getElementById('border-color-input');
+
+  return {
+    enabled: toggle ? toggle.checked : false,
+    width: widthSlider ? parseInt(widthSlider.value, 10) : 2,
+    color: colorInput ? colorInput.value : '#3b82f6'
+  };
+}
 
 /**
  * Handles radius slider input with immediate visual feedback
@@ -649,6 +797,7 @@ const debouncedUpdatePreview = debounce((radius, smoothing) => {
 function handleRadiusChange(e) {
   const radius = parseInt(e.target.value, 10);
   const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+  const borderConfig = getBorderConfig();
 
   // Immediate visual feedback (no debounce)
   const radiusValue = document.getElementById('radius-value');
@@ -661,7 +810,7 @@ function handleRadiusChange(e) {
 
   // Use requestAnimationFrame for smooth updates
   requestAnimationFrame(() => {
-    debouncedUpdatePreview(radius, smoothing);
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
   });
 }
 
@@ -671,6 +820,7 @@ function handleRadiusChange(e) {
 function handleSmoothingChange(e) {
   const smoothing = parseFloat(e.target.value);
   const radius = parseInt(document.getElementById('radius-slider').value, 10);
+  const borderConfig = getBorderConfig();
 
   // Immediate visual feedback (no debounce)
   const smoothingValue = document.getElementById('smoothing-value');
@@ -683,7 +833,69 @@ function handleSmoothingChange(e) {
 
   // Use requestAnimationFrame for smooth updates
   requestAnimationFrame(() => {
-    debouncedUpdatePreview(radius, smoothing);
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
+  });
+}
+
+/**
+ * Handles border toggle checkbox change
+ */
+function handleBorderToggle(e) {
+  const borderControls = document.getElementById('border-controls');
+  if (borderControls) {
+    if (e.target.checked) {
+      borderControls.classList.remove('hidden');
+    } else {
+      borderControls.classList.add('hidden');
+    }
+  }
+
+  // Update preview with current values
+  const radius = parseInt(document.getElementById('radius-slider').value, 10);
+  const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+  const borderConfig = getBorderConfig();
+
+  requestAnimationFrame(() => {
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
+  });
+}
+
+/**
+ * Handles border width slider change
+ */
+function handleBorderWidthChange(e) {
+  const widthValue = document.getElementById('border-width-value');
+  if (widthValue) {
+    widthValue.textContent = e.target.value;
+  }
+
+  const radius = parseInt(document.getElementById('radius-slider').value, 10);
+  const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+  const borderConfig = getBorderConfig();
+
+  requestAnimationFrame(() => {
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
+  });
+}
+
+/**
+ * Handles border color change
+ */
+function handleBorderColorChange(color) {
+  const colorValue = document.getElementById('border-color-value');
+  const colorPicker = document.getElementById('border-color-picker');
+  const colorInput = document.getElementById('border-color-input');
+
+  if (colorValue) colorValue.textContent = color;
+  if (colorPicker && colorPicker.value !== color) colorPicker.value = color;
+  if (colorInput && colorInput.value !== color) colorInput.value = color;
+
+  const radius = parseInt(document.getElementById('radius-slider').value, 10);
+  const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+  const borderConfig = getBorderConfig();
+
+  requestAnimationFrame(() => {
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
   });
 }
 
@@ -762,6 +974,25 @@ function initializeDemo() {
     // Attach slider event listeners
     radiusSlider.addEventListener('input', handleRadiusChange);
     smoothingSlider.addEventListener('input', handleSmoothingChange);
+
+    // Attach border control event listeners
+    const borderToggle = document.getElementById('border-toggle');
+    const borderWidthSlider = document.getElementById('border-width-slider');
+    const borderColorPicker = document.getElementById('border-color-picker');
+    const borderColorInput = document.getElementById('border-color-input');
+
+    if (borderToggle) {
+      borderToggle.addEventListener('change', handleBorderToggle);
+    }
+    if (borderWidthSlider) {
+      borderWidthSlider.addEventListener('input', handleBorderWidthChange);
+    }
+    if (borderColorPicker) {
+      borderColorPicker.addEventListener('input', (e) => handleBorderColorChange(e.target.value));
+    }
+    if (borderColorInput) {
+      borderColorInput.addEventListener('input', (e) => handleBorderColorChange(e.target.value));
+    }
 
     console.log('✅ Playground initialized with radius:', initialRadius, 'smoothing:', initialSmoothing);
   }
