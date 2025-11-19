@@ -32,6 +32,9 @@
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
   <!-- Custom Stylesheet (for minimal overrides only) -->
   <link rel="stylesheet" href="styles.css">
 
@@ -396,8 +399,8 @@
           <div class="space-y-4">
             <div id="modal-dialog" class="p-5 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow">
               <div class="flex items-start gap-3">
-                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                  <span class="text-blue-600 text-lg">💬</span>
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                  <i data-lucide="message-circle" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
                 </div>
                 <div class="flex-1">
                   <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Dialog Modal</strong>
@@ -408,8 +411,8 @@
             </div>
             <div id="modal-alert" class="p-5 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900 dark:to-orange-900 rounded-xl shadow-md hover:shadow-lg transition-shadow">
               <div class="flex items-start gap-3">
-                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
-                  <span class="text-amber-600 text-lg">⚠️</span>
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-800 flex items-center justify-center">
+                  <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 dark:text-amber-400"></i>
                 </div>
                 <div class="flex-1">
                   <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Alert Modal</strong>
@@ -420,8 +423,8 @@
             </div>
             <div id="modal-confirmation" class="p-5 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900 dark:to-emerald-900 rounded-xl shadow-md hover:shadow-lg transition-shadow">
               <div class="flex items-start gap-3">
-                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                  <span class="text-green-600 text-lg">✓</span>
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center">
+                  <i data-lucide="check-circle" class="w-5 h-5 text-green-600 dark:text-green-400"></i>
                 </div>
                 <div class="flex-1">
                   <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Success Modal</strong>
