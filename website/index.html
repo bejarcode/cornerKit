@@ -81,7 +81,17 @@
   }
   </script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+  <!-- Dark Mode Toggle -->
+  <button id="dark-mode-toggle" class="fixed top-4 right-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all border-2 border-gray-200 dark:border-gray-700" aria-label="Toggle dark mode">
+    <svg id="sun-icon" class="w-6 h-6 text-gray-900 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+    </svg>
+    <svg id="moon-icon" class="w-6 h-6 text-gray-100 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+    </svg>
+  </button>
+
   <!-- Skip to main content link for accessibility -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -154,7 +164,7 @@
   <section id="playground" role="main" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
     <div id="main-content" class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Live Interactive Playground</h2>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Live Interactive Playground</h2>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">Adjust the sliders to see real-time updates and generate code snippets</p>
       </div>
 
@@ -201,7 +211,7 @@
           <!-- Border Controls -->
           <div class="space-y-3 p-4 bg-gray-50 rounded-xl">
             <div class="flex items-center justify-between">
-              <label for="border-toggle" class="text-base font-medium text-gray-900">
+              <label for="border-toggle" class="text-base font-medium text-gray-900 dark:text-white">
                 Enable Border
               </label>
               <input
@@ -258,18 +268,18 @@
           </div>
 
           <div class="bg-gray-50 rounded-2xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Performance Metrics</h3>
             <div id="metrics-display" class="space-y-2 text-sm">
-              <p class="flex justify-between"><strong class="text-gray-600 font-medium">Render Time:</strong> <span id="render-time" class="font-mono text-gray-900">-</span> ms</p>
-              <p class="flex justify-between"><strong class="text-gray-600 font-medium">Dimensions:</strong> <span id="dimensions" class="font-mono text-gray-900">-</span></p>
-              <p class="flex justify-between"><strong class="text-gray-600 font-medium">Browser Tier:</strong> <span id="browser-tier" class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-xs font-semibold">-</span></p>
+              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Render Time:</strong> <span id="render-time" class="font-mono text-gray-900">-</span> ms</p>
+              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Dimensions:</strong> <span id="dimensions" class="font-mono text-gray-900">-</span></p>
+              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Browser Tier:</strong> <span id="browser-tier" class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-xs font-semibold">-</span></p>
             </div>
           </div>
         </div>
 
         <div class="space-y-6">
           <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Generated Code</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Generated Code</h3>
 
             <div class="flex flex-wrap gap-2 bg-gray-100 p-1 rounded-xl mb-4" role="tablist" aria-label="Code format tabs">
               <button id="tab-vanilla-js" class="tab-btn px-4 py-2 text-sm font-medium bg-blue-600 text-white hover:text-white rounded-lg shadow-sm transition-all" data-tab="vanilla-js" role="tab" aria-selected="true" aria-controls="code-panel-vanilla-js">Vanilla JS</button>
@@ -322,14 +332,14 @@
   <section id="gallery" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Visual Examples Gallery</h2>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Visual Examples Gallery</h2>
         <p class="text-lg text-gray-600">See squircles applied to real UI components</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Buttons -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Buttons</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Buttons</h3>
           <div class="flex flex-wrap gap-3">
             <button id="button-primary" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white hover:text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all hover:-translate-y-0.5">Primary Button</button>
             <button id="button-secondary" class="px-6 py-3 bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Secondary Button</button>
@@ -340,83 +350,83 @@
         </div>
 
         <!-- Cards -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Cards</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Cards</h3>
           <div class="space-y-4">
-            <div id="card-product" class="p-5 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm">
-              <strong class="block text-lg font-semibold text-gray-900 mb-1">Product Card</strong>
-              <p class="text-xs text-gray-500 font-mono">radius: 24px, smoothing: 0.85</p>
+            <div id="card-product" class="p-5 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Product Card</strong>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 24px, smoothing: 0.85</p>
             </div>
-            <div id="card-info" class="p-5 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-sm">
-              <strong class="block text-lg font-semibold text-gray-900 mb-1">Info Card</strong>
-              <p class="text-xs text-gray-500 font-mono">radius: 20px, smoothing: 0.8</p>
+            <div id="card-info" class="p-5 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Info Card</strong>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 20px, smoothing: 0.8</p>
             </div>
-            <div id="card-testimonial" class="p-5 bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-sm">
-              <strong class="block text-lg font-semibold text-gray-900 mb-1">Testimonial Card</strong>
-              <p class="text-xs text-gray-500 font-mono">radius: 28px, smoothing: 0.9</p>
+            <div id="card-testimonial" class="p-5 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Testimonial Card</strong>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 28px, smoothing: 0.9</p>
             </div>
           </div>
         </div>
 
         <!-- Bordered Elements -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Bordered Elements</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Bordered Elements</h3>
           <div class="space-y-4">
-            <div id="border-card-1" class="p-5 bg-white rounded-xl shadow-sm">
-              <strong class="block text-lg font-semibold text-gray-900 mb-1">Bordered Card</strong>
-              <p class="text-sm text-gray-600 mb-2">Squircle border with 2px width</p>
-              <p class="text-xs text-gray-500 font-mono">radius: 20px, smoothing: 0.8, borderWidth: 2px</p>
+            <div id="border-card-1" class="p-5 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Bordered Card</strong>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Squircle border with 2px width</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 20px, smoothing: 0.8, borderWidth: 2px</p>
             </div>
             <div id="border-card-2" class="p-5 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm">
-              <strong class="block text-lg font-semibold text-gray-900 mb-1">Colored Border</strong>
-              <p class="text-sm text-gray-600 mb-2">Blue squircle border with gradient background</p>
-              <p class="text-xs text-gray-500 font-mono">radius: 24px, smoothing: 0.85, borderWidth: 3px, borderColor: #3b82f6</p>
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Colored Border</strong>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Blue squircle border with gradient background</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 24px, smoothing: 0.85, borderWidth: 3px, borderColor: #3b82f6</p>
             </div>
             <div class="flex flex-wrap gap-3">
-              <button id="border-button-1" class="px-6 py-3 bg-white hover:bg-gray-50 text-gray-900 font-medium rounded-xl shadow-sm hover:shadow-md transition-all">Bordered Button</button>
+              <button id="border-button-1" class="px-6 py-3 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-medium rounded-xl shadow-sm hover:shadow-md transition-all">Bordered Button</button>
               <button id="border-button-2" class="px-6 py-3 bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 text-purple-900 font-medium rounded-xl shadow-sm hover:shadow-md transition-all">Purple Border</button>
             </div>
-            <p class="text-xs text-gray-500 font-mono">Buttons: radius: 20px, smoothing: 0.8, borderWidth: 2px</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">Buttons: radius: 20px, smoothing: 0.8, borderWidth: 2px</p>
           </div>
         </div>
 
         <!-- Modals -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Modals</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Modals</h3>
           <div class="space-y-4">
-            <div id="modal-dialog" class="p-5 bg-gradient-to-br from-gray-50 to-white rounded-xl shadow-md hover:shadow-lg transition-shadow">
+            <div id="modal-dialog" class="p-5 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow">
               <div class="flex items-start gap-3">
                 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
                   <span class="text-blue-600 text-lg">💬</span>
                 </div>
                 <div class="flex-1">
-                  <strong class="block text-lg font-semibold text-gray-900 mb-1">Dialog Modal</strong>
-                  <p class="text-sm text-gray-600 mb-2">Confirm your action</p>
-                  <p class="text-xs text-gray-500 font-mono">radius: 20px, smoothing: 0.8</p>
+                  <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Dialog Modal</strong>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Confirm your action</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 20px, smoothing: 0.8</p>
                 </div>
               </div>
             </div>
-            <div id="modal-alert" class="p-5 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+            <div id="modal-alert" class="p-5 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900 dark:to-orange-900 rounded-xl shadow-md hover:shadow-lg transition-shadow">
               <div class="flex items-start gap-3">
                 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
                   <span class="text-amber-600 text-lg">⚠️</span>
                 </div>
                 <div class="flex-1">
-                  <strong class="block text-lg font-semibold text-gray-900 mb-1">Alert Modal</strong>
-                  <p class="text-sm text-gray-600 mb-2">Important notification</p>
-                  <p class="text-xs text-gray-500 font-mono">radius: 16px, smoothing: 0.75</p>
+                  <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Alert Modal</strong>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Important notification</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 16px, smoothing: 0.75</p>
                 </div>
               </div>
             </div>
-            <div id="modal-confirmation" class="p-5 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+            <div id="modal-confirmation" class="p-5 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900 dark:to-emerald-900 rounded-xl shadow-md hover:shadow-lg transition-shadow">
               <div class="flex items-start gap-3">
                 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
                   <span class="text-green-600 text-lg">✓</span>
                 </div>
                 <div class="flex-1">
-                  <strong class="block text-lg font-semibold text-gray-900 mb-1">Success Modal</strong>
-                  <p class="text-sm text-gray-600 mb-2">Action completed</p>
-                  <p class="text-xs text-gray-500 font-mono">radius: 20px, smoothing: 0.85</p>
+                  <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Success Modal</strong>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Action completed</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 20px, smoothing: 0.85</p>
                 </div>
               </div>
             </div>
@@ -424,8 +434,8 @@
         </div>
 
         <!-- Navigation -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Navigation</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Navigation</h3>
           <div class="space-y-8">
             <!-- Tabs -->
             <div class="space-y-3">
@@ -480,8 +490,8 @@
         </div>
 
         <!-- Images -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Images</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Images</h3>
           <div class="space-y-6">
             <div class="grid grid-cols-2 gap-4">
               <div>
@@ -501,27 +511,27 @@
         </div>
 
         <!-- Forms -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Form Elements</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Form Elements</h3>
           <div class="space-y-4">
             <div>
-              <label for="form-text-1" class="block text-sm font-semibold text-gray-900 mb-2">Text Input (with squircle border)</label>
-              <input id="form-text-1" type="text" class="w-full px-4 py-3 bg-white border-0 rounded-xl shadow-sm focus:outline-none focus:ring-0 transition-all text-gray-900" placeholder="Enter text here">
-              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 12px, smoothing: 0.8, borderWidth: 2px</p>
+              <label for="form-text-1" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Text Input (with squircle border)</label>
+              <input id="form-text-1" type="text" class="w-full px-4 py-3 bg-white dark:bg-gray-700 border-0 rounded-xl shadow-sm focus:outline-none focus:ring-0 transition-all text-gray-900 dark:text-white" placeholder="Enter text here">
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">radius: 12px, smoothing: 0.8, borderWidth: 2px</p>
             </div>
             <div>
-              <label for="form-text-2" class="block text-sm font-semibold text-gray-900 mb-2">Email Input (with squircle border)</label>
-              <input id="form-text-2" type="email" class="w-full px-4 py-3 bg-white border-0 rounded-xl shadow-sm focus:outline-none focus:ring-0 transition-all text-gray-900" placeholder="your@email.com">
-              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 12px, smoothing: 0.8, borderWidth: 2px</p>
+              <label for="form-text-2" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Email Input (with squircle border)</label>
+              <input id="form-text-2" type="email" class="w-full px-4 py-3 bg-white dark:bg-gray-700 border-0 rounded-xl shadow-sm focus:outline-none focus:ring-0 transition-all text-gray-900 dark:text-white" placeholder="your@email.com">
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">radius: 12px, smoothing: 0.8, borderWidth: 2px</p>
             </div>
             <div>
-              <label for="form-textarea-1" class="block text-sm font-semibold text-gray-900 mb-2">Textarea (Manual Wrapper Pattern)</label>
+              <label for="form-textarea-1" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Textarea (Manual Wrapper Pattern)</label>
               <!-- Wrapper gets the squircle border (textareas require wrapping due to overflow restrictions) -->
               <div id="form-textarea-wrapper" class="inline-block w-full overflow-hidden">
-                <textarea id="form-textarea-1" rows="3" class="w-full px-4 py-3 bg-white border-0 focus:outline-none focus:ring-0 transition-all resize-none text-gray-900" placeholder="Enter multiple lines..." style="position: relative; z-index: 1;"></textarea>
+                <textarea id="form-textarea-1" rows="3" class="w-full px-4 py-3 bg-white dark:bg-gray-700 border-0 focus:outline-none focus:ring-0 transition-all resize-none text-gray-900 dark:text-white" placeholder="Enter multiple lines..." style="position: relative; z-index: 1;"></textarea>
               </div>
-              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 16px, smoothing: 0.85, borderWidth: 2px</p>
-              <p class="text-xs text-gray-600 mt-1 italic">Note: Border applied to wrapper div, not textarea directly (see README for details)</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">radius: 16px, smoothing: 0.8, borderWidth: 2px</p>
+              <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 italic">Note: Border applied to wrapper div, not textarea directly (see README for details)</p>
             </div>
           </div>
         </div>
@@ -533,13 +543,13 @@
   <section id="comparison" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Squircle vs Border-Radius</h2>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Squircle vs Border-Radius</h2>
         <p class="text-lg text-gray-600">Compare the smooth, continuous curves of squircles with standard CSS rounded corners</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
         <div class="text-center">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">✨ Squircle (CornerKit)</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">✨ Squircle (CornerKit)</h3>
           <div id="comparison-squircle" class="w-full h-48 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center font-bold text-xl text-amber-900 shadow-xl shadow-amber-500/30 mb-4">
             <span>Smooth & Natural</span>
           </div>
@@ -551,7 +561,7 @@
         </div>
 
         <div class="text-center">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">⭕ Standard Border-Radius</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">⭕ Standard Border-Radius</h3>
           <div id="comparison-border-radius" class="w-full h-48 bg-gradient-to-br from-gray-400 to-gray-600 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-900 shadow-xl shadow-gray-500/30 mb-4">
             <span>Circular Arc</span>
           </div>
@@ -576,7 +586,7 @@
   <section id="compatibility" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Browser Compatibility</h2>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Browser Compatibility</h2>
         <p class="text-lg text-gray-600">CornerKit uses progressive enhancement to support 98%+ of browsers</p>
       </div>
 
@@ -635,7 +645,7 @@
       </div>
 
       <div class="bg-white rounded-2xl p-8 shadow-sm">
-        <h3 class="text-xl font-semibold text-gray-900 mb-6">Tier Hierarchy</h3>
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Tier Hierarchy</h3>
         <ol class="space-y-4 ml-6 list-decimal text-gray-700">
           <li><strong class="font-semibold text-gray-900">Native CSS</strong> - GPU-accelerated, zero JavaScript overhead (Chrome 139+)</li>
           <li><strong class="font-semibold text-gray-900">Houdini Paint API</strong> - Runs on paint thread, near-native performance (Chrome 65+, Edge 79+)</li>
@@ -650,11 +660,11 @@
   <section id="code" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Code Examples & Installation</h2>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Code Examples & Installation</h2>
       </div>
 
       <div class="max-w-2xl mx-auto mb-16">
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">Installation</h3>
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Installation</h3>
         <div class="space-y-4">
           <div>
             <p class="text-sm text-gray-600 mb-2 font-medium">npm / yarn / pnpm:</p>
@@ -674,7 +684,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Vanilla JavaScript -->
         <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
-          <h4 class="text-lg font-semibold text-gray-900 mb-4">Vanilla JavaScript</h4>
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Vanilla JavaScript</h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-javascript">import CornerKit from '@cornerkit/core';
 
 // Create instance
@@ -690,7 +700,7 @@ ck.apply('#my-element', {
 
         <!-- HTML Data Attributes -->
         <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
-          <h4 class="text-lg font-semibold text-gray-900 mb-4">HTML Data Attributes</h4>
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">HTML Data Attributes</h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-html">&lt;div
   data-squircle
   data-squircle-radius="20"
@@ -707,7 +717,7 @@ ck.apply('#my-element', {
 
         <!-- TypeScript -->
         <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
-          <h4 class="text-lg font-semibold text-gray-900 mb-4">TypeScript</h4>
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">TypeScript</h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-typescript">import CornerKit, { type SquircleConfig } from '@cornerkit/core';
 
 const ck = new CornerKit();
@@ -721,7 +731,7 @@ ck.apply('#my-element', config);</code></pre>
 
         <!-- React (teaser) -->
         <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
-          <h4 class="text-lg font-semibold text-gray-900 mb-4">React <span class="text-sm text-gray-500 font-normal">(Coming Soon)</span></h4>
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">React <span class="text-sm text-gray-500 font-normal">(Coming Soon)</span></h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-javascript">import { Squircle } from '@cornerkit/react';
 
 function MyComponent() {
@@ -736,7 +746,7 @@ function MyComponent() {
 
         <!-- Vue (teaser) -->
         <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm lg:col-span-2">
-          <h4 class="text-lg font-semibold text-gray-900 mb-4">Vue <span class="text-sm text-gray-500 font-normal">(Coming Soon)</span></h4>
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Vue <span class="text-sm text-gray-500 font-normal">(Coming Soon)</span></h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-html">&lt;template&gt;
   &lt;Squircle :radius="20" :smoothing="0.8"&gt;
     &lt;div&gt;Your content&lt;/div&gt;
