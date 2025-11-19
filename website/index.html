@@ -505,20 +505,20 @@
           <h3 class="text-xl font-semibold text-gray-900 mb-6">Form Elements</h3>
           <div class="space-y-4">
             <div>
-              <label for="form-text-1" class="block text-sm font-semibold text-gray-900 mb-2">Text Input</label>
-              <input id="form-text-1" type="text" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900" placeholder="Enter text here">
-              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 12px, smoothing: 0.8</p>
+              <label for="form-text-1" class="block text-sm font-semibold text-gray-900 mb-2">Text Input (with squircle border)</label>
+              <input id="form-text-1" type="text" class="w-full px-4 py-3 bg-white border-0 rounded-xl shadow-sm focus:outline-none focus:ring-0 transition-all text-gray-900" placeholder="Enter text here">
+              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 12px, smoothing: 0.8, borderWidth: 2px</p>
             </div>
             <div>
-              <label for="form-text-2" class="block text-sm font-semibold text-gray-900 mb-2">Email Input</label>
-              <input id="form-text-2" type="email" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900" placeholder="your@email.com">
-              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 12px, smoothing: 0.8</p>
+              <label for="form-text-2" class="block text-sm font-semibold text-gray-900 mb-2">Email Input (with squircle border)</label>
+              <input id="form-text-2" type="email" class="w-full px-4 py-3 bg-white border-0 rounded-xl shadow-sm focus:outline-none focus:ring-0 transition-all text-gray-900" placeholder="your@email.com">
+              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 12px, smoothing: 0.8, borderWidth: 2px</p>
             </div>
             <div>
               <label for="form-textarea-1" class="block text-sm font-semibold text-gray-900 mb-2">Textarea (Manual Wrapper Pattern)</label>
               <!-- Wrapper gets the squircle border (textareas require wrapping due to overflow restrictions) -->
-              <div id="form-textarea-wrapper" class="inline-block w-full">
-                <textarea id="form-textarea-1" rows="3" class="w-full px-4 py-3 bg-white border-0 focus:outline-none focus:ring-0 transition-all resize-none text-gray-900" placeholder="Enter multiple lines..."></textarea>
+              <div id="form-textarea-wrapper" class="inline-block w-full overflow-hidden">
+                <textarea id="form-textarea-1" rows="3" class="w-full px-4 py-3 bg-white border-0 focus:outline-none focus:ring-0 transition-all resize-none text-gray-900" placeholder="Enter multiple lines..." style="position: relative; z-index: 1;"></textarea>
               </div>
               <p class="text-xs text-gray-500 mt-1 font-mono">radius: 16px, smoothing: 0.85, borderWidth: 2px</p>
               <p class="text-xs text-gray-600 mt-1 italic">Note: Border applied to wrapper div, not textarea directly (see README for details)</p>

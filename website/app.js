@@ -545,9 +545,9 @@ const exampleComponents = [
   // Images - Hero
   { id: 'image-hero', category: 'image', variant: 'hero', radius: 24, smoothing: 0.85 },
 
-  // Forms - Text Inputs
-  { id: 'form-text-1', category: 'form', variant: 'text', radius: 12, smoothing: 0.8 },
-  { id: 'form-text-2', category: 'form', variant: 'email', radius: 12, smoothing: 0.8 },
+  // Forms - Text Inputs (with borders)
+  { id: 'form-text-1', category: 'form', variant: 'text', radius: 12, smoothing: 0.8, borderWidth: 2, borderColor: '#d1d5db' },
+  { id: 'form-text-2', category: 'form', variant: 'email', radius: 12, smoothing: 0.8, borderWidth: 2, borderColor: '#d1d5db' },
 
   // Forms - Textareas (applying border to wrapper due to textarea overflow restrictions)
   { id: 'form-textarea-wrapper', category: 'form', variant: 'textarea', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' },
