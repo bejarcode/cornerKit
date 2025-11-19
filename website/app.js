@@ -1198,19 +1198,16 @@ document.addEventListener('click', function(e) {
 // ============================================================================
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 if (darkModeToggle) {
-  // Check for saved user preference or system preference
-  const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
-    (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-  if (isDarkMode) {
-    document.documentElement.classList.add('dark');
-  }
-
-  // Toggle dark mode
+  // Toggle dark mode on click
   darkModeToggle.addEventListener('click', () => {
     document.documentElement.classList.toggle('dark');
     const isDark = document.documentElement.classList.contains('dark');
     localStorage.setItem('darkMode', isDark);
+
+    // Reinitialize Lucide icons after DOM changes
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
   });
 }
 

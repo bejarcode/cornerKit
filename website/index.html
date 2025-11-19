@@ -27,6 +27,11 @@
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
 
   <!-- AOS (Animate On Scroll) -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -85,6 +90,17 @@
   </script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+  <!-- Initialize dark mode immediately to prevent flash -->
+  <script>
+    // Check for saved user preference or system preference
+    const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
+      (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+
   <!-- Dark Mode Toggle -->
   <button id="dark-mode-toggle" class="fixed top-4 right-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all border-2 border-gray-200 dark:border-gray-700" aria-label="Toggle dark mode">
     <svg id="sun-icon" class="w-6 h-6 text-gray-900 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -168,7 +184,7 @@
     <div id="main-content" class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Live Interactive Playground</h2>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Adjust the sliders to see real-time updates and generate code snippets</p>
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Adjust the sliders to see real-time updates and generate code snippets</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
@@ -227,7 +243,7 @@
 
             <div id="border-controls" class="space-y-3 hidden">
               <div class="space-y-2">
-                <label for="border-width-slider" class="block text-sm font-medium text-gray-700">
+                <label for="border-width-slider" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Border Width: <span id="border-width-value" class="text-blue-600 font-semibold">2</span>px
                 </label>
                 <input
@@ -243,7 +259,7 @@
               </div>
 
               <div class="space-y-2">
-                <label for="border-color-picker" class="block text-sm font-medium text-gray-700">
+                <label for="border-color-picker" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Border Color: <span id="border-color-value" class="text-blue-600 font-semibold">#000000</span>
                 </label>
                 <div class="flex items-center gap-3">
@@ -321,11 +337,11 @@
       </div>
 
       <div class="mt-12 max-w-3xl mx-auto bg-blue-50 rounded-2xl p-6 text-center">
-        <p class="text-gray-700 leading-relaxed">
-          <strong class="font-semibold text-gray-900">Keyboard Shortcuts:</strong> Press <kbd class="px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded shadow-sm">R</kbd> to reset | Press <kbd class="px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded shadow-sm">I</kbd> to inspect (logs to console)
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+          <strong class="font-semibold text-gray-900 dark:text-white">Keyboard Shortcuts:</strong> Press <kbd class="px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded shadow-sm">R</kbd> to reset | Press <kbd class="px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded shadow-sm">I</kbd> to inspect (logs to console)
         </p>
         <p class="text-gray-700 leading-relaxed mt-3">
-          <strong class="font-semibold text-gray-900">Note:</strong> CornerKit v1.1 now includes border support! Try the border toggle above to add squircle borders with customizable width and color. The library uses CSS <code class="px-1.5 py-0.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded">clip-path</code> for performance and broad compatibility.
+          <strong class="font-semibold text-gray-900 dark:text-white">Note:</strong> CornerKit v1.1 now includes border support! Try the border toggle above to add squircle borders with customizable width and color. The library uses CSS <code class="px-1.5 py-0.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded">clip-path</code> for performance and broad compatibility.
         </p>
       </div>
     </div>
@@ -336,7 +352,7 @@
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Visual Examples Gallery</h2>
-        <p class="text-lg text-gray-600">See squircles applied to real UI components</p>
+        <p class="text-lg text-gray-600 dark:text-gray-300">See squircles applied to real UI components</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -346,7 +362,7 @@
           <div class="flex flex-wrap gap-3">
             <button id="button-primary" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white hover:text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all hover:-translate-y-0.5">Primary Button</button>
             <button id="button-secondary" class="px-6 py-3 bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Secondary Button</button>
-            <button id="button-ghost" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Ghost Button</button>
+            <button id="button-ghost" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 dark:text-gray-200 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Ghost Button</button>
             <button id="button-disabled" class="px-6 py-3 bg-gray-100 text-gray-400 font-medium rounded-xl opacity-60 cursor-not-allowed" disabled>Disabled Button</button>
           </div>
           <p class="text-xs text-gray-500 mt-4 font-mono">radius: 20px, smoothing: 0.8</p>
@@ -444,13 +460,13 @@
             <div class="space-y-3">
               <div class="flex items-center gap-2 mb-2">
                 <div class="w-1 h-4 bg-blue-600 rounded-full"></div>
-                <span class="text-sm font-semibold text-gray-700">Tabs</span>
+                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Tabs</span>
               </div>
               <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4">
                 <div class="flex gap-1 border-b border-blue-200/50 pb-2">
                   <button id="nav-tab-1" class="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-100/50 rounded-t-lg border-b-2 border-blue-600 transition-all hover:bg-blue-100">Tab 1</button>
-                  <button id="nav-tab-2" class="px-4 py-2 text-sm font-medium text-gray-600 rounded-t-lg border-b-2 border-transparent transition-all hover:text-gray-900 hover:bg-blue-50">Tab 2</button>
-                  <button id="nav-tab-3" class="px-4 py-2 text-sm font-medium text-gray-600 rounded-t-lg border-b-2 border-transparent transition-all hover:text-gray-900 hover:bg-blue-50">Tab 3</button>
+                  <button id="nav-tab-2" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-t-lg border-b-2 border-transparent transition-all hover:text-gray-900 hover:bg-blue-50">Tab 2</button>
+                  <button id="nav-tab-3" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-t-lg border-b-2 border-transparent transition-all hover:text-gray-900 hover:bg-blue-50">Tab 3</button>
                 </div>
                 <p class="text-xs text-gray-500 mt-3 font-mono">radius: 12px, smoothing: 0.8</p>
               </div>
@@ -460,13 +476,13 @@
             <div class="space-y-3">
               <div class="flex items-center gap-2 mb-2">
                 <div class="w-1 h-4 bg-purple-600 rounded-full"></div>
-                <span class="text-sm font-semibold text-gray-700">Pills</span>
+                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Pills</span>
               </div>
               <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4">
                 <div class="flex flex-wrap gap-2">
                   <button id="nav-pill-1" class="px-5 py-2 text-sm font-medium bg-purple-600 text-white rounded-full shadow-md hover:shadow-lg hover:bg-purple-700 transition-all hover:-translate-y-0.5">Pill 1</button>
-                  <button id="nav-pill-2" class="px-5 py-2 text-sm font-medium bg-white text-gray-700 rounded-full shadow-sm hover:shadow-md hover:bg-purple-50 transition-all hover:-translate-y-0.5 border border-purple-100">Pill 2</button>
-                  <button id="nav-pill-3" class="px-5 py-2 text-sm font-medium bg-white text-gray-700 rounded-full shadow-sm hover:shadow-md hover:bg-purple-50 transition-all hover:-translate-y-0.5 border border-purple-100">Pill 3</button>
+                  <button id="nav-pill-2" class="px-5 py-2 text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full shadow-sm hover:shadow-md hover:bg-purple-50 transition-all hover:-translate-y-0.5 border border-purple-100">Pill 2</button>
+                  <button id="nav-pill-3" class="px-5 py-2 text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full shadow-sm hover:shadow-md hover:bg-purple-50 transition-all hover:-translate-y-0.5 border border-purple-100">Pill 3</button>
                 </div>
                 <p class="text-xs text-gray-500 mt-3 font-mono">radius: 20px, smoothing: 0.9</p>
               </div>
@@ -476,13 +492,13 @@
             <div class="space-y-3">
               <div class="flex items-center gap-2 mb-2">
                 <div class="w-1 h-4 bg-emerald-600 rounded-full"></div>
-                <span class="text-sm font-semibold text-gray-700">Breadcrumbs</span>
+                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Breadcrumbs</span>
               </div>
               <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-4">
                 <div id="nav-breadcrumbs" class="flex flex-wrap items-center gap-2 text-sm">
-                  <span class="px-3 py-1.5 bg-white text-gray-700 rounded-lg shadow-sm border border-emerald-100 font-medium">Home</span>
+                  <span class="px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg shadow-sm border border-emerald-100 font-medium">Home</span>
                   <span class="text-emerald-400 font-bold">›</span>
-                  <span class="px-3 py-1.5 bg-white text-gray-700 rounded-lg shadow-sm border border-emerald-100 font-medium">Products</span>
+                  <span class="px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg shadow-sm border border-emerald-100 font-medium">Products</span>
                   <span class="text-emerald-400 font-bold">›</span>
                   <span class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg shadow-md font-medium">Details</span>
                 </div>
@@ -547,7 +563,7 @@
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Squircle vs Border-Radius</h2>
-        <p class="text-lg text-gray-600">Compare the smooth, continuous curves of squircles with standard CSS rounded corners</p>
+        <p class="text-lg text-gray-600 dark:text-gray-300">Compare the smooth, continuous curves of squircles with standard CSS rounded corners</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
@@ -557,9 +573,9 @@
             <span>Smooth & Natural</span>
           </div>
           <div class="text-left space-y-2 bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
-            <p class="text-sm text-gray-700">✓ <strong class="font-semibold text-gray-900">Continuous S-curve</strong> - smooth transition from straight edges</p>
-            <p class="text-sm text-gray-700">✓ <strong class="font-semibold text-gray-900">iOS-style design</strong> - same curves used by Apple</p>
-            <p class="text-sm text-gray-700">✓ <strong class="font-semibold text-gray-900">Adjustable smoothing</strong> - control curve intensity (0.0-1.0)</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">✓ <strong class="font-semibold text-gray-900 dark:text-white">Continuous S-curve</strong> - smooth transition from straight edges</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">✓ <strong class="font-semibold text-gray-900 dark:text-white">iOS-style design</strong> - same curves used by Apple</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">✓ <strong class="font-semibold text-gray-900 dark:text-white">Adjustable smoothing</strong> - control curve intensity (0.0-1.0)</p>
           </div>
         </div>
 
@@ -569,17 +585,17 @@
             <span>Circular Arc</span>
           </div>
           <div class="text-left space-y-2 bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
-            <p class="text-sm text-gray-700">• <strong class="font-semibold text-gray-900">Circular arc</strong> - abrupt transition at corner</p>
-            <p class="text-sm text-gray-700">• <strong class="font-semibold text-gray-900">Standard CSS</strong> - uniform radius only</p>
-            <p class="text-sm text-gray-700">• <strong class="font-semibold text-gray-900">Can look harsh</strong> - especially at large sizes</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">• <strong class="font-semibold text-gray-900 dark:text-white">Circular arc</strong> - abrupt transition at corner</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">• <strong class="font-semibold text-gray-900 dark:text-white">Standard CSS</strong> - uniform radius only</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">• <strong class="font-semibold text-gray-900 dark:text-white">Can look harsh</strong> - especially at large sizes</p>
           </div>
         </div>
       </div>
 
       <div class="mt-12 max-w-3xl mx-auto bg-blue-50 rounded-2xl p-6 text-center">
-        <p class="text-gray-700 leading-relaxed">
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
           Squircles use a superellipse formula to create smoother, more continuous curves than standard border-radius.
-          The <strong class="font-semibold text-gray-900">smoothing parameter</strong> (0.0-1.0) controls how closely the curve follows the iOS-style continuous curve characteristic.
+          The <strong class="font-semibold text-gray-900 dark:text-white">smoothing parameter</strong> (0.0-1.0) controls how closely the curve follows the iOS-style continuous curve characteristic.
         </p>
       </div>
     </div>
@@ -590,11 +606,11 @@
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Browser Compatibility</h2>
-        <p class="text-lg text-gray-600">CornerKit uses progressive enhancement to support 98%+ of browsers</p>
+        <p class="text-lg text-gray-600 dark:text-gray-300">CornerKit uses progressive enhancement to support 98%+ of browsers</p>
       </div>
 
       <div class="text-center mb-12">
-        <p class="text-gray-700 mb-3"><strong class="font-semibold">Your browser:</strong> <span id="current-tier-badge" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold">Detecting...</span></p>
+        <p class="text-gray-700 dark:text-gray-300 mb-3"><strong class="font-semibold">Your browser:</strong> <span id="current-tier-badge" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold">Detecting...</span></p>
       </div>
 
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden mb-12">
@@ -605,42 +621,42 @@
           <table class="w-full">
             <thead class="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Browser</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Version</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Tier</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Performance</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Browser</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Version</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Tier</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Performance</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Chrome</td>
-                <td class="px-6 py-4 text-sm text-gray-600">65+</td>
-                <td class="px-6 py-4 text-sm text-gray-600">Houdini / ClipPath</td>
-                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">Chrome</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">65+</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">Houdini / ClipPath</td>
+                <td class="px-6 py-4 dark:text-gray-300"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
               </tr>
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Firefox</td>
-                <td class="px-6 py-4 text-sm text-gray-600">60+</td>
-                <td class="px-6 py-4 text-sm text-gray-600">ClipPath</td>
-                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">Firefox</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">60+</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">ClipPath</td>
+                <td class="px-6 py-4 dark:text-gray-300"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
               </tr>
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Safari</td>
-                <td class="px-6 py-4 text-sm text-gray-600">13.1+</td>
-                <td class="px-6 py-4 text-sm text-gray-600">ClipPath</td>
-                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">Safari</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">13.1+</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">ClipPath</td>
+                <td class="px-6 py-4 dark:text-gray-300"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
               </tr>
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Edge</td>
-                <td class="px-6 py-4 text-sm text-gray-600">79+</td>
-                <td class="px-6 py-4 text-sm text-gray-600">Houdini / ClipPath</td>
-                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">Edge</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">79+</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">Houdini / ClipPath</td>
+                <td class="px-6 py-4 dark:text-gray-300"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
               </tr>
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                <td class="px-6 py-4 text-sm text-gray-900 font-medium">IE11</td>
-                <td class="px-6 py-4 text-sm text-gray-600">11</td>
-                <td class="px-6 py-4 text-sm text-gray-600">Fallback</td>
-                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">Border-radius only</span></td>
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">IE11</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">11</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">Fallback</td>
+                <td class="px-6 py-4 dark:text-gray-300"><span class="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">Border-radius only</span></td>
               </tr>
             </tbody>
           </table>
@@ -649,11 +665,11 @@
 
       <div class="bg-white rounded-2xl p-8 shadow-sm">
         <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Tier Hierarchy</h3>
-        <ol class="space-y-4 ml-6 list-decimal text-gray-700">
-          <li><strong class="font-semibold text-gray-900">Native CSS</strong> - GPU-accelerated, zero JavaScript overhead (Chrome 139+)</li>
-          <li><strong class="font-semibold text-gray-900">Houdini Paint API</strong> - Runs on paint thread, near-native performance (Chrome 65+, Edge 79+)</li>
-          <li><strong class="font-semibold text-gray-900">SVG ClipPath</strong> - Dynamic path generation, excellent performance (All modern browsers)</li>
-          <li><strong class="font-semibold text-gray-900">Border-Radius Fallback</strong> - Standard rounded corners, universal compatibility</li>
+        <ol class="space-y-4 ml-6 list-decimal text-gray-700 dark:text-gray-300">
+          <li><strong class="font-semibold text-gray-900 dark:text-white">Native CSS</strong> - GPU-accelerated, zero JavaScript overhead (Chrome 139+)</li>
+          <li><strong class="font-semibold text-gray-900 dark:text-white">Houdini Paint API</strong> - Runs on paint thread, near-native performance (Chrome 65+, Edge 79+)</li>
+          <li><strong class="font-semibold text-gray-900 dark:text-white">SVG ClipPath</strong> - Dynamic path generation, excellent performance (All modern browsers)</li>
+          <li><strong class="font-semibold text-gray-900 dark:text-white">Border-Radius Fallback</strong> - Standard rounded corners, universal compatibility</li>
         </ol>
       </div>
     </div>
