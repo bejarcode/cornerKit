@@ -181,6 +181,87 @@ const info = ck.inspect('#button');
 console.log(info.config); // { radius: 32, smoothing: 0.6 }
 ```
 
+## Border Support
+
+CornerKit supports squircle borders using a dual pseudo-element rendering technique that creates smooth borders matching the corner curves.
+
+### Basic Border Usage
+
+```javascript
+const ck = new CornerKit();
+
+// Apply squircle with border
+ck.apply('.card', {
+  radius: 24,
+  smoothing: 0.6,
+  borderWidth: 2,        // Border width in pixels
+  borderColor: '#e5e7eb' // Border color (any CSS color)
+});
+```
+
+### HTML Data Attributes
+
+```html
+<div
+  data-squircle
+  data-squircle-radius="24"
+  data-squircle-smoothing="0.6"
+  data-squircle-border-width="2"
+  data-squircle-border-color="#e5e7eb"
+>
+  Card with squircle border
+</div>
+```
+
+### Compatible Elements
+
+Borders work seamlessly on elements with `overflow: visible` (the default for most elements):
+
+✅ **Fully compatible:**
+- `<div>` containers
+- `<button>` elements
+- `<a>` links
+- `<span>` inline elements
+- `<section>`, `<article>`, `<header>`, etc.
+
+### Limitations
+
+Borders use CSS pseudo-elements (`::before` and `::after`) that extend beyond the element's bounds to create the border effect. This requires `overflow: visible`.
+
+⚠️ **Not compatible with:**
+- `<textarea>` - Has browser-enforced `overflow: auto` for scrolling
+- `<select>` - Similar overflow restrictions
+- Scrollable containers with `overflow: scroll` or `overflow: auto`
+
+### Manual Wrapper Pattern for Form Elements
+
+For form elements like `<textarea>`, wrap the element in a container and apply the border to the wrapper:
+
+```html
+<!-- Wrapper gets the squircle border -->
+<div
+  data-squircle
+  data-squircle-radius="16"
+  data-squircle-smoothing="0.85"
+  data-squircle-border-width="2"
+  data-squircle-border-color="#d1d5db"
+  class="inline-block w-full"
+>
+  <!-- Textarea has no border/radius to avoid conflicts -->
+  <textarea
+    class="w-full px-4 py-3 bg-white border-0 focus:outline-none focus:ring-0"
+    rows="3"
+  ></textarea>
+</div>
+```
+
+**Key points:**
+- Apply squircle to the **wrapper div**, not the textarea
+- Remove conflicting styles from the textarea (border, border-radius, focus rings)
+- Wrapper should use `display: inline-block` or `block` and match desired width
+
+**Future improvement:** Phase 3 framework packages (React, Vue, Svelte) will handle wrapper injection automatically for form elements.
+
 ## Performance Benchmarks
 
 All metrics verified by automated tests on 2020 MacBook Pro (M1):

@@ -259,6 +259,7 @@ export class ClipPathRenderer {
     element.style.removeProperty('--squircle-content-bg-size');
     element.style.removeProperty('--squircle-content-bg-position');
     element.style.removeProperty('--squircle-content-bg-repeat');
+
     delete element.dataset['squircleBorder'];
     delete element.dataset['squircleOriginalBg'];
     // Note: We don't restore element.style.background here because

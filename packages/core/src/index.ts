@@ -143,6 +143,8 @@ export default class CornerKit {
       radius: validateRadius(config?.radius ?? this.globalConfig.radius),
       smoothing: validateSmoothing(config?.smoothing ?? this.globalConfig.smoothing),
       tier: config?.tier ?? this.globalConfig.tier,
+      borderWidth: config?.borderWidth,
+      borderColor: config?.borderColor,
     };
 
     // Detect tier (or use forced tier from config)

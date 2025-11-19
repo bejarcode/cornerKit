@@ -514,6 +514,12 @@ const exampleComponents = [
   { id: 'card-info', category: 'card', variant: 'info', radius: 20, smoothing: 0.8 },
   { id: 'card-testimonial', category: 'card', variant: 'testimonial', radius: 28, smoothing: 0.9 },
 
+  // Bordered Elements
+  { id: 'border-card-1', category: 'border', variant: 'card', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#d1d5db' },
+  { id: 'border-card-2', category: 'border', variant: 'card-colored', radius: 24, smoothing: 0.85, borderWidth: 3, borderColor: '#3b82f6' },
+  { id: 'border-button-1', category: 'border', variant: 'button', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#9ca3af' },
+  { id: 'border-button-2', category: 'border', variant: 'button-purple', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#a855f7' },
+
   // Modals
   { id: 'modal-dialog', category: 'modal', variant: 'dialog', radius: 20, smoothing: 0.8 },
   { id: 'modal-alert', category: 'modal', variant: 'alert', radius: 16, smoothing: 0.75 },
@@ -543,8 +549,8 @@ const exampleComponents = [
   { id: 'form-text-1', category: 'form', variant: 'text', radius: 12, smoothing: 0.8 },
   { id: 'form-text-2', category: 'form', variant: 'email', radius: 12, smoothing: 0.8 },
 
-  // Forms - Textareas
-  { id: 'form-textarea-1', category: 'form', variant: 'textarea', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' },
+  // Forms - Textareas (applying border to wrapper due to textarea overflow restrictions)
+  { id: 'form-textarea-wrapper', category: 'form', variant: 'textarea', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' },
   { id: 'form-textarea-2', category: 'form', variant: 'textarea-large', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' }
 ];
 
@@ -560,10 +566,20 @@ function applyToGalleryExamples() {
     try {
       const element = document.getElementById(component.id);
       if (element) {
-        ck.apply(`#${component.id}`, {
+        const config = {
           radius: component.radius,
           smoothing: component.smoothing
-        });
+        };
+
+        // Add border properties if they exist
+        if (component.borderWidth !== undefined) {
+          config.borderWidth = component.borderWidth;
+        }
+        if (component.borderColor !== undefined) {
+          config.borderColor = component.borderColor;
+        }
+
+        ck.apply(`#${component.id}`, config);
         successCount++;
       } else {
         console.warn(`Gallery element not found: ${component.id}`);
@@ -634,37 +650,6 @@ function displayCurrentTier() {
 // ============================================================================
 
 /**
- * Current comparison mode (split or overlay)
- */
-let comparisonMode = 'split';
-
-/**
- * Toggles between split and overlay comparison modes
- */
-function toggleComparisonMode() {
-  const comparisonContainer = document.querySelector('.comparison-split');
-  const toggleButton = document.getElementById('comparison-toggle');
-
-  if (!comparisonContainer) return;
-
-  if (comparisonMode === 'split') {
-    comparisonMode = 'overlay';
-    comparisonContainer.classList.add('overlay-mode');
-    if (toggleButton) {
-      toggleButton.textContent = 'Switch to Split View';
-    }
-    console.log('🔄 Comparison mode: Overlay');
-  } else {
-    comparisonMode = 'split';
-    comparisonContainer.classList.remove('overlay-mode');
-    if (toggleButton) {
-      toggleButton.textContent = 'Switch to Overlay View';
-    }
-    console.log('🔄 Comparison mode: Split');
-  }
-}
-
-/**
  * Initializes the comparison section
  */
 function initializeComparison() {
@@ -675,13 +660,6 @@ function initializeComparison() {
   const borderRadiusElement = document.getElementById('comparison-border-radius');
   if (borderRadiusElement) {
     borderRadiusElement.style.borderRadius = '32px';
-  }
-
-  // Attach toggle button click handler
-  const toggleButton = document.getElementById('comparison-toggle');
-  if (toggleButton) {
-    toggleButton.addEventListener('click', toggleComparisonMode);
-    toggleButton.textContent = 'Switch to Overlay View';
   }
 
   console.log('✅ Comparison section initialized');
