@@ -391,6 +391,9 @@ function testClipPathSupport() {
  */
 function displayBrowserTier() {
   const tier = detectBrowserTier();
+  const isDark = document.documentElement.classList.contains('dark') ||
+                  document.documentElement.getAttribute('data-theme') === 'dark';
+  
   const tierBadges = [
     document.getElementById('browser-tier'),
     document.getElementById('current-tier-badge')
@@ -400,16 +403,27 @@ function displayBrowserTier() {
     if (tierBadge) {
       tierBadge.textContent = tier;
 
-      // Color-code tier badge
+      // Remove Tailwind classes that might conflict
+      tierBadge.classList.remove('bg-blue-100', 'text-blue-800', 'bg-blue-600', 'dark:bg-purple-600', 'dark:text-white');
+
+      // Color-code tier badge with theme-aware colors
+      // Inline styles have higher specificity than classes
       if (tier.includes('Tier 1')) {
         tierBadge.style.backgroundColor = '#10b981'; // Green
+        tierBadge.style.color = '#ffffff';
       } else if (tier.includes('Tier 2')) {
         tierBadge.style.backgroundColor = '#3b82f6'; // Blue
+        tierBadge.style.color = '#ffffff';
       } else if (tier.includes('Tier 3')) {
         tierBadge.style.backgroundColor = '#8b5cf6'; // Purple
+        tierBadge.style.color = '#ffffff';
       } else {
-        tierBadge.style.backgroundColor = '#6b7280'; // Gray
+        tierBadge.style.backgroundColor = isDark ? '#4b5563' : '#6b7280'; // Gray
+        tierBadge.style.color = '#ffffff';
       }
+      
+      // Ensure styles are applied (force reflow)
+      void tierBadge.offsetHeight;
     }
   });
 
@@ -545,14 +559,26 @@ const exampleComponents = [
   // Images - Hero
   { id: 'image-hero', category: 'image', variant: 'hero', radius: 24, smoothing: 0.85 },
 
-  // Forms - Text Inputs (with borders)
-  { id: 'form-text-1', category: 'form', variant: 'text', radius: 12, smoothing: 0.8, borderWidth: 2, borderColor: '#d1d5db' },
-  { id: 'form-text-2', category: 'form', variant: 'email', radius: 12, smoothing: 0.8, borderWidth: 2, borderColor: '#d1d5db' },
+  // Forms - Text Inputs (with borders applied to wrappers, not inputs directly)
+  { id: 'form-text-1-wrapper', category: 'form', variant: 'text', radius: 12, smoothing: 0.8, borderWidth: 2, borderColor: '#d1d5db' },
+  { id: 'form-text-2-wrapper', category: 'form', variant: 'email', radius: 12, smoothing: 0.8, borderWidth: 2, borderColor: '#d1d5db' },
 
   // Forms - Textareas (applying border to wrapper due to textarea overflow restrictions)
   { id: 'form-textarea-wrapper', category: 'form', variant: 'textarea', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' },
   { id: 'form-textarea-2', category: 'form', variant: 'textarea-large', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' }
 ];
+
+/**
+ * Gets appropriate border color based on current theme
+ * @param {string} lightColor - Color for light mode
+ * @param {string} darkColor - Color for dark mode
+ * @returns {string} Appropriate color for current theme
+ */
+function getThemeBorderColor(lightColor, darkColor) {
+  const isDark = document.documentElement.classList.contains('dark') ||
+                  document.documentElement.getAttribute('data-theme') === 'dark';
+  return isDark ? darkColor : lightColor;
+}
 
 /**
  * Applies squircles to all gallery example components
@@ -576,7 +602,22 @@ function applyToGalleryExamples() {
           config.borderWidth = component.borderWidth;
         }
         if (component.borderColor !== undefined) {
-          config.borderColor = component.borderColor;
+          // Use theme-aware border colors
+          let borderColor = component.borderColor;
+          
+          // Map light colors to dark mode equivalents
+          if (component.id === 'border-card-1') {
+            borderColor = getThemeBorderColor('#d1d5db', '#4b5563'); // Light gray -> Dark gray
+          } else if (component.id === 'border-button-1') {
+            borderColor = getThemeBorderColor('#9ca3af', '#6b7280'); // Medium gray -> Lighter gray
+          } else if (component.id === 'form-text-1-wrapper' ||
+                     component.id === 'form-text-2-wrapper' ||
+                     component.id === 'form-textarea-wrapper') {
+            borderColor = getThemeBorderColor('#d1d5db', '#4b5563'); // Light gray -> Dark gray for forms
+          }
+          // border-card-2 and border-button-2 use blue/purple which work in both modes
+          
+          config.borderColor = borderColor;
         }
 
         ck.apply(`#${component.id}`, config);
@@ -1194,31 +1235,105 @@ document.addEventListener('click', function(e) {
 });
 
 // ============================================================================
-// Dark Mode Toggle
+// Dark Mode Toggle - Safari Optimized
 // ============================================================================
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 if (darkModeToggle) {
+  // Detect Safari
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  
   // Toggle dark mode on click
-  darkModeToggle.addEventListener('click', () => {
+  darkModeToggle.addEventListener('click', function() {
     const html = document.documentElement;
+    const body = document.body;
+    
+    // Toggle dark class
     html.classList.toggle('dark');
     const isDark = html.classList.contains('dark');
     
     // Save preference
-    localStorage.setItem('darkMode', isDark);
+    localStorage.setItem('darkMode', isDark.toString());
     
-    // Safari fix: Set data attribute for better compatibility
+    // Set data attribute
     html.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    
-    // Force Safari to repaint (sometimes needed for class changes)
-    html.style.display = 'none';
-    html.offsetHeight; // Trigger reflow
-    html.style.display = '';
 
-    // Reinitialize Lucide icons after DOM changes
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
+    // Set color-scheme CSS property for all browsers
+    html.style.colorScheme = isDark ? 'dark' : 'light';
+
+    // Update browser tier badge colors immediately
+    displayBrowserTier();
+
+    // Force browser to recalculate styles (applies to ALL browsers, not just Safari)
+    const forceRepaint = () => {
+      // Method 1: Trigger reflow on html element
+      void html.offsetHeight;
+
+      // Method 2: Temporarily modify display to force full recalculation
+      const originalDisplay = body.style.display;
+      body.style.display = 'none';
+      void body.offsetHeight; // Force reflow
+      body.style.display = originalDisplay;
+
+      // Method 3: Force style recalculation on key container elements
+      const containers = document.querySelectorAll('main, section, header, footer');
+      containers.forEach(el => void el.offsetHeight);
+    };
+
+    // Execute repaint immediately
+    forceRepaint();
+
+    // Also trigger after a microtask to ensure styles fully apply
+    Promise.resolve().then(() => {
+      forceRepaint();
+    });
+
+    // Reapply borders with theme-appropriate colors
+    // Use double requestAnimationFrame to ensure styles have fully recalculated
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        exampleComponents.forEach(component => {
+          if (component.borderWidth !== undefined && component.borderColor !== undefined) {
+            try {
+              const element = document.getElementById(component.id);
+              if (element) {
+                // Get current config or use defaults
+                const currentConfig = ck.inspect(`#${component.id}`);
+                const config = {
+                  radius: component.radius,
+                  smoothing: component.smoothing,
+                  borderWidth: component.borderWidth
+                };
+
+                // Determine border color based on theme
+                let borderColor = component.borderColor;
+                if (component.id === 'border-card-1') {
+                  borderColor = isDark ? '#4b5563' : '#d1d5db';
+                } else if (component.id === 'border-button-1') {
+                  borderColor = isDark ? '#6b7280' : '#9ca3af';
+                } else if (component.id === 'form-text-1-wrapper' ||
+                           component.id === 'form-text-2-wrapper' ||
+                           component.id === 'form-textarea-wrapper') {
+                  borderColor = isDark ? '#4b5563' : '#d1d5db'; // Same as border-card-1
+                }
+                // border-card-2 and border-button-2 keep their colors (blue/purple work in both)
+
+                config.borderColor = borderColor;
+
+                // Reapply the full config to ensure it updates
+                ck.apply(`#${component.id}`, config);
+              }
+            } catch (error) {
+              console.warn(`Failed to update border color for ${component.id}:`, error);
+            }
+          }
+        });
+
+        // Reinitialize Lucide icons after all updates
+        if (typeof lucide !== 'undefined') {
+          lucide.createIcons();
+        }
+      });
+    });
   });
 }
 

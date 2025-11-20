@@ -25,11 +25,19 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 
-  <!-- Tailwind CSS -->
+  <!-- Tailwind CSS - Configure BEFORE loading -->
+  <script>
+    // Configure Tailwind BEFORE loading to ensure Safari compatibility
+    window.tailwindConfig = {
+      darkMode: 'class',
+      important: true
+    };
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = {
-      darkMode: 'class'
+    // Ensure Tailwind config is applied (Safari fix)
+    if (window.tailwind && window.tailwindConfig) {
+      tailwind.config = window.tailwindConfig;
     }
   </script>
 
@@ -66,6 +74,15 @@
     .squircle-pending {
       animation: squircle-fallback-reveal 0s 0.5s forwards;
     }
+    
+    /* Safari dark mode support - ensure color-scheme is set */
+    html[data-theme="dark"] {
+      color-scheme: dark;
+    }
+    
+    html[data-theme="light"] {
+      color-scheme: light;
+    }
   </style>
 
   <!-- Structured Data (JSON-LD) for SEO -->
@@ -90,15 +107,36 @@
   </script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-  <!-- Initialize dark mode immediately to prevent flash -->
+  <!-- Initialize dark mode immediately to prevent flash - Safari optimized -->
   <script>
-    // Check for saved user preference or system preference
-    const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
-      (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    }
+    (function() {
+      'use strict';
+      // Check for saved user preference or system preference
+      const savedMode = localStorage.getItem('darkMode');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDarkMode = savedMode === 'true' || (savedMode === null && prefersDark);
+      
+      const html = document.documentElement;
+      
+      if (isDarkMode) {
+        // Apply dark class BEFORE any rendering
+        html.classList.add('dark');
+        html.setAttribute('data-theme', 'dark');
+        
+        // Safari-specific: Force immediate style recalculation
+        if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') === -1) {
+          html.style.colorScheme = 'dark';
+          // Trigger forced reflow for Safari
+          void html.offsetHeight;
+        }
+      } else {
+        html.classList.remove('dark');
+        html.setAttribute('data-theme', 'light');
+        if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') === -1) {
+          html.style.colorScheme = 'light';
+        }
+      }
+    })();
   </script>
 
   <!-- Dark Mode Toggle -->
@@ -200,7 +238,7 @@
               max="100"
               value="20"
               step="1"
-              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-blue-500"
               aria-label="Adjust corner radius"
               aria-valuemin="0"
               aria-valuemax="100"
@@ -219,7 +257,7 @@
               max="1"
               value="0.8"
               step="0.05"
-              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-blue-500"
               aria-label="Adjust smoothing parameter"
               aria-valuemin="0"
               aria-valuemax="1"
@@ -246,16 +284,16 @@
                 <label for="border-width-slider" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Border Width: <span id="border-width-value" class="text-blue-600 font-semibold">2</span>px
                 </label>
-                <input
-                  type="range"
-                  id="border-width-slider"
-                  min="1"
-                  max="10"
-                  value="2"
-                  step="1"
-                  class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                  aria-label="Adjust border width"
-                >
+                  <input
+                    type="range"
+                    id="border-width-slider"
+                    min="1"
+                    max="10"
+                    value="2"
+                    step="1"
+                    class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-blue-500"
+                    aria-label="Adjust border width"
+                  >
               </div>
 
               <div class="space-y-2">
@@ -291,7 +329,7 @@
             <div id="metrics-display" class="space-y-2 text-sm">
               <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Render Time:</strong> <span id="render-time" class="font-mono text-gray-900 dark:text-white">-</span> ms</p>
               <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Dimensions:</strong> <span id="dimensions" class="font-mono text-gray-900 dark:text-white">-</span></p>
-              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Browser Tier:</strong> <span id="browser-tier" class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-xs font-semibold">-</span></p>
+              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Browser Tier:</strong> <span id="browser-tier" class="inline-block px-3 py-1 bg-blue-100 dark:bg-purple-600 text-blue-800 dark:text-white rounded-lg text-xs font-semibold">-</span></p>
             </div>
           </div>
         </div>
@@ -391,12 +429,12 @@
         <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Bordered Elements</h3>
           <div class="space-y-4">
-            <div id="border-card-1" class="p-5 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
+            <div id="border-card-1" class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
               <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Bordered Card</strong>
               <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Squircle border with 2px width</p>
               <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 20px, smoothing: 0.8, borderWidth: 2px</p>
             </div>
-            <div id="border-card-2" class="p-5 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-xl shadow-sm">
+            <div id="border-card-2" class="p-5 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/50 dark:to-blue-800/50 rounded-xl shadow-sm">
               <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Colored Border</strong>
               <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Blue squircle border with gradient background</p>
               <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 24px, smoothing: 0.85, borderWidth: 3px, borderColor: #3b82f6</p>
@@ -535,19 +573,25 @@
           <div class="space-y-4">
             <div>
               <label for="form-text-1" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Text Input (with squircle border)</label>
-              <input id="form-text-1" type="text" class="w-full px-4 py-3 bg-white dark:bg-gray-700 border-0 rounded-xl shadow-sm focus:outline-none focus:ring-0 transition-all text-gray-900 dark:text-white" placeholder="Enter text here">
+              <!-- Wrapper gets the squircle border AND background (inputs require wrapping) -->
+              <div id="form-text-1-wrapper" class="inline-block w-full bg-white dark:bg-gray-700">
+                <input id="form-text-1" type="text" class="w-full px-4 py-3 bg-transparent border-0 focus:outline-none focus:ring-0 transition-all text-gray-900 dark:text-white" placeholder="Enter text here">
+              </div>
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">radius: 12px, smoothing: 0.8, borderWidth: 2px</p>
             </div>
             <div>
               <label for="form-text-2" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Email Input (with squircle border)</label>
-              <input id="form-text-2" type="email" class="w-full px-4 py-3 bg-white dark:bg-gray-700 border-0 rounded-xl shadow-sm focus:outline-none focus:ring-0 transition-all text-gray-900 dark:text-white" placeholder="your@email.com">
+              <!-- Wrapper gets the squircle border AND background (inputs require wrapping) -->
+              <div id="form-text-2-wrapper" class="inline-block w-full bg-white dark:bg-gray-700">
+                <input id="form-text-2" type="email" class="w-full px-4 py-3 bg-transparent border-0 focus:outline-none focus:ring-0 transition-all text-gray-900 dark:text-white" placeholder="your@email.com">
+              </div>
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">radius: 12px, smoothing: 0.8, borderWidth: 2px</p>
             </div>
             <div>
               <label for="form-textarea-1" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Textarea (Manual Wrapper Pattern)</label>
-              <!-- Wrapper gets the squircle border (textareas require wrapping due to overflow restrictions) -->
-              <div id="form-textarea-wrapper" class="inline-block w-full overflow-hidden">
-                <textarea id="form-textarea-1" rows="3" class="w-full px-4 py-3 bg-white dark:bg-gray-700 border-0 focus:outline-none focus:ring-0 transition-all resize-none text-gray-900 dark:text-white" placeholder="Enter multiple lines..." style="position: relative; z-index: 1;"></textarea>
+              <!-- Wrapper gets the squircle border AND background (textareas require wrapping) -->
+              <div id="form-textarea-wrapper" class="inline-block w-full bg-white dark:bg-gray-700">
+                <textarea id="form-textarea-1" rows="3" class="w-full px-4 py-3 bg-transparent border-0 focus:outline-none focus:ring-0 transition-all resize-none text-gray-900 dark:text-white" placeholder="Enter multiple lines..."></textarea>
               </div>
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">radius: 16px, smoothing: 0.8, borderWidth: 2px</p>
               <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 italic">Note: Border applied to wrapper div, not textarea directly (see README for details)</p>
