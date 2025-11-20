@@ -341,6 +341,49 @@ function BorderedCard({ children }) {
 }
 ```
 
+### Border Limitations & Workarounds
+
+CornerKit borders use `::before` and `::after` pseudo-elements, which require `overflow: visible` to render correctly. Some HTML elements have browser-enforced overflow restrictions that prevent borders from displaying:
+
+**Incompatible Elements:**
+- `<input>` (all types)
+- `<textarea>`
+- `<select>`
+- `<button>` (some browsers)
+- `<video>`, `<canvas>`, `<iframe>`
+
+**Solution: Wrapper Pattern**
+
+Wrap form elements in a container and apply the border to the wrapper:
+
+```html
+<!-- Wrapper gets the squircle border -->
+<div id="input-wrapper" class="bg-white">
+  <input type="text" class="bg-transparent" placeholder="Enter text">
+</div>
+```
+
+```javascript
+const ck = new CornerKit();
+
+// Apply border to wrapper, not the input
+ck.apply('#input-wrapper', {
+  radius: 12,
+  smoothing: 0.8,
+  borderWidth: 2,
+  borderColor: '#d1d5db'
+});
+```
+
+**Key Points:**
+- Apply border to the wrapper `<div>`, not the form element
+- Move background styling from form element to wrapper
+- Set form element background to `transparent`
+- Wrapper should be `display: inline-block` or `display: block`
+
+**Live Examples:**
+See the [interactive demo](https://bejarcode.github.io/cornerKit/) for working examples of form element borders using the wrapper pattern.
+
 ---
 
 ## Performance Benchmarks
