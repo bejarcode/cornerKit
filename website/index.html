@@ -190,8 +190,8 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         <div class="space-y-6">
           <div class="space-y-3">
-            <label for="radius-slider" class="block text-base font-medium text-gray-900">
-              Corner Radius: <span id="radius-value" aria-live="polite" class="text-blue-600 font-semibold">20</span>px
+            <label for="radius-slider" class="block text-base font-medium text-gray-900 dark:text-white">
+              Corner Radius: <span id="radius-value" aria-live="polite" class="text-blue-600 dark:text-blue-400 font-semibold">20</span>px
             </label>
             <input
               type="range"
@@ -209,8 +209,8 @@
           </div>
 
           <div class="space-y-3">
-            <label for="smoothing-slider" class="block text-base font-medium text-gray-900">
-              Smoothing: <span id="smoothing-value" aria-live="polite" class="text-blue-600 font-semibold">0.80</span>
+            <label for="smoothing-slider" class="block text-base font-medium text-gray-900 dark:text-white">
+              Smoothing: <span id="smoothing-value" aria-live="polite" class="text-blue-600 dark:text-blue-400 font-semibold">0.80</span>
             </label>
             <input
               type="range"
@@ -289,8 +289,8 @@
           <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Performance Metrics</h3>
             <div id="metrics-display" class="space-y-2 text-sm">
-              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Render Time:</strong> <span id="render-time" class="font-mono text-gray-900">-</span> ms</p>
-              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Dimensions:</strong> <span id="dimensions" class="font-mono text-gray-900">-</span></p>
+              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Render Time:</strong> <span id="render-time" class="font-mono text-gray-900 dark:text-white">-</span> ms</p>
+              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Dimensions:</strong> <span id="dimensions" class="font-mono text-gray-900 dark:text-white">-</span></p>
               <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Browser Tier:</strong> <span id="browser-tier" class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-xs font-semibold">-</span></p>
             </div>
           </div>
@@ -357,19 +357,19 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Buttons -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Buttons</h3>
           <div class="flex flex-wrap gap-3">
             <button id="button-primary" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white hover:text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all hover:-translate-y-0.5">Primary Button</button>
-            <button id="button-secondary" class="px-6 py-3 bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Secondary Button</button>
-            <button id="button-ghost" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 dark:text-gray-200 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Ghost Button</button>
-            <button id="button-disabled" class="px-6 py-3 bg-gray-100 text-gray-400 font-medium rounded-xl opacity-60 cursor-not-allowed" disabled>Disabled Button</button>
+            <button id="button-secondary" class="px-6 py-3 bg-blue-50 dark:bg-blue-900 hover:bg-blue-100 dark:hover:bg-blue-800 text-blue-600 dark:text-blue-200 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Secondary Button</button>
+            <button id="button-ghost" class="px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Ghost Button</button>
+            <button id="button-disabled" class="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 font-medium rounded-xl opacity-60 cursor-not-allowed" disabled>Disabled Button</button>
           </div>
-          <p class="text-xs text-gray-500 mt-4 font-mono">radius: 20px, smoothing: 0.8</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-4 font-mono">radius: 20px, smoothing: 0.8</p>
         </div>
 
         <!-- Cards -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Cards</h3>
           <div class="space-y-4">
             <div id="card-product" class="p-5 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-xl shadow-sm">
@@ -388,7 +388,7 @@
         </div>
 
         <!-- Bordered Elements -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Bordered Elements</h3>
           <div class="space-y-4">
             <div id="border-card-1" class="p-5 bg-white dark:bg-gray-700 rounded-xl shadow-sm">
@@ -410,7 +410,7 @@
         </div>
 
         <!-- Modals -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Modals</h3>
           <div class="space-y-4">
             <div id="modal-dialog" class="p-5 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow">
@@ -453,7 +453,7 @@
         </div>
 
         <!-- Navigation -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Navigation</h3>
           <div class="space-y-8">
             <!-- Tabs -->
@@ -462,13 +462,13 @@
                 <div class="w-1 h-4 bg-blue-600 rounded-full"></div>
                 <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Tabs</span>
               </div>
-              <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4">
-                <div class="flex gap-1 border-b border-blue-200/50 pb-2">
-                  <button id="nav-tab-1" class="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-100/50 rounded-t-lg border-b-2 border-blue-600 transition-all hover:bg-blue-100">Tab 1</button>
-                  <button id="nav-tab-2" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-t-lg border-b-2 border-transparent transition-all hover:text-gray-900 hover:bg-blue-50">Tab 2</button>
-                  <button id="nav-tab-3" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-t-lg border-b-2 border-transparent transition-all hover:text-gray-900 hover:bg-blue-50">Tab 3</button>
+              <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-xl p-4">
+                <div class="flex gap-1 border-b border-blue-200/50 dark:border-blue-700/50 pb-2">
+                  <button id="nav-tab-1" class="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-100/50 dark:bg-blue-900/50 rounded-t-lg border-b-2 border-blue-600 dark:border-blue-400 transition-all hover:bg-blue-100 dark:hover:bg-blue-900">Tab 1</button>
+                  <button id="nav-tab-2" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-t-lg border-b-2 border-transparent transition-all hover:text-gray-900 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-blue-900/30">Tab 2</button>
+                  <button id="nav-tab-3" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-t-lg border-b-2 border-transparent transition-all hover:text-gray-900 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-blue-900/30">Tab 3</button>
                 </div>
-                <p class="text-xs text-gray-500 mt-3 font-mono">radius: 12px, smoothing: 0.8</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-3 font-mono">radius: 12px, smoothing: 0.8</p>
               </div>
             </div>
 
@@ -478,13 +478,13 @@
                 <div class="w-1 h-4 bg-purple-600 rounded-full"></div>
                 <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Pills</span>
               </div>
-              <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4">
+              <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl p-4">
                 <div class="flex flex-wrap gap-2">
                   <button id="nav-pill-1" class="px-5 py-2 text-sm font-medium bg-purple-600 text-white rounded-full shadow-md hover:shadow-lg hover:bg-purple-700 transition-all hover:-translate-y-0.5">Pill 1</button>
-                  <button id="nav-pill-2" class="px-5 py-2 text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full shadow-sm hover:shadow-md hover:bg-purple-50 transition-all hover:-translate-y-0.5 border border-purple-100">Pill 2</button>
-                  <button id="nav-pill-3" class="px-5 py-2 text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full shadow-sm hover:shadow-md hover:bg-purple-50 transition-all hover:-translate-y-0.5 border border-purple-100">Pill 3</button>
+                  <button id="nav-pill-2" class="px-5 py-2 text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full shadow-sm hover:shadow-md hover:bg-purple-50 dark:hover:bg-purple-900/50 transition-all hover:-translate-y-0.5 border border-purple-100 dark:border-purple-800">Pill 2</button>
+                  <button id="nav-pill-3" class="px-5 py-2 text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full shadow-sm hover:shadow-md hover:bg-purple-50 dark:hover:bg-purple-900/50 transition-all hover:-translate-y-0.5 border border-purple-100 dark:border-purple-800">Pill 3</button>
                 </div>
-                <p class="text-xs text-gray-500 mt-3 font-mono">radius: 20px, smoothing: 0.9</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-3 font-mono">radius: 20px, smoothing: 0.9</p>
               </div>
             </div>
 
@@ -494,43 +494,43 @@
                 <div class="w-1 h-4 bg-emerald-600 rounded-full"></div>
                 <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Breadcrumbs</span>
               </div>
-              <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-4">
+              <div class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30 rounded-xl p-4">
                 <div id="nav-breadcrumbs" class="flex flex-wrap items-center gap-2 text-sm">
-                  <span class="px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg shadow-sm border border-emerald-100 font-medium">Home</span>
-                  <span class="text-emerald-400 font-bold">›</span>
-                  <span class="px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg shadow-sm border border-emerald-100 font-medium">Products</span>
-                  <span class="text-emerald-400 font-bold">›</span>
-                  <span class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg shadow-md font-medium">Details</span>
+                  <span class="px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg shadow-sm border border-emerald-100 dark:border-emerald-800 font-medium">Home</span>
+                  <span class="text-emerald-400 dark:text-emerald-500 font-bold">›</span>
+                  <span class="px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg shadow-sm border border-emerald-100 dark:border-emerald-800 font-medium">Products</span>
+                  <span class="text-emerald-400 dark:text-emerald-500 font-bold">›</span>
+                  <span class="px-3 py-1.5 bg-emerald-600 dark:bg-emerald-700 text-white rounded-lg shadow-md font-medium">Details</span>
                 </div>
-                <p class="text-xs text-gray-500 mt-3 font-mono">radius: 8px, smoothing: 0.7</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-3 font-mono">radius: 8px, smoothing: 0.7</p>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Images -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Images</h3>
           <div class="space-y-6">
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <img id="image-thumbnail-1" class="w-full h-auto object-cover rounded-xl shadow-md" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2306b6d4'/%3E%3Cstop offset='100%25' style='stop-color:%233b82f6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g1)' width='200' height='150'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='14' fill='white' text-anchor='middle' dy='.3em'%3ENature%3C/text%3E%3C/svg%3E" alt="Nature thumbnail" loading="lazy">
-                <p class="text-xs text-gray-500 mt-2 font-mono">radius: 16px, smoothing: 0.8</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 font-mono">radius: 16px, smoothing: 0.8</p>
               </div>
               <div>
                 <img id="image-thumbnail-2" class="w-full h-auto object-cover rounded-xl shadow-md" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ec4899'/%3E%3Cstop offset='100%25' style='stop-color:%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g2)' width='200' height='150'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='14' fill='white' text-anchor='middle' dy='.3em'%3ECity%3C/text%3E%3C/svg%3E" alt="City thumbnail" loading="lazy">
-                <p class="text-xs text-gray-500 mt-2 font-mono">radius: 16px, smoothing: 0.8</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 font-mono">radius: 16px, smoothing: 0.8</p>
               </div>
             </div>
             <div>
               <img id="image-hero" class="w-full h-auto object-cover rounded-2xl shadow-lg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2314b8a6'/%3E%3Cstop offset='50%25' style='stop-color:%230ea5e9'/%3E%3Cstop offset='100%25' style='stop-color:%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g3)' width='600' height='300'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' fill='white' text-anchor='middle' dy='.3em'%3EHero Banner Placeholder%3C/text%3E%3C/svg%3E" alt="Hero banner placeholder" loading="lazy">
-              <p class="text-xs text-gray-500 mt-2 font-mono">radius: 24px, smoothing: 0.85</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 font-mono">radius: 24px, smoothing: 0.85</p>
             </div>
           </div>
         </div>
 
         <!-- Forms -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Form Elements</h3>
           <div class="space-y-4">
             <div>
@@ -592,7 +592,7 @@
         </div>
       </div>
 
-      <div class="mt-12 max-w-3xl mx-auto bg-blue-50 rounded-2xl p-6 text-center">
+      <div class="mt-12 max-w-3xl mx-auto bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-6 text-center border border-blue-100 dark:border-blue-800">
         <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
           Squircles use a superellipse formula to create smoother, more continuous curves than standard border-radius.
           The <strong class="font-semibold text-gray-900 dark:text-white">smoothing parameter</strong> (0.0-1.0) controls how closely the curve follows the iOS-style continuous curve characteristic.
@@ -610,12 +610,12 @@
       </div>
 
       <div class="text-center mb-12">
-        <p class="text-gray-700 dark:text-gray-300 mb-3"><strong class="font-semibold">Your browser:</strong> <span id="current-tier-badge" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold">Detecting...</span></p>
+        <p class="text-gray-700 dark:text-gray-300 mb-3"><strong class="font-semibold text-gray-900 dark:text-white">Your browser:</strong> <span id="current-tier-badge" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold">Detecting...</span></p>
       </div>
 
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden mb-12">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h3 class="text-xl font-semibold text-gray-900">Browser Support Matrix</h3>
+      <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm overflow-hidden mb-12">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Browser Support Matrix</h3>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full">
@@ -627,7 +627,7 @@
                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Performance</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200">
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">Chrome</td>
                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">65+</td>
@@ -663,7 +663,7 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl p-8 shadow-sm">
+      <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm">
         <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Tier Hierarchy</h3>
         <ol class="space-y-4 ml-6 list-decimal text-gray-700 dark:text-gray-300">
           <li><strong class="font-semibold text-gray-900 dark:text-white">Native CSS</strong> - GPU-accelerated, zero JavaScript overhead (Chrome 139+)</li>
@@ -686,15 +686,15 @@
         <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Installation</h3>
         <div class="space-y-4">
           <div>
-            <p class="text-sm text-gray-600 mb-2 font-medium">npm / yarn / pnpm:</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-2 font-medium">npm / yarn / pnpm:</p>
             <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">npm install @cornerkit/core</code></pre>
           </div>
           <div>
-            <p class="text-sm text-gray-600 mb-2 font-medium">CDN (unpkg):</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-2 font-medium">CDN (unpkg):</p>
             <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">&lt;script src="https://unpkg.com/@cornerkit/core@1.1.0"&gt;&lt;/script&gt;</code></pre>
           </div>
           <div>
-            <p class="text-sm text-gray-600 mb-2 font-medium">CDN (jsDelivr):</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-2 font-medium">CDN (jsDelivr):</p>
             <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">&lt;script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.1.0"&gt;&lt;/script&gt;</code></pre>
           </div>
         </div>
@@ -764,8 +764,8 @@ function MyComponent() {
         </div>
 
         <!-- Vue (teaser) -->
-        <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm lg:col-span-2">
-          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Vue <span class="text-sm text-gray-500 font-normal">(Coming Soon)</span></h4>
+        <div class="relative bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm lg:col-span-2">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Vue <span class="text-sm text-gray-500 dark:text-gray-400 font-normal">(Coming Soon)</span></h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-html">&lt;template&gt;
   &lt;Squircle :radius="20" :smoothing="0.8"&gt;
     &lt;div&gt;Your content&lt;/div&gt;
