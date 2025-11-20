@@ -453,6 +453,29 @@ kbd {
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
 }
 
+/* Dark mode range slider styles */
+.dark .control-group input[type="range"] {
+  background-color: #374151;
+}
+
+.dark .control-group input[type="range"]::-webkit-slider-thumb {
+  background-color: #3b82f6;
+  border: 2px solid #1f2937;
+}
+
+.dark .control-group input[type="range"]::-moz-range-thumb {
+  background-color: #3b82f6;
+  border: 2px solid #1f2937;
+}
+
+.dark .control-group input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #374151;
+}
+
+.dark .control-group input[type="range"]::-moz-range-track {
+  background-color: #374151;
+}
+
 .playground-preview {
   width: 100%;
   height: 200px;
@@ -1232,74 +1255,95 @@ kbd {
 }
 
 /* ============================================================================
-   Dark Mode Support
+   Dark Mode Support (Class-based to match Tailwind's darkMode: 'class')
    ============================================================================ */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #111827;
-    --color-text: #f3f4f6;
-    --color-text-muted: #9ca3af;
-  }
+.dark {
+  --color-background: #111827;
+  --color-text: #f3f4f6;
+  --color-text-muted: #9ca3af;
+}
 
-  body {
-    background-color: var(--color-background);
-    color: var(--color-text);
-  }
+.dark body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
 
-  /* Adjust specific components for dark mode */
-  .bg-white {
-    background-color: #1f2937 !important;
-  }
+/* Adjust specific components for dark mode */
+.dark .bg-white {
+  background-color: #1f2937 !important;
+}
 
-  .bg-gray-50 {
-    background-color: #111827 !important;
-  }
+.dark .bg-gray-50 {
+  background-color: #111827 !important;
+}
 
-  .bg-gray-100 {
-    background-color: #1f2937 !important;
-  }
+.dark .bg-gray-100 {
+  background-color: #1f2937 !important;
+}
 
-  .text-gray-900 {
-    color: #f3f4f6 !important;
-  }
+.dark .text-gray-900 {
+  color: #f3f4f6 !important;
+}
 
-  .text-gray-700 {
-    color: #d1d5db !important;
-  }
+.dark .text-gray-700 {
+  color: #d1d5db !important;
+}
 
-  .text-gray-600 {
-    color: #9ca3af !important;
-  }
+.dark .text-gray-600 {
+  color: #9ca3af !important;
+}
 
-  .border-gray-200 {
-    border-color: #374151 !important;
-  }
+.dark .border-gray-200 {
+  border-color: #374151 !important;
+}
 
-  .border-gray-300 {
-    border-color: #4b5563 !important;
-  }
+.dark .border-gray-300 {
+  border-color: #4b5563 !important;
+}
 
-  /* Code blocks - keep dark */
-  .bg-gray-900,
-  pre {
-    background-color: #000 !important;
-  }
+/* Code blocks - keep dark */
+.dark .bg-gray-900,
+.dark pre {
+  background-color: #000 !important;
+}
 
-  /* Inputs and forms */
-  input,
-  textarea,
-  select {
-    background-color: #1f2937 !important;
-    border-color: #4b5563 !important;
-    color: #f3f4f6 !important;
-  }
+/* Inputs and forms */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+  color: #f3f4f6 !important;
+}
 
-  /* Cards and boxes */
-  .shadow-sm,
-  .shadow,
-  .shadow-lg {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5) !important;
-  }
+/* Range sliders - ensure visibility in dark mode */
+.dark input[type="range"] {
+  background-color: #374151 !important;
+}
+
+.dark input[type="range"]::-webkit-slider-thumb {
+  background-color: #3b82f6 !important;
+  border: 2px solid #1f2937;
+}
+
+.dark input[type="range"]::-moz-range-thumb {
+  background-color: #3b82f6 !important;
+  border: 2px solid #1f2937;
+}
+
+.dark input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #374151 !important;
+}
+
+.dark input[type="range"]::-moz-range-track {
+  background-color: #374151 !important;
+}
+
+/* Cards and boxes */
+.dark .shadow-sm,
+.dark .shadow,
+.dark .shadow-lg {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5) !important;
 }
 
 /* ============================================================================

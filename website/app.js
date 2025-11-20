@@ -1200,9 +1200,20 @@ const darkModeToggle = document.getElementById('dark-mode-toggle');
 if (darkModeToggle) {
   // Toggle dark mode on click
   darkModeToggle.addEventListener('click', () => {
-    document.documentElement.classList.toggle('dark');
-    const isDark = document.documentElement.classList.contains('dark');
+    const html = document.documentElement;
+    html.classList.toggle('dark');
+    const isDark = html.classList.contains('dark');
+    
+    // Save preference
     localStorage.setItem('darkMode', isDark);
+    
+    // Safari fix: Set data attribute for better compatibility
+    html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    
+    // Force Safari to repaint (sometimes needed for class changes)
+    html.style.display = 'none';
+    html.offsetHeight; // Trigger reflow
+    html.style.display = '';
 
     // Reinitialize Lucide icons after DOM changes
     if (typeof lucide !== 'undefined') {
