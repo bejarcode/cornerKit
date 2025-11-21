@@ -1,11 +1,26 @@
 // ============================================================================
+// CornerKit Demo Website - Wrapped in IIFE to prevent global pollution
+// ============================================================================
+(function() {
+'use strict';
+
+// ============================================================================
 // Phase 2: Foundational Infrastructure
 // ============================================================================
 
 // ----------------------------------------------------------------------------
 // T010: Initialize CornerKit
 // ----------------------------------------------------------------------------
+console.log('🔍 Debug: window.CornerKit =', window.CornerKit);
+console.log('🔍 Debug: window.CornerKit.default =', window.CornerKit?.default);
+
+if (!window.CornerKit || !window.CornerKit.default) {
+  console.error('❌ CornerKit library not loaded! Check if cornerkit.js is loaded before app.js');
+  throw new Error('CornerKit library not available');
+}
+
 const ck = new window.CornerKit.default();
+console.log('✅ CornerKit instance created:', ck);
 
 // ----------------------------------------------------------------------------
 // T015: Code Generation Engine (5 format templates)
@@ -27,7 +42,7 @@ ck.apply('#my-element', {
   Your content here
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.3"></script>
 <script>
   // Auto-init will apply squircles to all [data-squircle] elements
   CornerKit.auto();
@@ -110,22 +125,145 @@ function generateCode(format, radius, smoothing) {
  * Updates all code snippet DOM elements with newly generated code
  * @param {number} radius - Current radius value
  * @param {number} smoothing - Current smoothing value
+ * @param {Object} borderConfig - Optional border configuration
  */
-function updateAllCodeSnippets(radius, smoothing) {
+function updateAllCodeSnippets(radius, smoothing, borderConfig = null) {
+  console.log('🔍 updateAllCodeSnippets called with radius:', radius, 'smoothing:', smoothing, 'border:', borderConfig);
   const formats = ['vanilla-js', 'html', 'typescript', 'react', 'vue'];
 
   formats.forEach(format => {
     const codeElement = document.getElementById(`code-${format}`);
     if (codeElement) {
       try {
-        const code = generateCode(format, radius, smoothing);
+        const code = generateCodeWithBorder(format, radius, smoothing, borderConfig);
         codeElement.textContent = code;
+        console.log(`✅ Generated ${format} code (${code.length} chars)`);
       } catch (error) {
-        console.error(`Failed to generate ${format} code:`, error);
+        console.error(`❌ Failed to generate ${format} code:`, error);
         codeElement.textContent = '// Error generating code';
       }
+    } else {
+      console.warn(`⚠️ Code element #code-${format} not found in DOM`);
     }
   });
+}
+
+/**
+ * Generates code with optional border configuration
+ * @param {string} format - Code format
+ * @param {number} radius - Corner radius
+ * @param {number} smoothing - Smoothing value
+ * @param {Object} borderConfig - Border configuration
+ * @returns {string} Generated code
+ */
+function generateCodeWithBorder(format, radius, smoothing, borderConfig) {
+  const hasBorder = borderConfig && borderConfig.enabled;
+
+  const codeTemplatesWithBorder = {
+    'vanilla-js': () => {
+      if (hasBorder) {
+        return `import CornerKit from '@cornerkit/core';
+
+// Create instance
+const ck = new CornerKit();
+
+// Apply to element with border
+ck.apply('#my-element', {
+  radius: ${radius},
+  smoothing: ${smoothing},
+  borderWidth: ${borderConfig.width},
+  borderColor: '${borderConfig.color}'
+});`;
+      }
+      return codeTemplates['vanilla-js'](radius, smoothing);
+    },
+
+    'html': () => {
+      if (hasBorder) {
+        return `<div
+  data-squircle
+  data-squircle-radius="${radius}"
+  data-squircle-smoothing="${smoothing}"
+  style="border: none;"
+>
+  Your content here
+</div>
+
+<!-- Note: Border support requires JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.3"></script>
+<script>
+  const ck = new CornerKit();
+  ck.apply('[data-squircle]', {
+    radius: ${radius},
+    smoothing: ${smoothing},
+    borderWidth: ${borderConfig.width},
+    borderColor: '${borderConfig.color}'
+  });
+</script>`;
+      }
+      return codeTemplates['html'](radius, smoothing);
+    },
+
+    'typescript': () => {
+      if (hasBorder) {
+        return `import CornerKit, { type SquircleConfig } from '@cornerkit/core';
+
+const ck = new CornerKit();
+const config: SquircleConfig = {
+  radius: ${radius},
+  smoothing: ${smoothing},
+  borderWidth: ${borderConfig.width},
+  borderColor: '${borderConfig.color}'
+};
+ck.apply('#my-element', config);`;
+      }
+      return codeTemplates['typescript'](radius, smoothing);
+    },
+
+    'react': () => {
+      if (hasBorder) {
+        return `import { Squircle } from '@cornerkit/react';
+
+function App() {
+  return (
+    <Squircle
+      radius={${radius}}
+      smoothing={${smoothing}}
+      borderWidth={${borderConfig.width}}
+      borderColor="${borderConfig.color}"
+      style={{ border: 'none' }}
+    >
+      Your content here
+    </Squircle>
+  );
+}`;
+      }
+      return codeTemplates['react'](radius, smoothing);
+    },
+
+    'vue': () => {
+      if (hasBorder) {
+        return `<template>
+  <Squircle
+    :radius="${radius}"
+    :smoothing="${smoothing}"
+    :borderWidth="${borderConfig.width}"
+    borderColor="${borderConfig.color}"
+    style="border: none"
+  >
+    Your content here
+  </Squircle>
+</template>
+
+<script setup>
+import { Squircle } from '@cornerkit/vue';
+</script>`;
+      }
+      return codeTemplates['vue'](radius, smoothing);
+    }
+  };
+
+  return codeTemplatesWithBorder[format]();
 }
 
 // ----------------------------------------------------------------------------
@@ -136,15 +274,11 @@ function updateAllCodeSnippets(radius, smoothing) {
  * @param {string} formatOrId - Code format (vanilla-js, html, etc.) or element ID (code-vanilla-js)
  * @returns {Promise<void>}
  */
-async function copyCode(formatOrId) {
+async function copyCode(targetId, button) {
   try {
-    // Handle both formats: 'vanilla-js' or 'code-vanilla-js'
-    const format = formatOrId.startsWith('code-') ? formatOrId.substring(5) : formatOrId;
-    const elementId = formatOrId.startsWith('code-') ? formatOrId : `code-${formatOrId}`;
-
-    const codeElement = document.getElementById(elementId);
+    const codeElement = document.getElementById(targetId);
     if (!codeElement) {
-      throw new Error(`Code element not found: ${elementId}`);
+      throw new Error(`Code element not found: ${targetId}`);
     }
 
     const code = codeElement.textContent;
@@ -152,7 +286,7 @@ async function copyCode(formatOrId) {
     // Modern Clipboard API (Chrome 63+, Firefox 53+, Safari 13.1+)
     if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(code);
-      showCopyFeedback(format, 'success');
+      showCopyFeedback(button, 'success');
     } else {
       // Fallback for older browsers
       const textarea = document.createElement('textarea');
@@ -166,44 +300,45 @@ async function copyCode(formatOrId) {
       document.body.removeChild(textarea);
 
       if (success) {
-        showCopyFeedback(format, 'success');
+        showCopyFeedback(button, 'success');
       } else {
-        showCopyFeedback(format, 'fallback');
+        showCopyFeedback(button, 'fallback');
       }
     }
   } catch (error) {
     console.error('Copy failed:', error);
-    const format = formatOrId.startsWith('code-') ? formatOrId.substring(5) : formatOrId;
-    showCopyFeedback(format, 'error');
+    showCopyFeedback(button, 'error');
   }
 }
 
 /**
  * Shows visual feedback for copy action
- * @param {string} format - Code format
+ * @param {HTMLElement} button - Button element to show feedback on
  * @param {string} status - Feedback status (success, fallback, error)
  */
-function showCopyFeedback(format, status) {
-  const button = document.querySelector(`button[onclick*="copyCode('${format}')"]`);
+function showCopyFeedback(button, status) {
   if (!button) return;
 
   const originalText = button.textContent;
 
+  // Remove any existing state classes
+  button.classList.remove('btn-copy-success', 'btn-copy-error', 'btn-copy-fallback');
+
   if (status === 'success') {
     button.textContent = 'Copied!';
-    button.style.backgroundColor = 'var(--color-success, #10b981)';
+    button.classList.add('btn-copy-success');
   } else if (status === 'fallback') {
     button.textContent = 'Select & copy manually';
-    button.style.backgroundColor = 'var(--color-warning, #f59e0b)';
+    button.classList.add('btn-copy-fallback');
   } else {
     button.textContent = 'Copy failed';
-    button.style.backgroundColor = 'var(--color-error, #ef4444)';
+    button.classList.add('btn-copy-error');
   }
 
   // Reset button after 2 seconds
   setTimeout(() => {
     button.textContent = originalText;
-    button.style.backgroundColor = '';
+    button.classList.remove('btn-copy-success', 'btn-copy-error', 'btn-copy-fallback');
   }, 2000);
 }
 
@@ -215,17 +350,11 @@ function showCopyFeedback(format, status) {
  * @returns {string} Browser tier (Tier 1, Tier 2, Tier 3, or Tier 4)
  */
 function detectBrowserTier() {
-  // Check for Native CSS corner-shape (Tier 1)
-  if (CSS.supports && CSS.supports('corner-shape', 'squircle')) {
-    return 'Tier 1: Native CSS';
-  }
+  // Note: Native CSS corner-shape (Tier 1) and Houdini Paint API (Tier 2) are disabled
+  // Chrome falsely reports CSS.supports('corner-shape', 'squircle') as true but doesn't render it
+  // Houdini detection only checks for paintWorklet API, not actual squircle worklet registration
 
-  // Check for Houdini Paint API (Tier 2)
-  if ('paintWorklet' in CSS) {
-    return 'Tier 2: Houdini Paint API';
-  }
-
-  // Check for SVG clip-path (Tier 3)
+  // Check for SVG clip-path (Tier 3) - Current primary implementation
   // Safari has issues with CSS.supports() for path(), so test both methods
   if (testClipPathSupport()) {
     return 'Tier 3: SVG ClipPath';
@@ -262,6 +391,9 @@ function testClipPathSupport() {
  */
 function displayBrowserTier() {
   const tier = detectBrowserTier();
+  const isDark = document.documentElement.classList.contains('dark') ||
+                  document.documentElement.getAttribute('data-theme') === 'dark';
+  
   const tierBadges = [
     document.getElementById('browser-tier'),
     document.getElementById('current-tier-badge')
@@ -271,16 +403,27 @@ function displayBrowserTier() {
     if (tierBadge) {
       tierBadge.textContent = tier;
 
-      // Color-code tier badge
+      // Remove Tailwind classes that might conflict
+      tierBadge.classList.remove('bg-blue-100', 'text-blue-800', 'bg-blue-600', 'dark:bg-purple-600', 'dark:text-white');
+
+      // Color-code tier badge with theme-aware colors
+      // Inline styles have higher specificity than classes
       if (tier.includes('Tier 1')) {
         tierBadge.style.backgroundColor = '#10b981'; // Green
+        tierBadge.style.color = '#ffffff';
       } else if (tier.includes('Tier 2')) {
         tierBadge.style.backgroundColor = '#3b82f6'; // Blue
+        tierBadge.style.color = '#ffffff';
       } else if (tier.includes('Tier 3')) {
         tierBadge.style.backgroundColor = '#8b5cf6'; // Purple
+        tierBadge.style.color = '#ffffff';
       } else {
-        tierBadge.style.backgroundColor = '#6b7280'; // Gray
+        tierBadge.style.backgroundColor = isDark ? '#4b5563' : '#6b7280'; // Gray
+        tierBadge.style.color = '#ffffff';
       }
+      
+      // Ensure styles are applied (force reflow)
+      void tierBadge.offsetHeight;
     }
   });
 
@@ -301,16 +444,23 @@ document.addEventListener('keydown', (e) => {
     return;
   }
 
+  // Ignore if modifier keys are pressed (don't interfere with browser shortcuts)
+  if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) {
+    return;
+  }
+
   const key = e.key.toLowerCase();
 
   if (key === 'r') {
     // Reset to defaults
+    e.preventDefault();
     resetPlayground();
     console.log('⌨️ Keyboard shortcut: Reset to defaults (R)');
   }
 
   if (key === 'i') {
     // Inspect playground element
+    e.preventDefault();
     inspectPlayground();
     console.log('⌨️ Keyboard shortcut: Inspect element (I)');
   }
@@ -378,6 +528,12 @@ const exampleComponents = [
   { id: 'card-info', category: 'card', variant: 'info', radius: 20, smoothing: 0.8 },
   { id: 'card-testimonial', category: 'card', variant: 'testimonial', radius: 28, smoothing: 0.9 },
 
+  // Bordered Elements
+  { id: 'border-card-1', category: 'border', variant: 'card', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#d1d5db' },
+  { id: 'border-card-2', category: 'border', variant: 'card-colored', radius: 24, smoothing: 0.85, borderWidth: 3, borderColor: '#3b82f6' },
+  { id: 'border-button-1', category: 'border', variant: 'button', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#9ca3af' },
+  { id: 'border-button-2', category: 'border', variant: 'button-purple', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#a855f7' },
+
   // Modals
   { id: 'modal-dialog', category: 'modal', variant: 'dialog', radius: 20, smoothing: 0.8 },
   { id: 'modal-alert', category: 'modal', variant: 'alert', radius: 16, smoothing: 0.75 },
@@ -396,10 +552,6 @@ const exampleComponents = [
   // Navigation - Breadcrumbs
   { id: 'nav-breadcrumbs', category: 'navigation', variant: 'breadcrumbs', radius: 8, smoothing: 0.7 },
 
-  // Images - Avatars
-  { id: 'image-avatar-1', category: 'image', variant: 'avatar', radius: 40, smoothing: 0.85 },
-  { id: 'image-avatar-2', category: 'image', variant: 'avatar', radius: 40, smoothing: 0.85 },
-
   // Images - Thumbnails
   { id: 'image-thumbnail-1', category: 'image', variant: 'thumbnail', radius: 16, smoothing: 0.8 },
   { id: 'image-thumbnail-2', category: 'image', variant: 'thumbnail', radius: 16, smoothing: 0.8 },
@@ -407,14 +559,26 @@ const exampleComponents = [
   // Images - Hero
   { id: 'image-hero', category: 'image', variant: 'hero', radius: 24, smoothing: 0.85 },
 
-  // Forms - Text Inputs
-  { id: 'form-text-1', category: 'form', variant: 'text', radius: 12, smoothing: 0.8 },
-  { id: 'form-text-2', category: 'form', variant: 'email', radius: 12, smoothing: 0.8 },
+  // Forms - Text Inputs (with borders applied to wrappers, not inputs directly)
+  { id: 'form-text-1-wrapper', category: 'form', variant: 'text', radius: 12, smoothing: 0.8, borderWidth: 2, borderColor: '#d1d5db' },
+  { id: 'form-text-2-wrapper', category: 'form', variant: 'email', radius: 12, smoothing: 0.8, borderWidth: 2, borderColor: '#d1d5db' },
 
-  // Forms - Textareas
-  { id: 'form-textarea-1', category: 'form', variant: 'textarea', radius: 16, smoothing: 0.85 },
-  { id: 'form-textarea-2', category: 'form', variant: 'textarea-large', radius: 16, smoothing: 0.85 }
+  // Forms - Textareas (applying border to wrapper due to textarea overflow restrictions)
+  { id: 'form-textarea-wrapper', category: 'form', variant: 'textarea', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' },
+  { id: 'form-textarea-2', category: 'form', variant: 'textarea-large', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' }
 ];
+
+/**
+ * Gets appropriate border color based on current theme
+ * @param {string} lightColor - Color for light mode
+ * @param {string} darkColor - Color for dark mode
+ * @returns {string} Appropriate color for current theme
+ */
+function getThemeBorderColor(lightColor, darkColor) {
+  const isDark = document.documentElement.classList.contains('dark') ||
+                  document.documentElement.getAttribute('data-theme') === 'dark';
+  return isDark ? darkColor : lightColor;
+}
 
 /**
  * Applies squircles to all gallery example components
@@ -428,10 +592,35 @@ function applyToGalleryExamples() {
     try {
       const element = document.getElementById(component.id);
       if (element) {
-        ck.apply(`#${component.id}`, {
+        const config = {
           radius: component.radius,
           smoothing: component.smoothing
-        });
+        };
+
+        // Add border properties if they exist
+        if (component.borderWidth !== undefined) {
+          config.borderWidth = component.borderWidth;
+        }
+        if (component.borderColor !== undefined) {
+          // Use theme-aware border colors
+          let borderColor = component.borderColor;
+          
+          // Map light colors to dark mode equivalents
+          if (component.id === 'border-card-1') {
+            borderColor = getThemeBorderColor('#d1d5db', '#4b5563'); // Light gray -> Dark gray
+          } else if (component.id === 'border-button-1') {
+            borderColor = getThemeBorderColor('#9ca3af', '#6b7280'); // Medium gray -> Lighter gray
+          } else if (component.id === 'form-text-1-wrapper' ||
+                     component.id === 'form-text-2-wrapper' ||
+                     component.id === 'form-textarea-wrapper') {
+            borderColor = getThemeBorderColor('#d1d5db', '#4b5563'); // Light gray -> Dark gray for forms
+          }
+          // border-card-2 and border-button-2 use blue/purple which work in both modes
+          
+          config.borderColor = borderColor;
+        }
+
+        ck.apply(`#${component.id}`, config);
         successCount++;
       } else {
         console.warn(`Gallery element not found: ${component.id}`);
@@ -502,37 +691,6 @@ function displayCurrentTier() {
 // ============================================================================
 
 /**
- * Current comparison mode (split or overlay)
- */
-let comparisonMode = 'split';
-
-/**
- * Toggles between split and overlay comparison modes
- */
-function toggleComparisonMode() {
-  const comparisonContainer = document.querySelector('.comparison-split');
-  const toggleButton = document.getElementById('comparison-toggle');
-
-  if (!comparisonContainer) return;
-
-  if (comparisonMode === 'split') {
-    comparisonMode = 'overlay';
-    comparisonContainer.classList.add('overlay-mode');
-    if (toggleButton) {
-      toggleButton.textContent = 'Switch to Split View';
-    }
-    console.log('🔄 Comparison mode: Overlay');
-  } else {
-    comparisonMode = 'split';
-    comparisonContainer.classList.remove('overlay-mode');
-    if (toggleButton) {
-      toggleButton.textContent = 'Switch to Overlay View';
-    }
-    console.log('🔄 Comparison mode: Split');
-  }
-}
-
-/**
  * Initializes the comparison section
  */
 function initializeComparison() {
@@ -543,13 +701,6 @@ function initializeComparison() {
   const borderRadiusElement = document.getElementById('comparison-border-radius');
   if (borderRadiusElement) {
     borderRadiusElement.style.borderRadius = '32px';
-  }
-
-  // Attach toggle button click handler
-  const toggleButton = document.getElementById('comparison-toggle');
-  if (toggleButton) {
-    toggleButton.addEventListener('click', toggleComparisonMode);
-    toggleButton.textContent = 'Switch to Overlay View';
   }
 
   console.log('✅ Comparison section initialized');
@@ -568,9 +719,10 @@ function initializeComparison() {
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
+    const context = this; // Preserve context
     const later = () => {
       clearTimeout(timeout);
-      func(...args);
+      func.apply(context, args);
     };
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
@@ -581,12 +733,25 @@ function debounce(func, wait) {
  * Updates playground preview with new squircle parameters
  * @param {number} radius - Corner radius
  * @param {number} smoothing - Smoothing parameter
+ * @param {Object} borderConfig - Optional border configuration
+ * @param {boolean} borderConfig.enabled - Whether border is enabled
+ * @param {number} borderConfig.width - Border width in pixels
+ * @param {string} borderConfig.color - Border color
  */
-function updatePlaygroundPreview(radius, smoothing) {
+function updatePlaygroundPreview(radius, smoothing, borderConfig = null) {
   const startTime = performance.now();
 
+  // Build config object
+  const config = { radius, smoothing };
+
+  // Add border properties if enabled
+  if (borderConfig && borderConfig.enabled) {
+    config.borderWidth = borderConfig.width;
+    config.borderColor = borderConfig.color;
+  }
+
   // Update preview element
-  ck.update('#playground-preview', { radius, smoothing });
+  ck.update('#playground-preview', config);
 
   const endTime = performance.now();
   const renderTime = (endTime - startTime).toFixed(2);
@@ -594,8 +759,8 @@ function updatePlaygroundPreview(radius, smoothing) {
   // Update performance metrics
   displayPerformanceMetrics(renderTime);
 
-  // Update code snippets
-  updateAllCodeSnippets(radius, smoothing);
+  // Update code snippets with border info
+  updateAllCodeSnippets(radius, smoothing, borderConfig);
 }
 
 /**
@@ -625,9 +790,25 @@ function displayPerformanceMetrics(renderTime) {
 }
 
 // Debounced update functions for expensive operations
-const debouncedUpdatePreview = debounce((radius, smoothing) => {
-  updatePlaygroundPreview(radius, smoothing);
+const debouncedUpdatePreview = debounce((radius, smoothing, borderConfig) => {
+  updatePlaygroundPreview(radius, smoothing, borderConfig);
 }, 16); // ~60fps for smooth animation
+
+/**
+ * Gets current border configuration from UI controls
+ * @returns {Object} Border configuration object
+ */
+function getBorderConfig() {
+  const toggle = document.getElementById('border-toggle');
+  const widthSlider = document.getElementById('border-width-slider');
+  const colorInput = document.getElementById('border-color-input');
+
+  return {
+    enabled: toggle ? toggle.checked : false,
+    width: widthSlider ? parseInt(widthSlider.value, 10) : 2,
+    color: colorInput ? colorInput.value : '#3b82f6'
+  };
+}
 
 /**
  * Handles radius slider input with immediate visual feedback
@@ -635,6 +816,7 @@ const debouncedUpdatePreview = debounce((radius, smoothing) => {
 function handleRadiusChange(e) {
   const radius = parseInt(e.target.value, 10);
   const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+  const borderConfig = getBorderConfig();
 
   // Immediate visual feedback (no debounce)
   const radiusValue = document.getElementById('radius-value');
@@ -647,7 +829,7 @@ function handleRadiusChange(e) {
 
   // Use requestAnimationFrame for smooth updates
   requestAnimationFrame(() => {
-    debouncedUpdatePreview(radius, smoothing);
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
   });
 }
 
@@ -657,6 +839,7 @@ function handleRadiusChange(e) {
 function handleSmoothingChange(e) {
   const smoothing = parseFloat(e.target.value);
   const radius = parseInt(document.getElementById('radius-slider').value, 10);
+  const borderConfig = getBorderConfig();
 
   // Immediate visual feedback (no debounce)
   const smoothingValue = document.getElementById('smoothing-value');
@@ -669,7 +852,69 @@ function handleSmoothingChange(e) {
 
   // Use requestAnimationFrame for smooth updates
   requestAnimationFrame(() => {
-    debouncedUpdatePreview(radius, smoothing);
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
+  });
+}
+
+/**
+ * Handles border toggle checkbox change
+ */
+function handleBorderToggle(e) {
+  const borderControls = document.getElementById('border-controls');
+  if (borderControls) {
+    if (e.target.checked) {
+      borderControls.classList.remove('hidden');
+    } else {
+      borderControls.classList.add('hidden');
+    }
+  }
+
+  // Update preview with current values
+  const radius = parseInt(document.getElementById('radius-slider').value, 10);
+  const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+  const borderConfig = getBorderConfig();
+
+  requestAnimationFrame(() => {
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
+  });
+}
+
+/**
+ * Handles border width slider change
+ */
+function handleBorderWidthChange(e) {
+  const widthValue = document.getElementById('border-width-value');
+  if (widthValue) {
+    widthValue.textContent = e.target.value;
+  }
+
+  const radius = parseInt(document.getElementById('radius-slider').value, 10);
+  const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+  const borderConfig = getBorderConfig();
+
+  requestAnimationFrame(() => {
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
+  });
+}
+
+/**
+ * Handles border color change
+ */
+function handleBorderColorChange(color) {
+  const colorValue = document.getElementById('border-color-value');
+  const colorPicker = document.getElementById('border-color-picker');
+  const colorInput = document.getElementById('border-color-input');
+
+  if (colorValue) colorValue.textContent = color;
+  if (colorPicker && colorPicker.value !== color) colorPicker.value = color;
+  if (colorInput && colorInput.value !== color) colorInput.value = color;
+
+  const radius = parseInt(document.getElementById('radius-slider').value, 10);
+  const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+  const borderConfig = getBorderConfig();
+
+  requestAnimationFrame(() => {
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
   });
 }
 
@@ -712,6 +957,8 @@ function switchCodeTab(tabName) {
  */
 function initializeDemo() {
   console.log('🚀 CornerKit Demo Website initialized');
+  console.log('🔍 DOM ready state:', document.readyState);
+  console.log('🔍 CornerKit instance:', ck);
 
   // Display browser tier
   displayBrowserTier();
@@ -730,6 +977,13 @@ function initializeDemo() {
     // Apply squircle to playground preview
     ck.apply('#playground-preview', { radius: initialRadius, smoothing: initialSmoothing });
 
+    // Mark as ready to prevent FOUC - swap pending class for ready class
+    const preview = document.getElementById('playground-preview');
+    if (preview) {
+      preview.classList.remove('squircle-pending');
+      preview.classList.add('squircle-ready');
+    }
+
     // Initialize code snippets with default values
     updateAllCodeSnippets(initialRadius, initialSmoothing);
 
@@ -739,6 +993,25 @@ function initializeDemo() {
     // Attach slider event listeners
     radiusSlider.addEventListener('input', handleRadiusChange);
     smoothingSlider.addEventListener('input', handleSmoothingChange);
+
+    // Attach border control event listeners
+    const borderToggle = document.getElementById('border-toggle');
+    const borderWidthSlider = document.getElementById('border-width-slider');
+    const borderColorPicker = document.getElementById('border-color-picker');
+    const borderColorInput = document.getElementById('border-color-input');
+
+    if (borderToggle) {
+      borderToggle.addEventListener('change', handleBorderToggle);
+    }
+    if (borderWidthSlider) {
+      borderWidthSlider.addEventListener('input', handleBorderWidthChange);
+    }
+    if (borderColorPicker) {
+      borderColorPicker.addEventListener('input', (e) => handleBorderColorChange(e.target.value));
+    }
+    if (borderColorInput) {
+      borderColorInput.addEventListener('input', (e) => handleBorderColorChange(e.target.value));
+    }
 
     console.log('✅ Playground initialized with radius:', initialRadius, 'smoothing:', initialSmoothing);
   }
@@ -751,6 +1024,9 @@ function initializeDemo() {
       switchCodeTab(tabName);
     });
   });
+
+  // Ensure first tab (vanilla-js) is visible and active
+  switchCodeTab('vanilla-js');
 
   // Initialize gallery examples
   const galleryCount = applyToGalleryExamples();
@@ -765,12 +1041,18 @@ function initializeDemo() {
   console.log('  I - Inspect playground element');
 }
 
-// Wait for DOM to be ready, then initialize
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeDemo);
-} else {
-  initializeDemo();
-}
+  // Wait for DOM to be ready, then initialize
+  // Use a small delay to ensure all scripts are loaded
+  function startInitialization() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeDemo);
+    } else {
+      // DOM is already ready, but wait a tick to ensure scripts are fully loaded
+      setTimeout(initializeDemo, 0);
+    }
+  }
+
+  startInitialization();
 
 // ============================================================================
 // Phase 8: User Story 6 - Landing Page & Hero Section
@@ -785,6 +1067,13 @@ function initializeHero() {
     radius: 40,
     smoothing: 0.85
   });
+
+  // Mark as ready to prevent FOUC
+  const heroDemo = document.getElementById('hero-demo');
+  if (heroDemo) {
+    heroDemo.classList.remove('squircle-pending');
+    heroDemo.classList.add('squircle-ready');
+  }
 
   // Setup smooth scroll for CTA buttons
   const playgroundCTA = document.querySelector('a[href="#playground"]');
@@ -803,17 +1092,18 @@ function initializeHero() {
 
 /**
  * Copies the npm install command to clipboard
+ * @param {HTMLElement} button - Button that triggered the copy
  */
-function copyInstallCommand() {
+function copyInstallCommand(button) {
   const command = 'npm install @cornerkit/core';
 
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(command).then(() => {
       console.log('📋 Install command copied to clipboard');
-      showInstallCopyFeedback('success');
+      showCopyFeedback(button, 'success');
     }).catch(error => {
       console.error('Copy failed:', error);
-      showInstallCopyFeedback('error');
+      showCopyFeedback(button, 'error');
     });
   } else {
     // Fallback
@@ -828,9 +1118,9 @@ function copyInstallCommand() {
     document.body.removeChild(textarea);
 
     if (success) {
-      showInstallCopyFeedback('success');
+      showCopyFeedback(button, 'success');
     } else {
-      showInstallCopyFeedback('fallback');
+      showCopyFeedback(button, 'fallback');
     }
   }
 }
@@ -871,11 +1161,10 @@ function showInstallCopyFeedback(status) {
  * Copy code from static code examples in the Code Examples section
  * @param {string} exampleType - Type of example (example-vanilla, example-html, etc.)
  */
-function copyStaticExample(exampleType) {
+function copyStaticExample(button) {
   try {
     // Find the code example by button context
-    const button = event.target;
-    const codeExample = button.closest('.code-example');
+    const codeExample = button.closest('.code-example, .bg-gray-50, .relative');
 
     if (!codeExample) {
       throw new Error('Could not find code example container');
@@ -891,10 +1180,10 @@ function copyStaticExample(exampleType) {
     // Use modern Clipboard API or fallback
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(code).then(() => {
-        showCopyFeedbackForButton(button, 'success');
+        showCopyFeedback(button, 'success');
       }).catch(error => {
         console.error('Copy failed:', error);
-        showCopyFeedbackForButton(button, 'error');
+        showCopyFeedback(button, 'error');
       });
     } else {
       // Fallback for older browsers
@@ -909,53 +1198,144 @@ function copyStaticExample(exampleType) {
       document.body.removeChild(textarea);
 
       if (success) {
-        showCopyFeedbackForButton(button, 'success');
+        showCopyFeedback(button, 'success');
       } else {
-        showCopyFeedbackForButton(button, 'fallback');
+        showCopyFeedback(button, 'fallback');
       }
     }
   } catch (error) {
     console.error('Static example copy failed:', error);
-    if (event.target) {
-      showCopyFeedbackForButton(event.target, 'error');
+    showCopyFeedback(button, 'error');
+  }
+}
+
+// ============================================================================
+// Event Delegation (instead of inline onclick handlers)
+// ============================================================================
+document.addEventListener('click', function(e) {
+  const target = e.target;
+  const action = target.getAttribute('data-action');
+
+  if (!action) return;
+
+  // Handle different actions
+  if (action === 'copy-code') {
+    e.preventDefault();
+    const targetId = target.getAttribute('data-target');
+    if (targetId) {
+      copyCode(targetId, target);
     }
+  } else if (action === 'copy-install') {
+    e.preventDefault();
+    copyInstallCommand(target);
+  } else if (action === 'copy-static-example') {
+    e.preventDefault();
+    copyStaticExample(target);
   }
-}
-
-/**
- * Shows visual feedback directly on a button element
- * @param {HTMLElement} button - Button element
- * @param {string} status - Feedback status (success, fallback, error)
- */
-function showCopyFeedbackForButton(button, status) {
-  const originalText = button.textContent;
-  const originalBg = button.style.backgroundColor;
-
-  if (status === 'success') {
-    button.textContent = 'Copied!';
-    button.style.backgroundColor = '#10b981';
-  } else if (status === 'fallback') {
-    button.textContent = 'Select & copy manually';
-    button.style.backgroundColor = '#f59e0b';
-  } else {
-    button.textContent = 'Copy failed';
-    button.style.backgroundColor = '#ef4444';
-  }
-
-  // Reset button after 2 seconds
-  setTimeout(() => {
-    button.textContent = originalText;
-    button.style.backgroundColor = originalBg;
-  }, 2000);
-}
+});
 
 // ============================================================================
-// Global API (for inline onclick handlers and debugging)
+// Dark Mode Toggle - Safari Optimized
 // ============================================================================
-window.copyCode = copyCode;
-window.copyStaticExample = copyStaticExample;
-window.resetPlayground = resetPlayground;
-window.inspectPlayground = inspectPlayground;
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+if (darkModeToggle) {
+  // Detect Safari
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  
+  // Toggle dark mode on click
+  darkModeToggle.addEventListener('click', function() {
+    const html = document.documentElement;
+    const body = document.body;
+    
+    // Toggle dark class
+    html.classList.toggle('dark');
+    const isDark = html.classList.contains('dark');
+    
+    // Save preference
+    localStorage.setItem('darkMode', isDark.toString());
+    
+    // Set data attribute
+    html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+
+    // Set color-scheme CSS property for all browsers
+    html.style.colorScheme = isDark ? 'dark' : 'light';
+
+    // Update browser tier badge colors immediately
+    displayBrowserTier();
+
+    // Force browser to recalculate styles (applies to ALL browsers, not just Safari)
+    const forceRepaint = () => {
+      // Method 1: Trigger reflow on html element
+      void html.offsetHeight;
+
+      // Method 2: Temporarily modify display to force full recalculation
+      const originalDisplay = body.style.display;
+      body.style.display = 'none';
+      void body.offsetHeight; // Force reflow
+      body.style.display = originalDisplay;
+
+      // Method 3: Force style recalculation on key container elements
+      const containers = document.querySelectorAll('main, section, header, footer');
+      containers.forEach(el => void el.offsetHeight);
+    };
+
+    // Execute repaint immediately
+    forceRepaint();
+
+    // Also trigger after a microtask to ensure styles fully apply
+    Promise.resolve().then(() => {
+      forceRepaint();
+    });
+
+    // Reapply borders with theme-appropriate colors
+    // Use double requestAnimationFrame to ensure styles have fully recalculated
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        exampleComponents.forEach(component => {
+          if (component.borderWidth !== undefined && component.borderColor !== undefined) {
+            try {
+              const element = document.getElementById(component.id);
+              if (element) {
+                // Get current config or use defaults
+                const currentConfig = ck.inspect(`#${component.id}`);
+                const config = {
+                  radius: component.radius,
+                  smoothing: component.smoothing,
+                  borderWidth: component.borderWidth
+                };
+
+                // Determine border color based on theme
+                let borderColor = component.borderColor;
+                if (component.id === 'border-card-1') {
+                  borderColor = isDark ? '#4b5563' : '#d1d5db';
+                } else if (component.id === 'border-button-1') {
+                  borderColor = isDark ? '#6b7280' : '#9ca3af';
+                } else if (component.id === 'form-text-1-wrapper' ||
+                           component.id === 'form-text-2-wrapper' ||
+                           component.id === 'form-textarea-wrapper') {
+                  borderColor = isDark ? '#4b5563' : '#d1d5db'; // Same as border-card-1
+                }
+                // border-card-2 and border-button-2 keep their colors (blue/purple work in both)
+
+                config.borderColor = borderColor;
+
+                // Reapply the full config to ensure it updates
+                ck.apply(`#${component.id}`, config);
+              }
+            } catch (error) {
+              console.warn(`Failed to update border color for ${component.id}:`, error);
+            }
+          }
+        });
+
+        // Reinitialize Lucide icons after all updates
+        if (typeof lucide !== 'undefined') {
+          lucide.createIcons();
+        }
+      });
+    });
+  });
+}
 
 // ============================================================================
 // Initialize AOS (Animate On Scroll)
@@ -968,3 +1348,12 @@ if (typeof AOS !== 'undefined') {
     offset: 100
   });
 }
+
+// ============================================================================
+// Initialize Lucide Icons
+// ============================================================================
+if (typeof lucide !== 'undefined') {
+  lucide.createIcons();
+}
+
+})(); // End IIFE

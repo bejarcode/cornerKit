@@ -55,8 +55,11 @@ website/
 
 ## Features
 
-- **Live Interactive Playground**: Adjust radius/smoothing sliders, see real-time updates
-- **Visual Examples Gallery**: 15+ UI components with squircles (buttons, cards, modals, etc.)
+- **Live Interactive Playground**: Adjust radius/smoothing sliders, toggle borders with width/color controls, see real-time updates
+- **Border Support**: Squircle borders that follow the curve path with customizable width and color
+- **Form Element Borders**: Demonstrates wrapper pattern for applying borders to inputs/textareas
+- **Dark Mode Support**: Automatic theme switching with theme-aware border colors
+- **Visual Examples Gallery**: 36+ UI components with squircles (buttons, cards, modals, forms, etc.)
 - **Side-by-Side Comparison**: Squircles vs border-radius
 - **Browser Compatibility Info**: Automatic tier detection (Native/Houdini/ClipPath/Fallback)
 - **Code Examples**: Ready-to-use snippets in 5 formats (vanilla JS, HTML, TypeScript, React, Vue)

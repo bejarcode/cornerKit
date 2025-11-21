@@ -62,6 +62,49 @@
 }
 
 /* =============================================================================
+   Squircle Fallback (Prevents FOUC - Flash of Unstyled Content)
+   Pre-applies border-radius while JavaScript loads the squircle mask
+   ============================================================================= */
+[data-squircle] {
+  border-radius: var(--squircle-radius, 20px);
+}
+
+/* Playground preview element */
+#playground-preview {
+  border-radius: var(--squircle-radius, 20px);
+}
+
+/* Hero showcase element */
+#hero-showcase {
+  border-radius: var(--squircle-radius, 24px);
+}
+
+/* Gallery elements - apply fallback border-radius immediately */
+[id^="gallery-"],
+[id^="button-"],
+[id^="card-"],
+[id^="modal-"],
+[id^="nav-"],
+[id^="image-"],
+[id^="form-"] {
+  border-radius: var(--squircle-radius, 20px);
+}
+
+/* Smooth transition when clip-path is applied */
+#playground-preview,
+#hero-showcase,
+[data-squircle],
+[id^="gallery-"],
+[id^="button-"],
+[id^="card-"],
+[id^="modal-"],
+[id^="nav-"],
+[id^="image-"],
+[id^="form-"] {
+  transition: clip-path 0.15s ease-out;
+}
+
+/* =============================================================================
    CSS Reset & Base Styles
    ============================================================================= */
 *, *::before, *::after {
@@ -266,8 +309,8 @@ kbd {
   width: 200px;
   height: 200px;
   margin: var(--spacing-xl) auto;
-  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+  background: white;
+  box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
   animation: heroSquircleAnimation 4s ease-in-out infinite alternate;
 }
 
@@ -410,6 +453,34 @@ kbd {
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
 }
 
+/* Dark mode range slider styles - Safari compatible */
+.dark .control-group input[type="range"],
+[data-theme="dark"] .control-group input[type="range"] {
+  background-color: #374151;
+}
+
+.dark .control-group input[type="range"]::-webkit-slider-thumb,
+[data-theme="dark"] .control-group input[type="range"]::-webkit-slider-thumb {
+  background-color: #3b82f6;
+  border: 2px solid #1f2937;
+}
+
+.dark .control-group input[type="range"]::-moz-range-thumb,
+[data-theme="dark"] .control-group input[type="range"]::-moz-range-thumb {
+  background-color: #3b82f6;
+  border: 2px solid #1f2937;
+}
+
+.dark .control-group input[type="range"]::-webkit-slider-runnable-track,
+[data-theme="dark"] .control-group input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #374151;
+}
+
+.dark .control-group input[type="range"]::-moz-range-track,
+[data-theme="dark"] .control-group input[type="range"]::-moz-range-track {
+  background-color: #374151;
+}
+
 .playground-preview {
   width: 100%;
   height: 200px;
@@ -496,22 +567,13 @@ kbd {
 }
 
 .code-block {
-  display: none;
   position: relative;
 }
 
-.code-block.active {
-  display: block;
-}
-
 .code-block pre {
-  background: var(--color-bg-alt);
-  padding: var(--spacing-md);
-  border-radius: var(--radius-md);
-  overflow-x: auto;
-  font-size: var(--font-size-sm);
-  line-height: 1.6;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  /* Let Tailwind classes handle styling - don't override bg-gray-900 */
+  white-space: pre;
+  font-family: var(--font-mono);
 }
 
 .code-block button {
@@ -1115,4 +1177,227 @@ kbd {
 *:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* ============================================================================
+   Copy Button State Classes (for feedback)
+   ============================================================================ */
+.btn-copy-success {
+  background-color: #10b981 !important;
+  color: white !important;
+}
+
+.btn-copy-error {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
+
+.btn-copy-fallback {
+  background-color: #f59e0b !important;
+  color: white !important;
+}
+
+/* ============================================================================
+   Skip to Content Link (Accessibility)
+   ============================================================================ */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================================================
+   Print Styles
+   ============================================================================ */
+@media print {
+  /* Hide non-essential elements */
+  header,
+  footer,
+  nav,
+  aside,
+  .no-print,
+  button,
+  .hero-demo,
+  .playground-preview {
+    display: none !important;
+  }
+
+  /* Reset colors for print */
+  * {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Add page breaks */
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+
+  /* Show URLs for links */
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  /* Optimize layout */
+  body {
+    margin: 0;
+    padding: 20px;
+  }
+
+  section {
+    page-break-inside: avoid;
+  }
+}
+
+/* ============================================================================
+   Dark Mode Support (Class-based to match Tailwind's darkMode: 'class')
+   Safari-compatible with data-theme fallback
+   ============================================================================ */
+.dark,
+[data-theme="dark"] {
+  --color-background: #111827;
+  --color-text: #f3f4f6;
+  --color-text-muted: #9ca3af;
+  color-scheme: dark;
+}
+
+.dark body,
+[data-theme="dark"] body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+/* Safari fallback: Use data-theme attribute if class doesn't work */
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* Adjust specific components for dark mode - Safari compatible */
+.dark .bg-white,
+[data-theme="dark"] .bg-white {
+  background-color: #1f2937 !important;
+}
+
+.dark .bg-gray-50,
+[data-theme="dark"] .bg-gray-50 {
+  background-color: #111827 !important;
+}
+
+.dark .bg-gray-100,
+[data-theme="dark"] .bg-gray-100 {
+  background-color: #1f2937 !important;
+}
+
+.dark .text-gray-900,
+[data-theme="dark"] .text-gray-900 {
+  color: #f3f4f6 !important;
+}
+
+.dark .text-gray-700,
+[data-theme="dark"] .text-gray-700 {
+  color: #d1d5db !important;
+}
+
+.dark .text-gray-600,
+[data-theme="dark"] .text-gray-600 {
+  color: #9ca3af !important;
+}
+
+.dark .border-gray-200,
+[data-theme="dark"] .border-gray-200 {
+  border-color: #374151 !important;
+}
+
+.dark .border-gray-300,
+[data-theme="dark"] .border-gray-300 {
+  border-color: #4b5563 !important;
+}
+
+/* Code blocks - keep dark */
+.dark .bg-gray-900,
+[data-theme="dark"] .bg-gray-900,
+.dark pre,
+[data-theme="dark"] pre {
+  background-color: #000 !important;
+}
+
+/* Inputs and forms */
+.dark input,
+[data-theme="dark"] input,
+.dark textarea,
+[data-theme="dark"] textarea,
+.dark select,
+[data-theme="dark"] select {
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+  color: #f3f4f6 !important;
+}
+
+/* Range sliders - ensure visibility in dark mode */
+.dark input[type="range"],
+[data-theme="dark"] input[type="range"] {
+  background-color: #374151 !important;
+}
+
+.dark input[type="range"]::-webkit-slider-thumb,
+[data-theme="dark"] input[type="range"]::-webkit-slider-thumb {
+  background-color: #3b82f6 !important;
+  border: 2px solid #1f2937;
+}
+
+.dark input[type="range"]::-moz-range-thumb,
+[data-theme="dark"] input[type="range"]::-moz-range-thumb {
+  background-color: #3b82f6 !important;
+  border: 2px solid #1f2937;
+}
+
+.dark input[type="range"]::-webkit-slider-runnable-track,
+[data-theme="dark"] input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #374151 !important;
+}
+
+.dark input[type="range"]::-moz-range-track,
+[data-theme="dark"] input[type="range"]::-moz-range-track {
+  background-color: #374151 !important;
+}
+
+/* Cards and boxes */
+.dark .shadow-sm,
+[data-theme="dark"] .shadow-sm,
+.dark .shadow,
+[data-theme="dark"] .shadow,
+.dark .shadow-lg,
+[data-theme="dark"] .shadow-lg {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ============================================================================
+   Smooth Scroll (Respect prefers-reduced-motion)
+   ============================================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

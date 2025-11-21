@@ -9,6 +9,7 @@
   <meta name="description" content="A lightweight JavaScript library for implementing iOS-style squircle (continuous curve) corners on web elements. Zero dependencies, 3.66 KB gzipped, 98%+ browser support.">
   <meta name="keywords" content="squircle, superellipse, rounded corners, iOS design, web components, javascript library, border-radius alternative">
   <meta name="author" content="CornerKit">
+  <link rel="canonical" href="https://bejarcode.github.io/cornerkit/">
 
   <!-- Open Graph Meta Tags -->
   <meta property="og:title" content="CornerKit - iOS-style squircle corners for the web">
@@ -24,69 +25,192 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 
-  <!-- Tailwind CSS -->
+  <!-- Tailwind CSS - Configure BEFORE loading -->
+  <script>
+    // Configure Tailwind BEFORE loading to ensure Safari compatibility
+    window.tailwindConfig = {
+      darkMode: 'class',
+      important: true
+    };
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Ensure Tailwind config is applied (Safari fix)
+    if (window.tailwind && window.tailwindConfig) {
+      tailwind.config = window.tailwindConfig;
+    }
+  </script>
 
   <!-- AOS (Animate On Scroll) -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
   <!-- Custom Stylesheet (for minimal overrides only) -->
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Critical CSS: Prevent FOUC for squircle elements -->
+  <!-- Hide elements initially, reveal after JS applies squircles -->
+  <style>
+    /* Hide squircle elements until JavaScript enhances them */
+    /* This prevents FOUC - elements appear already styled */
+    .squircle-pending {
+      opacity: 0 !important;
+    }
+
+    /* Reveal with smooth fade after squircle is applied */
+    .squircle-ready {
+      opacity: 1 !important;
+      transition: opacity 0.15s ease-out !important;
+    }
+
+    /* Fallback: If JS fails or is disabled, show after 500ms */
+    @keyframes squircle-fallback-reveal {
+      to { opacity: 1; }
+    }
+
+    .squircle-pending {
+      animation: squircle-fallback-reveal 0s 0.5s forwards;
+    }
+    
+    /* Safari dark mode support - ensure color-scheme is set */
+    html[data-theme="dark"] {
+      color-scheme: dark;
+    }
+    
+    html[data-theme="light"] {
+      color-scheme: light;
+    }
+  </style>
+
+  <!-- Structured Data (JSON-LD) for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CornerKit",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web",
+    "description": "A lightweight JavaScript library for implementing iOS-style squircle corners on web elements",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "CornerKit"
+    }
+  }
+  </script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+  <!-- Initialize dark mode immediately to prevent flash - Safari optimized -->
+  <script>
+    (function() {
+      'use strict';
+      // Check for saved user preference or system preference
+      const savedMode = localStorage.getItem('darkMode');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDarkMode = savedMode === 'true' || (savedMode === null && prefersDark);
+      
+      const html = document.documentElement;
+      
+      if (isDarkMode) {
+        // Apply dark class BEFORE any rendering
+        html.classList.add('dark');
+        html.setAttribute('data-theme', 'dark');
+        
+        // Safari-specific: Force immediate style recalculation
+        if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') === -1) {
+          html.style.colorScheme = 'dark';
+          // Trigger forced reflow for Safari
+          void html.offsetHeight;
+        }
+      } else {
+        html.classList.remove('dark');
+        html.setAttribute('data-theme', 'light');
+        if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') === -1) {
+          html.style.colorScheme = 'light';
+        }
+      }
+    })();
+  </script>
+
+  <!-- Dark Mode Toggle -->
+  <button id="dark-mode-toggle" class="fixed top-4 right-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all border-2 border-gray-200 dark:border-gray-700" aria-label="Toggle dark mode">
+    <svg id="sun-icon" class="w-6 h-6 text-gray-900 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+    </svg>
+    <svg id="moon-icon" class="w-6 h-6 text-gray-100 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+    </svg>
+  </button>
+
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Noscript fallback -->
+  <noscript>
+    <div style="padding: 20px; background: #fef3c7; border: 2px solid #f59e0b; margin: 20px; border-radius: 8px;">
+      <strong>JavaScript Required:</strong> This interactive demo requires JavaScript to be enabled.
+      Please enable JavaScript in your browser settings to view the full experience.
+    </div>
+  </noscript>
   <!-- Hero Section -->
-  <section id="hero" class="bg-gray-900 text-white min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+  <section id="hero" role="banner" class="bg-gray-900 text-white min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
     <div class="max-w-4xl mx-auto text-center">
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight" data-aos="fade-up">
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 tracking-tight leading-tight" data-aos="fade-up">
         iOS-style squircle corners for the web
       </h1>
-      <p class="text-lg sm:text-xl text-gray-300 mb-12 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+      <p class="text-base sm:text-xl text-gray-300 mb-8 sm:mb-10 max-w-2xl mx-auto px-2" data-aos="fade-up" data-aos-delay="100">
         A lightweight, zero-dependency JavaScript library for smooth, continuous curve corners
       </p>
 
-      <div class="hero-demo w-48 h-48 sm:w-56 sm:h-56 mx-auto mb-12" id="hero-demo" data-aos="zoom-in" data-aos-delay="200">
+      <div class="hero-demo squircle-pending w-32 h-32 sm:w-48 sm:h-48 lg:w-56 lg:h-56 mx-auto mb-8 sm:mb-12" id="hero-demo" data-aos="zoom-in" data-aos-delay="200">
         <!-- Animated squircle demo element -->
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12 text-left" data-aos="fade-up" data-aos-delay="300">
-        <div class="flex flex-col gap-2">
-          <strong class="text-base sm:text-lg font-semibold">Zero dependencies</strong>
-          <span class="text-sm text-gray-400">Pure vanilla JavaScript</span>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 mb-8 sm:mb-12" data-aos="fade-up" data-aos-delay="300">
+        <div class="flex flex-col gap-1.5 sm:gap-2 p-3 sm:p-4 bg-white/5 hover:bg-white/10 rounded-xl transition-colors backdrop-blur-sm border border-white/10">
+          <strong class="text-sm sm:text-base lg:text-lg font-semibold text-white">Zero dependencies</strong>
+          <span class="text-xs sm:text-sm text-gray-300">Pure vanilla JavaScript</span>
         </div>
-        <div class="flex flex-col gap-2">
-          <strong class="text-base sm:text-lg font-semibold">3.66 KB gzipped</strong>
-          <span class="text-sm text-gray-400">Tiny bundle size</span>
+        <div class="flex flex-col gap-1.5 sm:gap-2 p-3 sm:p-4 bg-white/5 hover:bg-white/10 rounded-xl transition-colors backdrop-blur-sm border border-white/10">
+          <strong class="text-sm sm:text-base lg:text-lg font-semibold text-white">3.66 KB gzipped</strong>
+          <span class="text-xs sm:text-sm text-gray-300">Tiny bundle size</span>
         </div>
-        <div class="flex flex-col gap-2">
-          <strong class="text-base sm:text-lg font-semibold">98%+ browser support</strong>
-          <span class="text-sm text-gray-400">Works everywhere</span>
+        <div class="flex flex-col gap-1.5 sm:gap-2 p-3 sm:p-4 bg-white/5 hover:bg-white/10 rounded-xl transition-colors backdrop-blur-sm border border-white/10">
+          <strong class="text-sm sm:text-base lg:text-lg font-semibold text-white">98%+ browser support</strong>
+          <span class="text-xs sm:text-sm text-gray-300">Works everywhere</span>
         </div>
-        <div class="flex flex-col gap-2">
-          <strong class="text-base sm:text-lg font-semibold">Progressive enhancement</strong>
-          <span class="text-sm text-gray-400">4-tier rendering</span>
+        <div class="flex flex-col gap-1.5 sm:gap-2 p-3 sm:p-4 bg-white/5 hover:bg-white/10 rounded-xl transition-colors backdrop-blur-sm border border-white/10">
+          <strong class="text-sm sm:text-base lg:text-lg font-semibold text-white">Progressive enhancement</strong>
+          <span class="text-xs sm:text-sm text-gray-300">4-tier rendering</span>
         </div>
-        <div class="flex flex-col gap-2">
-          <strong class="text-base sm:text-lg font-semibold">WCAG 2.1 AA accessible</strong>
-          <span class="text-sm text-gray-400">Screen reader friendly</span>
+        <div class="flex flex-col gap-1.5 sm:gap-2 p-3 sm:p-4 bg-white/5 hover:bg-white/10 rounded-xl transition-colors backdrop-blur-sm border border-white/10 sm:col-span-2 lg:col-span-1">
+          <strong class="text-sm sm:text-base lg:text-lg font-semibold text-white">WCAG 2.1 AA accessible</strong>
+          <span class="text-xs sm:text-sm text-gray-300">Screen reader friendly</span>
         </div>
       </div>
 
-      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8" data-aos="fade-up" data-aos-delay="400">
-        <a href="#playground" class="inline-flex items-center justify-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200 hover:-translate-y-0.5">
+      <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8 px-4 sm:px-0" data-aos="fade-up" data-aos-delay="400">
+        <a href="#playground" class="inline-flex items-center justify-center px-6 py-2.5 sm:px-8 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-sm sm:text-base font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200 hover:-translate-y-0.5">
           Try Playground
         </a>
-        <a href="https://github.com/bejarcode/cornerkit" class="inline-flex items-center justify-center px-8 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5">
+        <a href="https://github.com/bejarcode/cornerkit" class="inline-flex items-center justify-center px-6 py-2.5 sm:px-8 sm:py-3 bg-blue-500/10 hover:bg-blue-500/20 text-white hover:text-white text-sm sm:text-base font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5">
           View on GitHub
         </a>
-        <button onclick="copyInstallCommand()" class="inline-flex items-center justify-center px-8 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5" aria-label="Copy npm install command">
+        <button data-action="copy-install" class="inline-flex items-center justify-center px-6 py-2.5 sm:px-8 sm:py-3 bg-blue-500/10 hover:bg-blue-500/20 text-white hover:text-white text-sm sm:text-base font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5" aria-label="Copy npm install command">
           npm Install
         </button>
       </div>
 
-      <div class="relative max-w-md mx-auto" data-aos="fade-up" data-aos-delay="500">
-        <pre class="bg-black/30 backdrop-blur-sm px-4 py-3 pr-20 rounded-xl text-left overflow-x-auto"><code id="install-command" class="text-sm sm:text-base">npm install @cornerkit/core</code></pre>
-        <button onclick="copyCode('install-command')" class="absolute top-2 right-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors" aria-label="Copy install command">
+      <div class="relative max-w-md mx-auto px-4 sm:px-0" data-aos="fade-up" data-aos-delay="500">
+        <pre class="bg-black/30 backdrop-blur-sm px-3 py-2.5 pr-16 sm:px-4 sm:py-3 sm:pr-20 rounded-xl text-left overflow-x-auto"><code id="install-command" class="text-xs sm:text-sm lg:text-base">npm install @cornerkit/core</code></pre>
+        <button data-action="copy-code" data-target="install-command" class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-xs sm:text-sm font-medium rounded-lg transition-colors" aria-label="Copy install command">
           Copy
         </button>
       </div>
@@ -94,18 +218,18 @@
   </section>
 
   <!-- Playground Section -->
-  <section id="playground" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
-    <div class="max-w-7xl mx-auto">
+  <section id="playground" role="main" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+    <div id="main-content" class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Live Interactive Playground</h2>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Adjust the sliders to see real-time updates and generate code snippets</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Live Interactive Playground</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Adjust the sliders to see real-time updates and generate code snippets</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         <div class="space-y-6">
           <div class="space-y-3">
-            <label for="radius-slider" class="block text-base font-medium text-gray-900">
-              Corner Radius: <span id="radius-value" aria-live="polite" class="text-blue-600 font-semibold">20</span>px
+            <label for="radius-slider" class="block text-base font-medium text-gray-900 dark:text-white">
+              Corner Radius: <span id="radius-value" aria-live="polite" class="text-blue-600 dark:text-blue-400 font-semibold">20</span>px
             </label>
             <input
               type="range"
@@ -114,7 +238,7 @@
               max="100"
               value="20"
               step="1"
-              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-blue-500"
               aria-label="Adjust corner radius"
               aria-valuemin="0"
               aria-valuemax="100"
@@ -123,8 +247,8 @@
           </div>
 
           <div class="space-y-3">
-            <label for="smoothing-slider" class="block text-base font-medium text-gray-900">
-              Smoothing: <span id="smoothing-value" aria-live="polite" class="text-blue-600 font-semibold">0.80</span>
+            <label for="smoothing-slider" class="block text-base font-medium text-gray-900 dark:text-white">
+              Smoothing: <span id="smoothing-value" aria-live="polite" class="text-blue-600 dark:text-blue-400 font-semibold">0.80</span>
             </label>
             <input
               type="range"
@@ -133,7 +257,7 @@
               max="1"
               value="0.8"
               step="0.05"
-              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-blue-500"
               aria-label="Adjust smoothing parameter"
               aria-valuemin="0"
               aria-valuemax="1"
@@ -141,219 +265,336 @@
             >
           </div>
 
-          <div class="playground-preview w-full h-48 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center font-bold text-lg text-white shadow-xl shadow-blue-500/30" id="playground-preview">
+          <!-- Border Controls -->
+          <div class="space-y-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+            <div class="flex items-center justify-between">
+              <label for="border-toggle" class="text-base font-medium text-gray-900 dark:text-white">
+                Enable Border
+              </label>
+              <input
+                type="checkbox"
+                id="border-toggle"
+                class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                aria-label="Toggle squircle border"
+              >
+            </div>
+
+            <div id="border-controls" class="space-y-3 hidden">
+              <div class="space-y-2">
+                <label for="border-width-slider" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Border Width: <span id="border-width-value" class="text-blue-600 font-semibold">2</span>px
+                </label>
+                  <input
+                    type="range"
+                    id="border-width-slider"
+                    min="1"
+                    max="10"
+                    value="2"
+                    step="1"
+                    class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-blue-500"
+                    aria-label="Adjust border width"
+                  >
+              </div>
+
+              <div class="space-y-2">
+                <label for="border-color-picker" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Border Color: <span id="border-color-value" class="text-blue-600 font-semibold">#000000</span>
+                </label>
+                <div class="flex items-center gap-3">
+                  <input
+                    type="color"
+                    id="border-color-picker"
+                    value="#000000"
+                    class="w-12 h-10 rounded cursor-pointer border border-gray-300"
+                    aria-label="Choose border color"
+                  >
+                  <input
+                    type="text"
+                    id="border-color-input"
+                    value="#000000"
+                    class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="#000000"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="playground-preview squircle-pending relative w-full h-72 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center font-bold text-lg text-white shadow-xl shadow-blue-500/30" id="playground-preview">
             <p>Preview Element</p>
           </div>
 
-          <div class="bg-gray-50 rounded-2xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h3>
+          <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Performance Metrics</h3>
             <div id="metrics-display" class="space-y-2 text-sm">
-              <p class="flex justify-between"><strong class="text-gray-600 font-medium">Render Time:</strong> <span id="render-time" class="font-mono text-gray-900">-</span> ms</p>
-              <p class="flex justify-between"><strong class="text-gray-600 font-medium">Dimensions:</strong> <span id="dimensions" class="font-mono text-gray-900">-</span></p>
-              <p class="flex justify-between"><strong class="text-gray-600 font-medium">Browser Tier:</strong> <span id="browser-tier" class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-xs font-semibold">-</span></p>
+              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Render Time:</strong> <span id="render-time" class="font-mono text-gray-900 dark:text-white">-</span> ms</p>
+              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Dimensions:</strong> <span id="dimensions" class="font-mono text-gray-900 dark:text-white">-</span></p>
+              <p class="flex justify-between"><strong class="text-gray-600 dark:text-gray-300 font-medium">Browser Tier:</strong> <span id="browser-tier" class="inline-block px-3 py-1 bg-blue-100 dark:bg-purple-600 text-blue-800 dark:text-white rounded-lg text-xs font-semibold">-</span></p>
             </div>
           </div>
         </div>
 
         <div class="space-y-6">
-          <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Generated Code</h3>
+          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Generated Code</h3>
 
             <div class="flex flex-wrap gap-2 bg-gray-100 p-1 rounded-xl mb-4" role="tablist" aria-label="Code format tabs">
-              <button class="tab-btn px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg shadow-sm transition-all" data-tab="vanilla-js" role="tab" aria-selected="true" aria-controls="code-panel-vanilla-js">Vanilla JS</button>
-              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="html" role="tab" aria-selected="false" aria-controls="code-panel-html">HTML</button>
-              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="typescript" role="tab" aria-selected="false" aria-controls="code-panel-typescript">TypeScript</button>
-              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="react" role="tab" aria-selected="false" aria-controls="code-panel-react">React</button>
-              <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-lg transition-all" data-tab="vue" role="tab" aria-selected="false" aria-controls="code-panel-vue">Vue</button>
+              <button id="tab-vanilla-js" class="tab-btn px-4 py-2 text-sm font-medium bg-blue-600 text-white hover:text-white rounded-lg shadow-sm transition-all" data-tab="vanilla-js" role="tab" aria-selected="true" aria-controls="code-panel-vanilla-js">Vanilla JS</button>
+              <button id="tab-html" class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 rounded-lg transition-all" data-tab="html" role="tab" aria-selected="false" aria-controls="code-panel-html">HTML</button>
+              <button id="tab-typescript" class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 rounded-lg transition-all" data-tab="typescript" role="tab" aria-selected="false" aria-controls="code-panel-typescript">TypeScript</button>
+              <button id="tab-react" class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 rounded-lg transition-all" data-tab="react" role="tab" aria-selected="false" aria-controls="code-panel-react">React</button>
+              <button id="tab-vue" class="tab-btn px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 rounded-lg transition-all" data-tab="vue" role="tab" aria-selected="false" aria-controls="code-panel-vue">Vue</button>
             </div>
 
             <div id="code-panel-vanilla-js" class="code-block relative" data-content="vanilla-js" role="tabpanel" aria-labelledby="tab-vanilla-js">
-              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-vanilla-js" class="language-javascript"></code></pre>
-              <button onclick="copyCode('code-vanilla-js')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy vanilla JavaScript code">Copy</button>
+              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3 whitespace-pre"><code id="code-vanilla-js" class="language-javascript"></code></pre>
+              <button data-action="copy-code" data-target="code-vanilla-js" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy vanilla JavaScript code">Copy</button>
             </div>
 
             <div id="code-panel-html" class="code-block hidden relative" data-content="html" role="tabpanel" aria-labelledby="tab-html">
-              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-html" class="language-html"></code></pre>
-              <button onclick="copyCode('code-html')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy HTML code">Copy</button>
+              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3 whitespace-pre"><code id="code-html" class="language-html"></code></pre>
+              <button data-action="copy-code" data-target="code-html" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy HTML code">Copy</button>
             </div>
 
             <div id="code-panel-typescript" class="code-block hidden relative" data-content="typescript" role="tabpanel" aria-labelledby="tab-typescript">
-              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-typescript" class="language-typescript"></code></pre>
-              <button onclick="copyCode('code-typescript')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy TypeScript code">Copy</button>
+              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3 whitespace-pre"><code id="code-typescript" class="language-typescript"></code></pre>
+              <button data-action="copy-code" data-target="code-typescript" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy TypeScript code">Copy</button>
             </div>
 
             <div id="code-panel-react" class="code-block hidden relative" data-content="react" role="tabpanel" aria-labelledby="tab-react">
-              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-react" class="language-javascript"></code></pre>
-              <button onclick="copyCode('code-react')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy React code">Copy</button>
+              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3 whitespace-pre"><code id="code-react" class="language-javascript"></code></pre>
+              <button data-action="copy-code" data-target="code-react" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy React code">Copy</button>
             </div>
 
             <div id="code-panel-vue" class="code-block hidden relative" data-content="vue" role="tabpanel" aria-labelledby="tab-vue">
-              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm"><code id="code-vue" class="language-html"></code></pre>
-              <button onclick="copyCode('code-vue')" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy Vue code">Copy</button>
+              <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3 whitespace-pre"><code id="code-vue" class="language-html"></code></pre>
+              <button data-action="copy-code" data-target="code-vue" class="absolute top-3 right-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-xs font-medium rounded-lg shadow-sm transition-colors" aria-label="Copy Vue code">Copy</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-12 bg-gray-50 rounded-2xl p-6 text-center space-y-3">
-        <p class="text-sm text-gray-700">
-          <strong class="font-semibold">Keyboard Shortcuts:</strong> Press <kbd class="px-2 py-1 bg-white text-gray-900 text-xs font-mono rounded shadow-sm">R</kbd> to reset | Press <kbd class="px-2 py-1 bg-white text-gray-900 text-xs font-mono rounded shadow-sm">I</kbd> to inspect (logs to console)
+      <div class="mt-12 max-w-3xl mx-auto bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-6 text-center border border-blue-100 dark:border-blue-800">
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+          <strong class="font-semibold text-gray-900 dark:text-white">Keyboard Shortcuts:</strong> Press <kbd class="px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded shadow-sm">R</kbd> to reset | Press <kbd class="px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded shadow-sm">I</kbd> to inspect (logs to console)
         </p>
-        <p class="text-sm text-gray-600">
-          <strong class="font-medium">Note:</strong> CornerKit v1.0 focuses on performance and broad compatibility using CSS <code class="px-1.5 py-0.5 bg-white text-gray-900 text-xs font-mono rounded">clip-path</code>. Enhanced rendering options, including border support along squircle paths, are planned for future releases.
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed mt-3">
+          <strong class="font-semibold text-gray-900 dark:text-white">Note:</strong> CornerKit v1.1 now includes border support! Try the border toggle above to add squircle borders with customizable width and color. The library uses CSS <code class="px-1.5 py-0.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded">clip-path</code> for performance and broad compatibility.
         </p>
       </div>
     </div>
   </section>
 
   <!-- Gallery Section -->
-  <section id="gallery" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
+  <section id="gallery" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Visual Examples Gallery</h2>
-        <p class="text-lg text-gray-600">See squircles applied to real UI components</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Visual Examples Gallery</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300">See squircles applied to real UI components</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Buttons -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Buttons</h3>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Buttons</h3>
           <div class="flex flex-wrap gap-3">
-            <button id="button-primary" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all hover:-translate-y-0.5">Primary Button</button>
-            <button id="button-secondary" class="px-6 py-3 bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Secondary Button</button>
-            <button id="button-ghost" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Ghost Button</button>
-            <button id="button-disabled" class="px-6 py-3 bg-gray-100 text-gray-400 font-medium rounded-xl opacity-60 cursor-not-allowed" disabled>Disabled Button</button>
+            <button id="button-primary" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white hover:text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all hover:-translate-y-0.5">Primary Button</button>
+            <button id="button-secondary" class="px-6 py-3 bg-blue-50 dark:bg-blue-900 hover:bg-blue-100 dark:hover:bg-blue-800 text-blue-600 dark:text-blue-200 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Secondary Button</button>
+            <button id="button-ghost" class="px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-xl shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">Ghost Button</button>
+            <button id="button-disabled" class="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 font-medium rounded-xl opacity-60 cursor-not-allowed" disabled>Disabled Button</button>
           </div>
-          <p class="text-xs text-gray-500 mt-4 font-mono">radius: 20px, smoothing: 0.8</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-4 font-mono">radius: 20px, smoothing: 0.8</p>
         </div>
 
         <!-- Cards -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Cards</h3>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Cards</h3>
           <div class="space-y-4">
-            <div id="card-product" class="p-5 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm">
-              <strong class="block text-lg font-semibold text-gray-900 mb-1">Product Card</strong>
-              <p class="text-xs text-gray-500 font-mono">radius: 24px, smoothing: 0.85</p>
+            <div id="card-product" class="p-5 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Product Card</strong>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 24px, smoothing: 0.85</p>
             </div>
-            <div id="card-info" class="p-5 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-sm">
-              <strong class="block text-lg font-semibold text-gray-900 mb-1">Info Card</strong>
-              <p class="text-xs text-gray-500 font-mono">radius: 20px, smoothing: 0.8</p>
+            <div id="card-info" class="p-5 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Info Card</strong>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 20px, smoothing: 0.8</p>
             </div>
-            <div id="card-testimonial" class="p-5 bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-sm">
-              <strong class="block text-lg font-semibold text-gray-900 mb-1">Testimonial Card</strong>
-              <p class="text-xs text-gray-500 font-mono">radius: 28px, smoothing: 0.9</p>
+            <div id="card-testimonial" class="p-5 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Testimonial Card</strong>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 28px, smoothing: 0.9</p>
             </div>
+          </div>
+        </div>
+
+        <!-- Bordered Elements -->
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Bordered Elements</h3>
+          <div class="space-y-4">
+            <div id="border-card-1" class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Bordered Card</strong>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Squircle border with 2px width</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 20px, smoothing: 0.8, borderWidth: 2px</p>
+            </div>
+            <div id="border-card-2" class="p-5 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/50 dark:to-blue-800/50 rounded-xl shadow-sm">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Colored Border</strong>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Blue squircle border with gradient background</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 24px, smoothing: 0.85, borderWidth: 3px, borderColor: #3b82f6</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <button id="border-button-1" class="px-6 py-3 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-medium rounded-xl shadow-sm hover:shadow-md transition-all">Bordered Button</button>
+              <button id="border-button-2" class="px-6 py-3 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 hover:from-purple-100 hover:to-purple-200 dark:hover:from-purple-800 dark:hover:to-purple-700 text-purple-900 dark:text-purple-100 font-medium rounded-xl shadow-sm hover:shadow-md transition-all">Purple Border</button>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">Buttons: radius: 20px, smoothing: 0.8, borderWidth: 2px</p>
           </div>
         </div>
 
         <!-- Modals -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Modals</h3>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Modals</h3>
           <div class="space-y-4">
-            <div id="modal-dialog" class="p-5 bg-white rounded-xl shadow-lg">
-              <strong class="block text-lg font-semibold text-gray-900 mb-2">Dialog Modal</strong>
-              <p class="text-sm text-gray-600 mb-3">Confirm your action</p>
-              <p class="text-xs text-gray-500 font-mono">radius: 20px, smoothing: 0.8</p>
+            <div id="modal-dialog" class="p-5 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                  <i data-lucide="message-circle" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                </div>
+                <div class="flex-1">
+                  <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Dialog Modal</strong>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Confirm your action</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 20px, smoothing: 0.8</p>
+                </div>
+              </div>
             </div>
-            <div id="modal-alert" class="p-5 bg-white rounded-xl shadow-lg border-l-4 border-amber-500">
-              <strong class="block text-lg font-semibold text-gray-900 mb-2">⚠️ Alert Modal</strong>
-              <p class="text-sm text-gray-600 mb-3">Important notification</p>
-              <p class="text-xs text-gray-500 font-mono">radius: 16px, smoothing: 0.75</p>
+            <div id="modal-alert" class="p-5 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900 dark:to-orange-900 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-800 flex items-center justify-center">
+                  <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 dark:text-amber-400"></i>
+                </div>
+                <div class="flex-1">
+                  <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Alert Modal</strong>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Important notification</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 16px, smoothing: 0.75</p>
+                </div>
+              </div>
             </div>
-            <div id="modal-confirmation" class="p-5 bg-white rounded-xl shadow-lg border-l-4 border-green-500">
-              <strong class="block text-lg font-semibold text-gray-900 mb-2">✓ Success Modal</strong>
-              <p class="text-sm text-gray-600 mb-3">Action completed</p>
-              <p class="text-xs text-gray-500 font-mono">radius: 20px, smoothing: 0.85</p>
+            <div id="modal-confirmation" class="p-5 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900 dark:to-emerald-900 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center">
+                  <i data-lucide="check-circle" class="w-5 h-5 text-green-600 dark:text-green-400"></i>
+                </div>
+                <div class="flex-1">
+                  <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Success Modal</strong>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Action completed</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 20px, smoothing: 0.85</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Navigation -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Navigation</h3>
-          <div class="space-y-6">
-            <div>
-              <div class="flex gap-2 border-b border-gray-200 pb-3">
-                <button id="nav-tab-1" class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600 transition-colors">Tab 1</button>
-                <button id="nav-tab-2" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent transition-colors">Tab 2</button>
-                <button id="nav-tab-3" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent transition-colors">Tab 3</button>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Navigation</h3>
+          <div class="space-y-8">
+            <!-- Tabs -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-1 h-4 bg-blue-600 rounded-full"></div>
+                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Tabs</span>
               </div>
-              <p class="text-xs text-gray-500 mt-2 font-mono">Tabs: radius 12px, smoothing: 0.8</p>
+              <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-xl p-4">
+                <div class="flex gap-1 border-b border-blue-200/50 dark:border-blue-700/50 pb-2">
+                  <button id="nav-tab-1" class="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-100/50 dark:bg-blue-900/50 rounded-t-lg border-b-2 border-blue-600 dark:border-blue-400 transition-all hover:bg-blue-100 dark:hover:bg-blue-900">Tab 1</button>
+                  <button id="nav-tab-2" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-t-lg border-b-2 border-transparent transition-all hover:text-gray-900 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-blue-900/30">Tab 2</button>
+                  <button id="nav-tab-3" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-t-lg border-b-2 border-transparent transition-all hover:text-gray-900 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-blue-900/30">Tab 3</button>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-3 font-mono">radius: 12px, smoothing: 0.8</p>
+              </div>
             </div>
-            <div>
-              <div class="flex flex-wrap gap-2">
-                <button id="nav-pill-1" class="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-full shadow-sm">Pill 1</button>
-                <button id="nav-pill-2" class="px-4 py-2 text-sm font-medium bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors">Pill 2</button>
-                <button id="nav-pill-3" class="px-4 py-2 text-sm font-medium bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors">Pill 3</button>
+
+            <!-- Pills -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-1 h-4 bg-purple-600 rounded-full"></div>
+                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Pills</span>
               </div>
-              <p class="text-xs text-gray-500 mt-2 font-mono">Pills: radius 20px, smoothing: 0.9</p>
+              <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl p-4">
+                <div class="flex flex-wrap gap-2">
+                  <button id="nav-pill-1" class="px-5 py-2 text-sm font-medium bg-purple-600 text-white rounded-full shadow-md hover:shadow-lg hover:bg-purple-700 transition-all hover:-translate-y-0.5">Pill 1</button>
+                  <button id="nav-pill-2" class="px-5 py-2 text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full shadow-sm hover:shadow-md hover:bg-purple-50 dark:hover:bg-purple-900/50 transition-all hover:-translate-y-0.5 border border-purple-100 dark:border-purple-800">Pill 2</button>
+                  <button id="nav-pill-3" class="px-5 py-2 text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full shadow-sm hover:shadow-md hover:bg-purple-50 dark:hover:bg-purple-900/50 transition-all hover:-translate-y-0.5 border border-purple-100 dark:border-purple-800">Pill 3</button>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-3 font-mono">radius: 20px, smoothing: 0.9</p>
+              </div>
             </div>
-            <div>
-              <div id="nav-breadcrumbs" class="flex flex-wrap items-center gap-2 text-sm">
-                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg">Home</span>
-                <span class="text-gray-400">›</span>
-                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg">Products</span>
-                <span class="text-gray-400">›</span>
-                <span class="px-3 py-1 bg-blue-600 text-white rounded-lg">Details</span>
+
+            <!-- Breadcrumbs -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-1 h-4 bg-emerald-600 rounded-full"></div>
+                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Breadcrumbs</span>
               </div>
-              <p class="text-xs text-gray-500 mt-2 font-mono">radius: 8px, smoothing: 0.7</p>
+              <div class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30 rounded-xl p-4">
+                <div id="nav-breadcrumbs" class="flex flex-wrap items-center gap-2 text-sm">
+                  <span class="px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg shadow-sm border border-emerald-100 dark:border-emerald-800 font-medium">Home</span>
+                  <span class="text-emerald-400 dark:text-emerald-500 font-bold">›</span>
+                  <span class="px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg shadow-sm border border-emerald-100 dark:border-emerald-800 font-medium">Products</span>
+                  <span class="text-emerald-400 dark:text-emerald-500 font-bold">›</span>
+                  <span class="px-3 py-1.5 bg-emerald-600 dark:bg-emerald-700 text-white rounded-lg shadow-md font-medium">Details</span>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-3 font-mono">radius: 8px, smoothing: 0.7</p>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Images -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Images</h3>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Images</h3>
           <div class="space-y-6">
-            <div class="flex items-center gap-4">
-              <div>
-                <img id="image-avatar-1" class="w-20 h-20 object-cover rounded-2xl shadow-md" src="https://i.pravatar.cc/80?img=12" alt="Avatar 1" loading="lazy">
-                <p class="text-xs text-gray-500 mt-2 font-mono">Avatar: 40px, 0.85</p>
-              </div>
-              <div>
-                <img id="image-avatar-2" class="w-20 h-20 object-cover rounded-2xl shadow-md" src="https://i.pravatar.cc/80?img=45" alt="Avatar 2" loading="lazy">
-                <p class="text-xs text-gray-500 mt-2 font-mono">Avatar: 40px, 0.85</p>
-              </div>
-              <div>
-                <img id="image-avatar-3" class="w-20 h-20 object-cover rounded-2xl shadow-md" src="https://i.pravatar.cc/80?img=33" alt="Avatar 3" loading="lazy">
-                <p class="text-xs text-gray-500 mt-2 font-mono">Avatar: 40px, 0.85</p>
-              </div>
-            </div>
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <img id="image-thumbnail-1" class="w-full h-auto object-cover rounded-xl shadow-md" src="https://picsum.photos/seed/nature1/200/150" alt="Nature thumbnail" loading="lazy">
-                <p class="text-xs text-gray-500 mt-2 font-mono">16px, 0.8</p>
+                <img id="image-thumbnail-1" class="w-full h-auto object-cover rounded-xl shadow-md" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2306b6d4'/%3E%3Cstop offset='100%25' style='stop-color:%233b82f6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g1)' width='200' height='150'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='14' fill='white' text-anchor='middle' dy='.3em'%3ENature%3C/text%3E%3C/svg%3E" alt="Nature thumbnail" loading="lazy">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 font-mono">radius: 16px, smoothing: 0.8</p>
               </div>
               <div>
-                <img id="image-thumbnail-2" class="w-full h-auto object-cover rounded-xl shadow-md" src="https://picsum.photos/seed/city2/200/150" alt="City thumbnail" loading="lazy">
-                <p class="text-xs text-gray-500 mt-2 font-mono">16px, 0.8</p>
+                <img id="image-thumbnail-2" class="w-full h-auto object-cover rounded-xl shadow-md" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ec4899'/%3E%3Cstop offset='100%25' style='stop-color:%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g2)' width='200' height='150'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='14' fill='white' text-anchor='middle' dy='.3em'%3ECity%3C/text%3E%3C/svg%3E" alt="City thumbnail" loading="lazy">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 font-mono">radius: 16px, smoothing: 0.8</p>
               </div>
             </div>
             <div>
-              <img id="image-hero" class="w-full h-auto object-cover rounded-2xl shadow-lg" src="https://picsum.photos/seed/landscape3/600/300" alt="Hero landscape image" loading="lazy">
-              <p class="text-xs text-gray-500 mt-2 font-mono">Hero: 24px, 0.85</p>
+              <img id="image-hero" class="w-full h-auto object-cover rounded-2xl shadow-lg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2314b8a6'/%3E%3Cstop offset='50%25' style='stop-color:%230ea5e9'/%3E%3Cstop offset='100%25' style='stop-color:%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g3)' width='600' height='300'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' fill='white' text-anchor='middle' dy='.3em'%3EHero Banner Placeholder%3C/text%3E%3C/svg%3E" alt="Hero banner placeholder" loading="lazy">
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 font-mono">radius: 24px, smoothing: 0.85</p>
             </div>
           </div>
         </div>
 
         <!-- Forms -->
-        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Form Elements</h3>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Form Elements</h3>
           <div class="space-y-4">
             <div>
-              <label for="form-text-1" class="block text-sm font-semibold text-gray-900 mb-2">Text Input</label>
-              <input id="form-text-1" type="text" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900" placeholder="Enter text here">
-              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 12px, smoothing: 0.8</p>
+              <label for="form-text-1" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Text Input (with squircle border)</label>
+              <!-- Wrapper gets the squircle border AND background (inputs require wrapping) -->
+              <div id="form-text-1-wrapper" class="inline-block w-full bg-white dark:bg-gray-700">
+                <input id="form-text-1" type="text" class="w-full px-4 py-3 bg-transparent border-0 focus:outline-none focus:ring-0 transition-all text-gray-900 dark:text-white" placeholder="Enter text here">
+              </div>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">radius: 12px, smoothing: 0.8, borderWidth: 2px</p>
             </div>
             <div>
-              <label for="form-text-2" class="block text-sm font-semibold text-gray-900 mb-2">Email Input</label>
-              <input id="form-text-2" type="email" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900" placeholder="your@email.com">
-              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 12px, smoothing: 0.8</p>
+              <label for="form-text-2" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Email Input (with squircle border)</label>
+              <!-- Wrapper gets the squircle border AND background (inputs require wrapping) -->
+              <div id="form-text-2-wrapper" class="inline-block w-full bg-white dark:bg-gray-700">
+                <input id="form-text-2" type="email" class="w-full px-4 py-3 bg-transparent border-0 focus:outline-none focus:ring-0 transition-all text-gray-900 dark:text-white" placeholder="your@email.com">
+              </div>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">radius: 12px, smoothing: 0.8, borderWidth: 2px</p>
             </div>
             <div>
-              <label for="form-textarea-1" class="block text-sm font-semibold text-gray-900 mb-2">Textarea</label>
-              <textarea id="form-textarea-1" rows="3" class="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-vertical text-gray-900" placeholder="Enter multiple lines..."></textarea>
-              <p class="text-xs text-gray-500 mt-1 font-mono">radius: 16px, smoothing: 0.85</p>
+              <label for="form-textarea-1" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Textarea (Manual Wrapper Pattern)</label>
+              <!-- Wrapper gets the squircle border AND background (textareas require wrapping) -->
+              <div id="form-textarea-wrapper" class="inline-block w-full bg-white dark:bg-gray-700">
+                <textarea id="form-textarea-1" rows="3" class="w-full px-4 py-3 bg-transparent border-0 focus:outline-none focus:ring-0 transition-all resize-none text-gray-900 dark:text-white" placeholder="Enter multiple lines..."></textarea>
+              </div>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">radius: 16px, smoothing: 0.8, borderWidth: 2px</p>
+              <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 italic">Note: Border applied to wrapper div, not textarea directly (see README for details)</p>
             </div>
           </div>
         </div>
@@ -362,134 +603,151 @@
   </section>
 
   <!-- Comparison Section -->
-  <section id="comparison" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+  <section id="comparison" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Side-by-Side Comparison</h2>
-        <p class="text-lg text-gray-600">See the difference between squircles and standard border-radius</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Squircle vs Border-Radius</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300">Compare the smooth, continuous curves of squircles with standard CSS rounded corners</p>
       </div>
 
-      <div class="text-center mb-8">
-        <button id="comparison-toggle" class="px-6 py-3 bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium rounded-xl shadow-sm hover:shadow-md transition-all" aria-label="Toggle between side-by-side and overlay comparison modes">
-          Toggle View Mode
-        </button>
-      </div>
-
-      <div class="comparison-split grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
         <div class="text-center">
-          <div id="comparison-squircle" class="w-full h-48 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center font-bold text-lg text-amber-900 shadow-xl shadow-amber-500/30 mb-4">
-            <p>Squircle</p>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">✨ Squircle (CornerKit)</h3>
+          <div id="comparison-squircle" class="w-full h-48 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center font-bold text-xl text-amber-900 shadow-xl shadow-amber-500/30 mb-4">
+            <span>Smooth & Natural</span>
           </div>
-          <p class="text-sm text-gray-600">Continuous curve (smoothing: 0.8)</p>
+          <div class="text-left space-y-2 bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
+            <p class="text-sm text-gray-700 dark:text-gray-300">✓ <strong class="font-semibold text-gray-900 dark:text-white">Continuous S-curve</strong> - smooth transition from straight edges</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">✓ <strong class="font-semibold text-gray-900 dark:text-white">iOS-style design</strong> - same curves used by Apple</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">✓ <strong class="font-semibold text-gray-900 dark:text-white">Adjustable smoothing</strong> - control curve intensity (0.0-1.0)</p>
+          </div>
         </div>
 
         <div class="text-center">
-          <div id="comparison-border-radius" class="w-full h-48 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center font-bold text-lg text-amber-900 shadow-xl shadow-amber-500/30 mb-4">
-            <p>Border-Radius</p>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">⭕ Standard Border-Radius</h3>
+          <div id="comparison-border-radius" class="w-full h-48 bg-gradient-to-br from-gray-400 to-gray-600 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-900 shadow-xl shadow-gray-500/30 mb-4">
+            <span>Circular Arc</span>
           </div>
-          <p class="text-sm text-gray-600">Standard CSS border-radius</p>
+          <div class="text-left space-y-2 bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
+            <p class="text-sm text-gray-700 dark:text-gray-300">• <strong class="font-semibold text-gray-900 dark:text-white">Circular arc</strong> - abrupt transition at corner</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">• <strong class="font-semibold text-gray-900 dark:text-white">Standard CSS</strong> - uniform radius only</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">• <strong class="font-semibold text-gray-900 dark:text-white">Can look harsh</strong> - especially at large sizes</p>
+          </div>
         </div>
       </div>
 
-      <div class="mt-12 max-w-3xl mx-auto bg-blue-50 rounded-2xl p-6 text-center">
-        <p class="text-gray-700 leading-relaxed">
+      <div class="mt-12 max-w-3xl mx-auto bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-6 text-center border border-blue-100 dark:border-blue-800">
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
           Squircles use a superellipse formula to create smoother, more continuous curves than standard border-radius.
-          The <strong class="font-semibold text-gray-900">smoothing parameter</strong> (0.0-1.0) controls how closely the curve follows the iOS-style continuous curve characteristic.
+          The <strong class="font-semibold text-gray-900 dark:text-white">smoothing parameter</strong> (0.0-1.0) controls how closely the curve follows the iOS-style continuous curve characteristic.
         </p>
       </div>
     </div>
   </section>
 
   <!-- Compatibility Section -->
-  <section id="compatibility" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
+  <section id="compatibility" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Browser Compatibility</h2>
-        <p class="text-lg text-gray-600">CornerKit uses progressive enhancement to support 98%+ of browsers</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Browser Compatibility</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300">CornerKit uses progressive enhancement to support 98%+ of browsers</p>
       </div>
 
       <div class="text-center mb-12">
-        <p class="text-gray-700 mb-3"><strong class="font-semibold">Your browser:</strong> <span id="current-tier-badge" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold">Detecting...</span></p>
+        <p class="text-gray-700 dark:text-gray-300 mb-3"><strong class="font-semibold text-gray-900 dark:text-white">Your browser:</strong> <span id="current-tier-badge" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold">Detecting...</span></p>
       </div>
 
-      <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-12">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h3 class="text-xl font-semibold text-gray-900">Browser Support Matrix</h3>
+      <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm overflow-hidden mb-12">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Browser Support Matrix</h3>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Browser</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Version</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Tier</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Performance</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Browser</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Version</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Tier</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Performance</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200">
-              <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Chrome</td>
-                <td class="px-6 py-4 text-sm text-gray-600">65+</td>
-                <td class="px-6 py-4 text-sm text-gray-600">Houdini / ClipPath</td>
-                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">Chrome</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">65+</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">Houdini / ClipPath</td>
+                <td class="px-6 py-4 dark:text-gray-300"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
               </tr>
-              <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Firefox</td>
-                <td class="px-6 py-4 text-sm text-gray-600">60+</td>
-                <td class="px-6 py-4 text-sm text-gray-600">ClipPath</td>
-                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">Firefox</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">60+</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">ClipPath</td>
+                <td class="px-6 py-4 dark:text-gray-300"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
               </tr>
-              <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Safari</td>
-                <td class="px-6 py-4 text-sm text-gray-600">13.1+</td>
-                <td class="px-6 py-4 text-sm text-gray-600">ClipPath</td>
-                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">Safari</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">13.1+</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">ClipPath</td>
+                <td class="px-6 py-4 dark:text-gray-300"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
               </tr>
-              <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 text-sm text-gray-900 font-medium">Edge</td>
-                <td class="px-6 py-4 text-sm text-gray-600">79+</td>
-                <td class="px-6 py-4 text-sm text-gray-600">Houdini / ClipPath</td>
-                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">Edge</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">79+</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">Houdini / ClipPath</td>
+                <td class="px-6 py-4 dark:text-gray-300"><span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Excellent</span></td>
               </tr>
-              <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 text-sm text-gray-900 font-medium">IE11</td>
-                <td class="px-6 py-4 text-sm text-gray-600">11</td>
-                <td class="px-6 py-4 text-sm text-gray-600">Fallback</td>
-                <td class="px-6 py-4"><span class="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">Border-radius only</span></td>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-medium">IE11</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">11</td>
+                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">Fallback</td>
+                <td class="px-6 py-4 dark:text-gray-300"><span class="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">Border-radius only</span></td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl p-8 shadow-sm">
-        <h3 class="text-xl font-semibold text-gray-900 mb-6">Tier Hierarchy</h3>
-        <ol class="space-y-4 ml-6 list-decimal text-gray-700">
-          <li><strong class="font-semibold text-gray-900">Native CSS</strong> - GPU-accelerated, zero JavaScript overhead (Chrome 139+)</li>
-          <li><strong class="font-semibold text-gray-900">Houdini Paint API</strong> - Runs on paint thread, near-native performance (Chrome 65+, Edge 79+)</li>
-          <li><strong class="font-semibold text-gray-900">SVG ClipPath</strong> - Dynamic path generation, excellent performance (All modern browsers)</li>
-          <li><strong class="font-semibold text-gray-900">Border-Radius Fallback</strong> - Standard rounded corners, universal compatibility</li>
+      <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Tier Hierarchy</h3>
+        <ol class="space-y-4 ml-6 list-decimal text-gray-700 dark:text-gray-300">
+          <li><strong class="font-semibold text-gray-900 dark:text-white">Native CSS</strong> - GPU-accelerated, zero JavaScript overhead (Chrome 139+)</li>
+          <li><strong class="font-semibold text-gray-900 dark:text-white">Houdini Paint API</strong> - Runs on paint thread, near-native performance (Chrome 65+, Edge 79+)</li>
+          <li><strong class="font-semibold text-gray-900 dark:text-white">SVG ClipPath</strong> - Dynamic path generation, excellent performance (All modern browsers)</li>
+          <li><strong class="font-semibold text-gray-900 dark:text-white">Border-Radius Fallback</strong> - Standard rounded corners, universal compatibility</li>
         </ol>
       </div>
     </div>
   </section>
 
   <!-- Code Examples Section -->
-  <section id="code" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+  <section id="code" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Code Examples & Installation</h2>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Code Examples & Installation</h2>
       </div>
 
       <div class="max-w-2xl mx-auto mb-16">
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">Installation</h3>
-        <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">npm install @cornerkit/core</code></pre>
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Installation</h3>
+        <div class="space-y-4">
+          <div>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-2 font-medium">npm / yarn / pnpm:</p>
+            <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">npm install @cornerkit/core</code></pre>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-2 font-medium">CDN (unpkg):</p>
+            <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">&lt;script src="https://unpkg.com/@cornerkit/core@1.1.0"&gt;&lt;/script&gt;</code></pre>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-2 font-medium">CDN (jsDelivr):</p>
+            <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">&lt;script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.1.0"&gt;&lt;/script&gt;</code></pre>
+          </div>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Vanilla JavaScript -->
-        <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
-          <h4 class="text-lg font-semibold text-gray-900 mb-4">Vanilla JavaScript</h4>
+        <div class="relative bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Vanilla JavaScript</h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-javascript">import CornerKit from '@cornerkit/core';
 
 // Create instance
@@ -500,12 +758,12 @@ ck.apply('#my-element', {
   radius: 20,
   smoothing: 0.8
 });</code></pre>
-          <button onclick="copyStaticExample('example-vanilla')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
+          <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- HTML Data Attributes -->
-        <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
-          <h4 class="text-lg font-semibold text-gray-900 mb-4">HTML Data Attributes</h4>
+        <div class="relative bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">HTML Data Attributes</h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-html">&lt;div
   data-squircle
   data-squircle-radius="20"
@@ -517,12 +775,12 @@ ck.apply('#my-element', {
 &lt;script&gt;
   CornerKit.auto();
 &lt;/script&gt;</code></pre>
-          <button onclick="copyStaticExample('example-html')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
+          <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- TypeScript -->
-        <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
-          <h4 class="text-lg font-semibold text-gray-900 mb-4">TypeScript</h4>
+        <div class="relative bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">TypeScript</h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-typescript">import CornerKit, { type SquircleConfig } from '@cornerkit/core';
 
 const ck = new CornerKit();
@@ -531,12 +789,12 @@ const config: SquircleConfig = {
   smoothing: 0.8
 };
 ck.apply('#my-element', config);</code></pre>
-          <button onclick="copyStaticExample('example-typescript')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
+          <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- React (teaser) -->
-        <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm">
-          <h4 class="text-lg font-semibold text-gray-900 mb-4">React <span class="text-sm text-gray-500 font-normal">(Coming Soon)</span></h4>
+        <div class="relative bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">React <span class="text-sm text-gray-500 font-normal">(Coming Soon)</span></h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-javascript">import { Squircle } from '@cornerkit/react';
 
 function MyComponent() {
@@ -546,12 +804,12 @@ function MyComponent() {
     &lt;/Squircle&gt;
   );
 }</code></pre>
-          <button onclick="copyStaticExample('example-react')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
+          <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
         <!-- Vue (teaser) -->
-        <div class="relative bg-gray-50 rounded-2xl p-6 shadow-sm lg:col-span-2">
-          <h4 class="text-lg font-semibold text-gray-900 mb-4">Vue <span class="text-sm text-gray-500 font-normal">(Coming Soon)</span></h4>
+        <div class="relative bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm lg:col-span-2">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Vue <span class="text-sm text-gray-500 dark:text-gray-400 font-normal">(Coming Soon)</span></h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-html">&lt;template&gt;
   &lt;Squircle :radius="20" :smoothing="0.8"&gt;
     &lt;div&gt;Your content&lt;/div&gt;
@@ -561,7 +819,7 @@ function MyComponent() {
 &lt;script setup&gt;
 import { Squircle } from '@cornerkit/vue';
 &lt;/script&gt;</code></pre>
-          <button onclick="copyStaticExample('example-vue')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
+          <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
       </div>
     </div>
@@ -579,8 +837,9 @@ import { Squircle } from '@cornerkit/vue';
     </div>
   </footer>
 
-  <!-- CornerKit library (local build until published to npm) -->
-  <script src="cornerkit.js"></script>
-  <script src="app.js"></script>
+  <!-- CornerKit library -->
+  <!-- <script src="https://unpkg.com/@cornerkit/core@1.0.3/dist/cornerkit.js"></script> -->
+  <script src="cornerkit.js?v=20251117-border"></script>
+  <script src="app.js?v=20251117"></script>
 </body>
 </html>

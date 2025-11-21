@@ -143,6 +143,8 @@ export default class CornerKit {
       radius: validateRadius(config?.radius ?? this.globalConfig.radius),
       smoothing: validateSmoothing(config?.smoothing ?? this.globalConfig.smoothing),
       tier: config?.tier ?? this.globalConfig.tier,
+      borderWidth: config?.borderWidth,
+      borderColor: config?.borderColor,
     };
 
     // Detect tier (or use forced tier from config)
@@ -435,6 +437,15 @@ export default class CornerKit {
 
     if (config.smoothing !== undefined) {
       validatedConfig.smoothing = validateSmoothing(config.smoothing);
+    }
+
+    // Handle border properties
+    if (config.borderWidth !== undefined) {
+      validatedConfig.borderWidth = config.borderWidth;
+    }
+
+    if (config.borderColor !== undefined) {
+      validatedConfig.borderColor = config.borderColor;
     }
 
     // Allow tier override (for advanced users)

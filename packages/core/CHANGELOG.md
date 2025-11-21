@@ -7,6 +7,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-11-18
+
+### Added
+- **Border support** - Squircle borders that follow the curve path using pseudo-element rendering
+  - New `borderWidth` config option (pixels)
+  - New `borderColor` config option (any valid CSS color)
+  - Borders extend outward from element boundaries (outer stroke positioning)
+  - Automatic background preservation using individual CSS properties
+  - Interactive border controls in playground (toggle, width slider, color picker)
+  - Code generation updated to include border parameters
+
+### Changed
+- Bundle size increased from 3.66 KB to 4.58 KB gzipped (+0.92 KB for border feature)
+- Pseudo-element architecture: `::before` for border (z-index: 0), `::after` for background (z-index: 1)
+- Elements with borders automatically get `position: relative` if needed
+- Child elements positioned with `z-index: 2` to stay on top of border layers
+
+### Technical Details
+- Border rendering uses layered pseudo-elements to work around clip-path masking
+- Background split into individual CSS properties (backgroundColor, backgroundImage, etc.)
+- Original background stored in dataset to prevent recapture issues
+- Performance: ~0.4ms additional render time per bordered element
+
+## [1.0.3] - 2025-11-17
+
+### Fixed
+- Fixed 100% smoothing spike artifact - corners no longer show thin lines at maximum smoothing
+- Implemented proportional scaling for large radius values - maintains smooth S-curves when space is constrained
+- Fixed Chrome false-positive native CSS detection - disabled corner-shape: squircle detection until browsers actually render it
+- Disabled Houdini Paint API detection - waiting for actual paint worklet implementation in Phase 2
+- Improved FOUC (Flash of Unstyled Content) prevention for demo website
+
+### Changed
+- Enhanced Figma squircle algorithm with preserveSmoothing mode (default: true)
+- When corner radius is large relative to element dimensions, bezier handles are proportionally scaled instead of reducing smoothing
+- This maintains the characteristic iOS-style continuous S-curve even when space is limited
+
+## [1.0.2] - 2025-11-16
+
+### Fixed
+- Safari clip-path detection now uses runtime feature test as fallback
+- Safari's CSS.supports() incorrectly returns false for path(), causing fallback to border-radius
+- Added dual detection: CSS.supports first, then runtime element test for Safari compatibility
+- Safari 13.1+ now correctly uses SVG clip-path tier instead of border-radius fallback
+
+### Added
+- Interactive demo website at https://bejarcode.github.io/cornerKit/
+- Live playground with adjustable radius and smoothing sliders
+- Visual gallery with 36+ UI component examples
+- Side-by-side comparison: squircles vs standard border-radius
+- Browser compatibility detector
+- Code generator for 5 formats (Vanilla JS, HTML, TypeScript, React, Vue)
+
 ## [1.0.0] - 2025-11-12
 
 ### Added
@@ -134,5 +187,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Working vanilla JavaScript example with interactive demo
 - CHANGELOG.md following Keep a Changelog format
 
-[Unreleased]: https://github.com/bejarcode/cornerkit/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/bejarcode/cornerkit/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/bejarcode/cornerkit/compare/v1.0.0...v1.0.2
 [1.0.0]: https://github.com/bejarcode/cornerkit/releases/tag/v1.0.0

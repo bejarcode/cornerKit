@@ -36,6 +36,60 @@ export interface ResizeObserverWithCleanup extends ResizeObserver {
  * FR-018 to FR-022: SVG clip-path implementation with ResizeObserver
  */
 export class ClipPathRenderer {
+  private static borderStylesInjected = false;
+
+  /**
+   * Inject global CSS styles for squircle borders (once per page)
+   * Uses ::before for border layer, ::after for content background
+   * Main element has NO clip-path to allow pseudo-elements to show
+   */
+  private static injectBorderStyles(): void {
+    if (this.borderStylesInjected || typeof document === 'undefined') {
+      return;
+    }
+
+    const style = document.createElement('style');
+    style.id = 'cornerkit-border-styles';
+    style.textContent = `
+      [data-squircle-border]::before {
+        content: '';
+        position: absolute;
+        top: calc(var(--squircle-border-width, 0px) * -1);
+        left: calc(var(--squircle-border-width, 0px) * -1);
+        width: calc(100% + var(--squircle-border-width, 0px) * 2);
+        height: calc(100% + var(--squircle-border-width, 0px) * 2);
+        background: var(--squircle-border-color, transparent);
+        clip-path: var(--squircle-border-path);
+        z-index: 0;
+        pointer-events: none;
+        border-radius: 0;
+      }
+      [data-squircle-border]::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--squircle-content-bg-color, transparent);
+        background-image: var(--squircle-content-bg-image, none);
+        background-size: var(--squircle-content-bg-size, auto);
+        background-position: var(--squircle-content-bg-position, 0% 0%);
+        background-repeat: var(--squircle-content-bg-repeat, repeat);
+        clip-path: var(--squircle-content-path);
+        z-index: 1;
+        pointer-events: none;
+        border-radius: 0;
+      }
+      [data-squircle-border] > * {
+        position: relative;
+        z-index: 2;
+      }
+    `;
+    document.head.appendChild(style);
+    this.borderStylesInjected = true;
+  }
+
   /**
    * FR-018: Apply squircle clip-path to an element
    * Generates SVG path and sets element.style.clipPath
@@ -101,6 +155,9 @@ export class ClipPathRenderer {
   remove(element: HTMLElement, originalTransition?: string): void {
     element.style.clipPath = '';
 
+    // Remove border properties
+    this.removeBorderProperties(element);
+
     // Restore original transition if provided
     if (originalTransition !== undefined) {
       element.style.transition = originalTransition;
@@ -115,7 +172,7 @@ export class ClipPathRenderer {
    * @param config - Squircle configuration
    */
   private updateClipPath(element: HTMLElement, config: SquircleConfig): void {
-    const { radius, smoothing } = config;
+    const { radius, smoothing, borderWidth, borderColor } = config;
 
     // Get current element dimensions
     const width = element.offsetWidth;
@@ -129,8 +186,84 @@ export class ClipPathRenderer {
     // Generate SVG path string
     const path = generateSquirclePath(width, height, radius, smoothing);
 
-    // Apply clip-path CSS property
-    element.style.clipPath = `path('${path}')`;
+    // Handle border rendering via ::before and ::after pseudo-elements
+    if (borderWidth && borderWidth > 0 && borderColor) {
+      // Inject global border styles (once per page)
+      ClipPathRenderer.injectBorderStyles();
+
+      // DON'T apply clip-path to main element - let pseudo-elements handle it
+      // This prevents the parent's clip-path from cutting off the border
+      element.style.clipPath = 'none';
+
+      // Calculate border path (for the ::before element which is larger)
+      const borderElementWidth = width + borderWidth * 2;
+      const borderElementHeight = height + borderWidth * 2;
+      const borderPath = generateSquirclePath(
+        borderElementWidth,
+        borderElementHeight,
+        radius + borderWidth, // Increase radius proportionally
+        smoothing
+      );
+
+      // Capture original background ONLY ONCE (before we set it to transparent)
+      // This prevents recapturing the transparent value on subsequent updates
+      if (!element.dataset['squircleOriginalBg']) {
+        const computedStyle = getComputedStyle(element);
+
+        // Store individual background properties in CSS variables
+        element.style.setProperty('--squircle-content-bg-color', computedStyle.backgroundColor);
+        element.style.setProperty('--squircle-content-bg-image', computedStyle.backgroundImage);
+        element.style.setProperty('--squircle-content-bg-size', computedStyle.backgroundSize);
+        element.style.setProperty('--squircle-content-bg-position', computedStyle.backgroundPosition);
+        element.style.setProperty('--squircle-content-bg-repeat', computedStyle.backgroundRepeat);
+
+        // Mark as captured
+        element.dataset['squircleOriginalBg'] = 'captured';
+      }
+
+      // Set CSS custom properties for pseudo-elements (border path updates on resize)
+      element.style.setProperty('--squircle-border-width', `${borderWidth}px`);
+      element.style.setProperty('--squircle-border-color', borderColor);
+      element.style.setProperty('--squircle-border-path', `path('${borderPath}')`);
+      element.style.setProperty('--squircle-content-path', `path('${path}')`);
+
+      // Make main element's background transparent (::after will show it)
+      element.style.background = 'transparent';
+
+      // Mark element for border styling and ensure position context
+      element.dataset['squircleBorder'] = 'true';
+      const computedStyle = getComputedStyle(element);
+      const computedPosition = computedStyle.position;
+      if (computedPosition === 'static') {
+        element.style.position = 'relative';
+      }
+    } else {
+      // No borders - apply clip-path directly to element
+      element.style.clipPath = `path('${path}')`;
+      // Remove border properties if not configured
+      this.removeBorderProperties(element);
+    }
+  }
+
+  /**
+   * Remove border-related CSS properties from element
+   * @param element - Target HTMLElement
+   */
+  private removeBorderProperties(element: HTMLElement): void {
+    element.style.removeProperty('--squircle-border-width');
+    element.style.removeProperty('--squircle-border-color');
+    element.style.removeProperty('--squircle-border-path');
+    element.style.removeProperty('--squircle-content-path');
+    element.style.removeProperty('--squircle-content-bg-color');
+    element.style.removeProperty('--squircle-content-bg-image');
+    element.style.removeProperty('--squircle-content-bg-size');
+    element.style.removeProperty('--squircle-content-bg-position');
+    element.style.removeProperty('--squircle-content-bg-repeat');
+
+    delete element.dataset['squircleBorder'];
+    delete element.dataset['squircleOriginalBg'];
+    // Note: We don't restore element.style.background here because
+    // the element will get the standard clip-path instead
   }
 
   /**
