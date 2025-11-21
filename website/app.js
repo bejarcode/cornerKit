@@ -42,7 +42,7 @@ ck.apply('#my-element', {
   Your content here
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.1.0"></script>
 <script>
   // Auto-init will apply squircles to all [data-squircle] elements
   CornerKit.auto();
@@ -190,7 +190,7 @@ ck.apply('#my-element', {
 </div>
 
 <!-- Note: Border support requires JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.0.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.1.0"></script>
 <script>
   const ck = new CornerKit();
   ck.apply('[data-squircle]', {
