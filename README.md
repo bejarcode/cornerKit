@@ -398,12 +398,12 @@ npm run analyze-bundle         # Bundle size analysis
 
 ## Roadmap
 
-- **Phase 1**: Core library (Complete)
-- **Phase 2**: Houdini Paint API + Native CSS support
-- **Phase 3**: Framework wrappers (React, Vue, Svelte)
-- **Phase 4**: Advanced features (per-corner control, animations)
-- **Phase 5**: Shopify Theme App Extension
-- **Phase 6**: Visual playground and documentation site
+- **Phase 1**: Core library + Demo website (Complete)
+- **Phase 2**: Framework wrappers (React, Vue, Svelte) - Next
+- **Phase 3**: Shopify Theme App Extension
+- **Phase 4**: Future (Native CSS, Houdini, advanced features)
+
+See [docs/ROADMAP.md](docs/ROADMAP.md) for full details.
 
 ## License
 
