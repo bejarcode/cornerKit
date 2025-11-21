@@ -80,13 +80,13 @@
 }
 
 /* Gallery elements - apply fallback border-radius immediately */
+/* Note: form- elements excluded because they use squircle borders (pseudo-elements) */
 [id^="gallery-"],
 [id^="button-"],
 [id^="card-"],
 [id^="modal-"],
 [id^="nav-"],
-[id^="image-"],
-[id^="form-"] {
+[id^="image-"] {
   border-radius: var(--squircle-radius, 20px);
 }
 
@@ -99,8 +99,7 @@
 [id^="card-"],
 [id^="modal-"],
 [id^="nav-"],
-[id^="image-"],
-[id^="form-"] {
+[id^="image-"] {
   transition: clip-path 0.15s ease-out;
 }
 
@@ -1335,11 +1334,11 @@ kbd {
   background-color: #000 !important;
 }
 
-/* Inputs and forms */
-.dark input,
-[data-theme="dark"] input,
-.dark textarea,
-[data-theme="dark"] textarea,
+/* Inputs and forms - exclude form elements inside squircle wrappers */
+.dark input:not([id^="form-"]),
+[data-theme="dark"] input:not([id^="form-"]),
+.dark textarea:not([id^="form-"]),
+[data-theme="dark"] textarea:not([id^="form-"]),
 .dark select,
 [data-theme="dark"] select {
   background-color: #1f2937 !important;

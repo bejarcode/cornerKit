@@ -613,7 +613,7 @@ function applyToGalleryExamples() {
           } else if (component.id === 'form-text-1-wrapper' ||
                      component.id === 'form-text-2-wrapper' ||
                      component.id === 'form-textarea-wrapper') {
-            borderColor = getThemeBorderColor('#d1d5db', '#4b5563'); // Light gray -> Dark gray for forms
+            borderColor = getThemeBorderColor('#d1d5db', '#6b7280'); // Light gray -> gray-500 for better contrast
           }
           // border-card-2 and border-button-2 use blue/purple which work in both modes
           
@@ -621,6 +621,17 @@ function applyToGalleryExamples() {
         }
 
         ck.apply(`#${component.id}`, config);
+
+        // Set form wrapper background color for the ::after pseudo-element
+        if (component.id === 'form-text-1-wrapper' ||
+            component.id === 'form-text-2-wrapper' ||
+            component.id === 'form-textarea-wrapper') {
+          const isDark = document.documentElement.classList.contains('dark') ||
+                         document.documentElement.getAttribute('data-theme') === 'dark';
+          const bgColor = isDark ? '#374151' : '#ffffff'; // gray-700 : white
+          element.style.setProperty('--squircle-content-bg-color', bgColor);
+        }
+
         successCount++;
       } else {
         console.warn(`Gallery element not found: ${component.id}`);
@@ -1313,7 +1324,7 @@ if (darkModeToggle) {
                 } else if (component.id === 'form-text-1-wrapper' ||
                            component.id === 'form-text-2-wrapper' ||
                            component.id === 'form-textarea-wrapper') {
-                  borderColor = isDark ? '#4b5563' : '#d1d5db'; // Same as border-card-1
+                  borderColor = isDark ? '#6b7280' : '#d1d5db'; // gray-500 for better contrast
                 }
                 // border-card-2 and border-button-2 keep their colors (blue/purple work in both)
 
@@ -1321,6 +1332,14 @@ if (darkModeToggle) {
 
                 // Reapply the full config to ensure it updates
                 ck.apply(`#${component.id}`, config);
+
+                // Update form wrapper background color for the ::after pseudo-element
+                if (component.id === 'form-text-1-wrapper' ||
+                    component.id === 'form-text-2-wrapper' ||
+                    component.id === 'form-textarea-wrapper') {
+                  const bgColor = isDark ? '#374151' : '#ffffff'; // gray-700 : white
+                  element.style.setProperty('--squircle-content-bg-color', bgColor);
+                }
               }
             } catch (error) {
               console.warn(`Failed to update border color for ${component.id}:`, error);
