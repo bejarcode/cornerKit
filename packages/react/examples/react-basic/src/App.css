@@ -60,6 +60,7 @@ h3 {
   letter-spacing: -0.01em;
 }
 
+/* Demo Grid */
 .demo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -68,7 +69,6 @@ h3 {
 }
 
 .demo-card {
-  background: #1a1a1a;
   color: #ffffff;
   padding: 2rem;
   min-height: 180px;
@@ -108,7 +108,8 @@ h3 {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.controls {
+/* Polymorphic Section */
+.polymorphic-section {
   margin-bottom: 3rem;
   padding: 2rem;
   background: #f9fafb;
@@ -116,29 +117,76 @@ h3 {
   border: 1px solid #e5e5e5;
 }
 
-.control-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.control-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.control-group label {
-  font-weight: 600;
-  color: #1a1a1a;
-  font-size: 0.875rem;
-  display: flex;
-  justify-content: space-between;
-}
-
-.control-group label span {
-  font-weight: 400;
+.section-description {
   color: #737373;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.polymorphic-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.squircle-button {
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.squircle-button:hover {
+  background: #333333;
+}
+
+.squircle-button:active {
+  transform: scale(0.98);
+}
+
+.squircle-link {
+  background: #3b82f6;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-block;
+  transition: all 0.15s ease;
+}
+
+.squircle-link:hover {
+  background: #2563eb;
+}
+
+.squircle-input {
+  padding: 0.75rem 1rem;
+  border: none;
+  font-size: 0.875rem;
+  min-width: 200px;
+  background: #e5e7eb;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.squircle-input:focus {
+  outline: none;
+  background: #dbeafe;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Controls Section */
+.controls {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
 }
 
 /* Border Controls */
@@ -174,17 +222,29 @@ h3 {
   gap: 1rem;
 }
 
-.control-group input[type="color"] {
-  width: 50px;
-  height: 32px;
-  border: 1px solid #e5e5e5;
-  border-radius: 6px;
-  cursor: pointer;
-  padding: 2px;
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.hidden {
-  display: none !important;
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-group label {
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 0.875rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.control-group label span {
+  font-weight: 400;
+  color: #737373;
 }
 
 .control-group input[type="range"] {
@@ -221,8 +281,13 @@ h3 {
   transition: transform 0.15s ease;
 }
 
-.control-group input[type="range"]::-moz-range-thumb:hover {
-  transform: scale(1.1);
+.control-group input[type="color"] {
+  width: 50px;
+  height: 32px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 2px;
 }
 
 .interactive-demo {
@@ -245,25 +310,32 @@ h3 {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+.interactive-demo p {
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 0.5rem;
+}
+
+/* Code Example */
 .code-example {
   margin-bottom: 2rem;
 }
 
 .code-example pre {
-  background: #f9fafb;
-  color: #1a1a1a;
+  background: #1a1a1a;
+  color: #e5e5e5;
   padding: 1.5rem;
   border-radius: 8px;
   overflow-x: auto;
   font-size: 0.875rem;
   line-height: 1.6;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #333;
 }
 
 .code-example code {
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
 }
 
+/* Footer */
 footer {
   text-align: center;
   padding-top: 2rem;
@@ -285,6 +357,7 @@ footer a:hover {
   text-decoration: underline;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   body {
     padding: 1rem;
@@ -295,11 +368,16 @@ footer a:hover {
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .demo-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .polymorphic-grid {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

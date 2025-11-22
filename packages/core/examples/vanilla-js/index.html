@@ -16,36 +16,36 @@
     <main>
       <section class="demo-grid">
         <!-- Basic Squircle -->
-        <div class="demo-card" id="basic-card">
-          <h2>Basic Squircle</h2>
+        <div class="demo-card card-blue" id="basic-card">
+          <h3>Basic Squircle</h3>
           <p>radius: 20px, smoothing: 0.8</p>
           <code>ck.apply('#basic-card', { radius: 20, smoothing: 0.8 });</code>
         </div>
 
         <!-- High Smoothing -->
-        <div class="demo-card" id="smooth-card">
-          <h2>High Smoothing</h2>
+        <div class="demo-card card-purple" id="smooth-card">
+          <h3>High Smoothing</h3>
           <p>radius: 20px, smoothing: 0.95</p>
           <code>ck.apply('#smooth-card', { radius: 20, smoothing: 0.95 });</code>
         </div>
 
-        <!-- Low Smoothing -->
-        <div class="demo-card" id="sharp-card">
-          <h2>Low Smoothing</h2>
-          <p>radius: 20px, smoothing: 0.6</p>
-          <code>ck.apply('#sharp-card', { radius: 20, smoothing: 0.6 });</code>
+        <!-- With Border -->
+        <div class="demo-card card-pink" id="border-card">
+          <h3>With Border</h3>
+          <p>radius: 20px, border: 3px white</p>
+          <code>ck.apply('#border-card', { borderWidth: 3, borderColor: '#fff' });</code>
         </div>
 
         <!-- Large Radius -->
-        <div class="demo-card" id="large-card">
-          <h2>Large Radius</h2>
+        <div class="demo-card card-amber" id="large-card">
+          <h3>Large Radius</h3>
           <p>radius: 40px, smoothing: 0.8</p>
           <code>ck.apply('#large-card', { radius: 40, smoothing: 0.8 });</code>
         </div>
       </section>
 
       <section class="controls">
-        <h2>Interactive Controls</h2>
+        <h2>Interactive Demo</h2>
         <div class="control-panel">
           <div class="control-group">
             <label for="radius-slider">
@@ -75,9 +75,44 @@
             >
           </div>
 
+          <!-- Border Controls -->
+          <div class="border-controls-wrapper">
+            <div class="border-toggle">
+              <label for="border-toggle">Enable Border</label>
+              <input type="checkbox" id="border-toggle">
+            </div>
+
+            <div class="border-controls hidden" id="border-controls">
+              <div class="control-group">
+                <label for="border-width-slider">
+                  Border Width: <span id="border-width-value">2</span>px
+                </label>
+                <input
+                  type="range"
+                  id="border-width-slider"
+                  min="1"
+                  max="10"
+                  value="2"
+                  step="1"
+                >
+              </div>
+
+              <div class="control-group">
+                <label for="border-color-picker">
+                  Border Color: <span id="border-color-value">#000000</span>
+                </label>
+                <input
+                  type="color"
+                  id="border-color-picker"
+                  value="#000000"
+                >
+              </div>
+            </div>
+          </div>
+
           <div class="interactive-demo" id="interactive-card">
-            <h2>Interactive Squircle</h2>
-            <p>Adjust the sliders above to see changes in real-time</p>
+            <h3>Interactive Squircle</h3>
+            <p>Adjust the controls above</p>
           </div>
         </div>
       </section>
