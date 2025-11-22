@@ -450,8 +450,6 @@ npm run analyze-bundle         # Bundle size analysis
 - **Phase 3**: Shopify Theme App Extension
 - **Phase 4**: Future (Native CSS, Houdini, advanced features)
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) for full details.
-
 ## License
 
 MIT - Victor Bejar / bejarllc
