@@ -51,7 +51,7 @@ npm install @cornerkit/core
 ### Framework Agnostic
 - Works with React, Vue, Svelte, Angular, or vanilla JS
 - TypeScript-first with full type definitions
-- Framework wrappers available separately
+- **Official React package**: [`@cornerkit/react`](https://www.npmjs.com/package/@cornerkit/react)
 - Web Components support
 
 ### Accessible by Default
@@ -460,7 +460,48 @@ All metrics verified by automated performance tests and documented in SUCCESS-CR
 
 ## Framework Integration
 
-### React
+### React (Recommended: @cornerkit/react)
+
+For React projects, we recommend using the official **[@cornerkit/react](https://www.npmjs.com/package/@cornerkit/react)** package:
+
+```bash
+npm install @cornerkit/react
+```
+
+```jsx
+import { Squircle, useSquircle } from '@cornerkit/react';
+
+// Component approach (recommended)
+function App() {
+  return (
+    <Squircle radius={24} smoothing={0.6} className="card">
+      Beautiful squircle corners!
+    </Squircle>
+  );
+}
+
+// Polymorphic - render as any element
+<Squircle as="button" radius={16} onClick={handleClick}>
+  Click me
+</Squircle>
+
+// Hook approach for custom components
+function CustomCard() {
+  const ref = useSquircle({ radius: 24, smoothing: 0.6 });
+  return <div ref={ref}>Content</div>;
+}
+
+// With borders
+<Squircle radius={24} border={{ width: 2, color: '#e5e7eb' }}>
+  Card with border
+</Squircle>
+```
+
+**[Full @cornerkit/react documentation →](https://github.com/bejarcode/cornerKit/tree/main/packages/react#readme)**
+
+#### Manual Integration (Alternative)
+
+If you prefer manual control, you can use @cornerkit/core directly:
 
 ```jsx
 import { useEffect, useRef } from 'react';
@@ -707,6 +748,7 @@ MIT License - see [LICENSE](../../LICENSE) for details.
 ## Resources
 
 - [npm Package](https://www.npmjs.com/package/@cornerkit/core)
+- [React Package](https://www.npmjs.com/package/@cornerkit/react) - Official React integration
 - [GitHub Discussions](https://github.com/bejarcode/cornerkit/discussions)
 - [Issue Tracker](https://github.com/bejarcode/cornerkit/issues)
 - [Security Policy](../../SECURITY.md)
