@@ -4,7 +4,7 @@ const ck = new window.CornerKit.default();
 // Apply squircles to demo cards
 ck.apply('#basic-card', { radius: 20, smoothing: 0.8 });
 ck.apply('#smooth-card', { radius: 20, smoothing: 0.95 });
-ck.apply('#sharp-card', { radius: 20, smoothing: 0.6 });
+ck.apply('#border-card', { radius: 20, smoothing: 0.8, borderWidth: 3, borderColor: '#ffffff' });
 ck.apply('#large-card', { radius: 40, smoothing: 0.8 });
 
 // Apply squircle to interactive demo card
@@ -15,24 +15,67 @@ const radiusSlider = document.getElementById('radius-slider');
 const smoothingSlider = document.getElementById('smoothing-slider');
 const radiusValue = document.getElementById('radius-value');
 const smoothingValue = document.getElementById('smoothing-value');
-const interactiveCard = document.getElementById('interactive-card');
+
+// Border controls
+const borderToggle = document.getElementById('border-toggle');
+const borderControls = document.getElementById('border-controls');
+const borderWidthSlider = document.getElementById('border-width-slider');
+const borderWidthValue = document.getElementById('border-width-value');
+const borderColorPicker = document.getElementById('border-color-picker');
+const borderColorValue = document.getElementById('border-color-value');
+
+// Get current config for updates
+function getCurrentConfig() {
+  const radius = parseInt(radiusSlider.value, 10);
+  const smoothing = parseFloat(smoothingSlider.value);
+  const config = { radius, smoothing };
+
+  if (borderToggle.checked) {
+    config.borderWidth = parseInt(borderWidthSlider.value, 10);
+    config.borderColor = borderColorPicker.value;
+  }
+
+  return config;
+}
+
+// Update interactive card
+function updateInteractiveCard() {
+  const config = getCurrentConfig();
+  ck.update('#interactive-card', config);
+}
 
 // Update radius
 radiusSlider.addEventListener('input', (e) => {
-  const radius = parseInt(e.target.value, 10);
-  radiusValue.textContent = radius;
-
-  const smoothing = parseFloat(smoothingSlider.value);
-  ck.update('#interactive-card', { radius, smoothing });
+  radiusValue.textContent = e.target.value;
+  updateInteractiveCard();
 });
 
 // Update smoothing
 smoothingSlider.addEventListener('input', (e) => {
-  const smoothing = parseFloat(e.target.value);
-  smoothingValue.textContent = smoothing.toFixed(2);
+  smoothingValue.textContent = parseFloat(e.target.value).toFixed(2);
+  updateInteractiveCard();
+});
 
-  const radius = parseInt(radiusSlider.value, 10);
-  ck.update('#interactive-card', { radius, smoothing });
+// Border toggle
+borderToggle.addEventListener('change', (e) => {
+  if (e.target.checked) {
+    borderControls.classList.remove('hidden');
+  } else {
+    borderControls.classList.add('hidden');
+  }
+  updateInteractiveCard();
+});
+
+// Border width
+borderWidthSlider.addEventListener('input', (e) => {
+  borderWidthValue.textContent = e.target.value;
+  updateInteractiveCard();
+});
+
+// Border color
+borderColorPicker.addEventListener('input', (e) => {
+  borderColorValue.textContent = e.target.value;
+  updateInteractiveCard();
 });
 
 // Log info to console

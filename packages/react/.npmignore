@@ -1,0 +1,30 @@
+# Source files
+src/
+tests/
+
+# Config files
+tsconfig.json
+rollup.config.js
+vitest.config.ts
+.eslintrc*
+.prettierrc*
+
+# Development files
+*.log
+*.map
+coverage/
+.nyc_output/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore

@@ -1,0 +1,73 @@
+{
+  "name": "@cornerkit/react",
+  "version": "1.0.0",
+  "description": "React components and hooks for iOS-style squircle corners",
+  "type": "module",
+  "main": "dist/cornerkit-react.js",
+  "module": "dist/cornerkit-react.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/cornerkit-react.esm.js",
+      "require": "./dist/cornerkit-react.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "@cornerkit/core": "^1.1.0",
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^14.0.0",
+    "@types/react": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "@vitest/coverage-v8": "^1.6.1",
+    "happy-dom": "^12.10.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rollup": "^4.9.0",
+    "rollup-plugin-dts": "^6.1.0",
+    "tslib": "^2.6.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "keywords": [
+    "react",
+    "squircle",
+    "superellipse",
+    "border-radius",
+    "ios",
+    "corners",
+    "ui",
+    "component",
+    "hook"
+  ],
+  "author": "cornerKit",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bejarcode/cornerKit.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/bejarcode/cornerKit/tree/main/packages/react#readme",
+  "bugs": {
+    "url": "https://github.com/bejarcode/cornerKit/issues"
+  }
+}

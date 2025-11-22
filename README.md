@@ -104,9 +104,53 @@ Works seamlessly with:
 - Angular
 - Any framework or no framework
 
-## Framework Examples
+## Framework Packages
 
-### React
+### React (@cornerkit/react)
+
+Official React integration with dedicated components and hooks.
+
+```bash
+npm install @cornerkit/react
+```
+
+```jsx
+import { Squircle, useSquircle } from '@cornerkit/react';
+
+// Component approach (recommended)
+function App() {
+  return (
+    <Squircle radius={24} smoothing={0.6} className="card">
+      Beautiful squircle corners!
+    </Squircle>
+  );
+}
+
+// Polymorphic - render as any element
+<Squircle as="button" radius={16} onClick={handleClick}>
+  Click me
+</Squircle>
+
+// Hook approach for custom components
+function CustomCard() {
+  const ref = useSquircle({ radius: 24, smoothing: 0.6 });
+  return <div ref={ref}>Content</div>;
+}
+
+// With borders
+<Squircle
+  radius={24}
+  border={{ width: 2, color: '#e5e7eb' }}
+>
+  Card with border
+</Squircle>
+```
+
+**[Full @cornerkit/react documentation →](packages/react/README.md)**
+
+### Core Library (Manual Integration)
+
+For frameworks without dedicated packages, use @cornerkit/core directly:
 
 ```jsx
 import { useEffect, useRef } from 'react';
@@ -345,7 +389,7 @@ ck.apply('.card', config);
 Working examples with interactive demos:
 
 - **[Vanilla JavaScript](packages/core/examples/vanilla-js/)** - Pure HTML/CSS/JS implementation
-- **React** (coming soon)
+- **[React](packages/react/examples/)** - Squircle component and useSquircle hook demos
 - **Vue 3** (coming soon)
 - **Svelte** (coming soon)
 
@@ -398,8 +442,11 @@ npm run analyze-bundle         # Bundle size analysis
 
 ## Roadmap
 
-- **Phase 1**: Core library + Demo website (Complete)
-- **Phase 2**: Framework wrappers (React, Vue, Svelte) - Next
+- **Phase 1**: Core library + Demo website ✅ Complete
+- **Phase 2**: Framework wrappers
+  - React (@cornerkit/react) ✅ Complete
+  - Vue (coming soon)
+  - Svelte (coming soon)
 - **Phase 3**: Shopify Theme App Extension
 - **Phase 4**: Future (Native CSS, Houdini, advanced features)
 
