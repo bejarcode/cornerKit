@@ -1,6 +1,13 @@
 # @cornerkit/react
 
+[![npm version](https://img.shields.io/npm/v/@cornerkit/react)](https://www.npmjs.com/package/@cornerkit/react)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@cornerkit/react)](https://bundlephobia.com/package/@cornerkit/react)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0%2B-blue)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 React components and hooks for iOS-style squircle corners. A thin wrapper around `@cornerkit/core` with full TypeScript support.
+
+**[Live Demo](https://bejarcode.github.io/cornerKit/)** | **[GitHub](https://github.com/bejarcode/cornerKit)** | **[Core Package](https://www.npmjs.com/package/@cornerkit/core)**
 
 ## Installation
 
