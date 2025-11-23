@@ -52,6 +52,7 @@ npm install @cornerkit/core
 - Works with React, Vue, Svelte, Angular, or vanilla JS
 - TypeScript-first with full type definitions
 - **Official React package**: [`@cornerkit/react`](https://www.npmjs.com/package/@cornerkit/react)
+- **Official Vue package**: [`@cornerkit/vue`](https://www.npmjs.com/package/@cornerkit/vue)
 - Web Components support
 
 ### Accessible by Default
@@ -524,15 +525,47 @@ function SquircleButton({ children, radius = 20, smoothing = 0.6 }) {
 }
 ```
 
-### Vue 3
+### Vue 3 (Recommended: @cornerkit/vue)
+
+For Vue projects, we recommend using the official **[@cornerkit/vue](https://www.npmjs.com/package/@cornerkit/vue)** package:
+
+```bash
+npm install @cornerkit/vue
+```
 
 ```vue
-<template>
-  <button ref="buttonRef">
-    <slot />
-  </button>
-</template>
+<script setup>
+import { Squircle, useSquircle, vSquircle } from '@cornerkit/vue';
+</script>
 
+<template>
+  <!-- Component approach (recommended) -->
+  <Squircle :radius="24" :smoothing="0.6" class="card">
+    Beautiful squircle corners!
+  </Squircle>
+
+  <!-- Render as any element -->
+  <Squircle tag="button" :radius="16" @click="handleClick">
+    Click me
+  </Squircle>
+
+  <!-- Directive approach -->
+  <div v-squircle="{ radius: 20, smoothing: 0.8 }">
+    Directive-based squircle
+  </div>
+
+  <!-- Shorthand directive (radius only) -->
+  <div v-squircle="16">Quick squircle</div>
+</template>
+```
+
+**[Full @cornerkit/vue documentation →](https://github.com/bejarcode/cornerKit/tree/main/packages/vue#readme)**
+
+#### Manual Integration (Alternative)
+
+If you prefer manual control, you can use @cornerkit/core directly:
+
+```vue
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import CornerKit from '@cornerkit/core';
@@ -547,27 +580,23 @@ let ck = null;
 
 onMounted(() => {
   ck = new CornerKit();
-  ck.apply(buttonRef.value, {
-    radius: props.radius,
-    smoothing: props.smoothing
-  });
+  ck.apply(buttonRef.value, { radius: props.radius, smoothing: props.smoothing });
 });
 
 watch(() => [props.radius, props.smoothing], () => {
   if (ck && buttonRef.value) {
-    ck.update(buttonRef.value, {
-      radius: props.radius,
-      smoothing: props.smoothing
-    });
+    ck.update(buttonRef.value, { radius: props.radius, smoothing: props.smoothing });
   }
 });
 
 onBeforeUnmount(() => {
-  if (ck && buttonRef.value) {
-    ck.remove(buttonRef.value);
-  }
+  if (ck && buttonRef.value) ck.remove(buttonRef.value);
 });
 </script>
+
+<template>
+  <button ref="buttonRef"><slot /></button>
+</template>
 ```
 
 ### Svelte
@@ -749,6 +778,7 @@ MIT License - see [LICENSE](../../LICENSE) for details.
 
 - [npm Package](https://www.npmjs.com/package/@cornerkit/core)
 - [React Package](https://www.npmjs.com/package/@cornerkit/react) - Official React integration
+- [Vue Package](https://www.npmjs.com/package/@cornerkit/vue) - Official Vue 3 integration
 - [GitHub Discussions](https://github.com/bejarcode/cornerkit/discussions)
 - [Issue Tracker](https://github.com/bejarcode/cornerkit/issues)
 - [Security Policy](../../SECURITY.md)
