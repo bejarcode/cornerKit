@@ -1,0 +1,46 @@
+# Shopify App Configuration
+# https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "cornerKit"
+client_id = "your_client_id_here"
+application_url = "https://localhost"
+embedded = true
+
+[access_scopes]
+scopes = "read_themes,write_themes"
+
+[auth]
+redirect_urls = [
+  "https://localhost/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-10"
+
+# Required: App lifecycle webhook
+[[webhooks.subscriptions]]
+topics = ["app/uninstalled"]
+uri = "/webhooks"
+
+# Required: GDPR compliance webhooks
+[[webhooks.subscriptions]]
+topics = ["customers/data_request"]
+uri = "/webhooks"
+compliance_topics = ["customers/data_request"]
+
+[[webhooks.subscriptions]]
+topics = ["customers/redact"]
+uri = "/webhooks"
+compliance_topics = ["customers/redact"]
+
+[[webhooks.subscriptions]]
+topics = ["shop/redact"]
+uri = "/webhooks"
+compliance_topics = ["shop/redact"]
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = ""
