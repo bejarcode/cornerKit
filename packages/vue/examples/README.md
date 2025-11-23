@@ -1,18 +1,19 @@
-# @cornerkit/react Examples
+# @cornerkit/vue Examples
 
-Example applications demonstrating how to use the `@cornerkit/react` package.
+Example applications demonstrating how to use the `@cornerkit/vue` package.
 
 ## Available Examples
 
 | Example | Description | Tech Stack |
 |---------|-------------|------------|
-| [react-basic](./react-basic/) | Complete demo with Squircle component and useSquircle hook | Vite + React + TypeScript |
+| [vue-basic](./vue-basic/) | Complete demo with Squircle component, useSquircle composable, and v-squircle directive | Vite + Vue 3 + TypeScript |
 
-### react-basic Features
+### vue-basic Features
 
 - **Squircle Component**: Basic usage with various configurations
-- **useSquircle Hook**: Imperative usage with ref
-- **Polymorphic Components**: Render as button, link, or input
+- **useSquircle Composable**: Imperative usage with ref
+- **v-squircle Directive**: Apply squircle directly to elements
+- **Polymorphic Components**: Render as button, link, or custom element
 - **Interactive Controls**: Real-time radius and smoothing adjustment
 - **Border Support**: Toggle borders with width and color controls
 - **Live Code Generation**: See generated code update as you adjust parameters
@@ -23,7 +24,7 @@ Each example is a standalone application. To run an example:
 
 ```bash
 # Navigate to the example directory
-cd react-basic
+cd vue-basic
 
 # Install dependencies
 npm install
@@ -42,15 +43,15 @@ To add a new example:
 
 ## Note on Local Development
 
-The examples use a local path reference to `@cornerkit/react` for development.
+The examples use a local path reference to `@cornerkit/vue` for development.
 Before running, ensure you've built the main package:
 
 ```bash
-# From packages/react
+# From packages/vue
 npm run build
 
 # Then run the example
-cd examples/react-basic
+cd examples/vue-basic
 npm install
 npm run dev
 ```
@@ -58,4 +59,4 @@ npm run dev
 ## Related Examples
 
 - **Vanilla JavaScript**: See [`@cornerkit/core` examples](../../core/examples/)
-- **Vue**: See [`@cornerkit/vue` examples](../../vue/examples/)
+- **React**: See [`@cornerkit/react` examples](../../react/examples/)

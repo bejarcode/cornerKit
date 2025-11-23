@@ -30,7 +30,7 @@ xdg-open index.html  # Linux
 Framework-specific examples are available in their respective packages:
 
 - **React** - See [`@cornerkit/react` examples](../../react/examples/)
-- **Vue** (coming soon) - Will be at `packages/vue/examples/`
+- **Vue** - See [`@cornerkit/vue` examples](../../vue/examples/)
 
 ## Future Examples
 
