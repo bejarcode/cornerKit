@@ -4,8 +4,16 @@ For detailed changelog information, see the package-specific changelogs:
 
 - **[@cornerkit/core](packages/core/CHANGELOG.md)** - Core library changes
 - **[@cornerkit/react](packages/react/CHANGELOG.md)** - React integration changes
+- **[@cornerkit/vue](packages/vue/CHANGELOG.md)** - Vue 3 integration changes
+- **[@cornerkit/svelte](packages/svelte/CHANGELOG.md)** - Svelte integration changes
 
 ## Quick Links
+
+### @cornerkit/svelte
+- [v1.0.0](packages/svelte/CHANGELOG.md#100---2025-11-22) - Initial release with Squircle component and squircle action
+
+### @cornerkit/vue
+- [v1.0.0](packages/vue/CHANGELOG.md#100---2025-11-22) - Initial release with Squircle component, useSquircle composable, and v-squircle directive
 
 ### @cornerkit/react
 - [v1.0.0](packages/react/CHANGELOG.md#100---2025-11-22) - Initial release with Squircle component and useSquircle hook

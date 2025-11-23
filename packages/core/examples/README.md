@@ -31,6 +31,7 @@ Framework-specific examples are available in their respective packages:
 
 - **React** - See [`@cornerkit/react` examples](../../react/examples/)
 - **Vue** - See [`@cornerkit/vue` examples](../../vue/examples/)
+- **Svelte** - See [`@cornerkit/svelte` examples](../../svelte/examples/)
 
 ## Future Examples
 

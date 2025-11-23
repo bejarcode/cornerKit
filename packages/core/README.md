@@ -53,6 +53,7 @@ npm install @cornerkit/core
 - TypeScript-first with full type definitions
 - **Official React package**: [`@cornerkit/react`](https://www.npmjs.com/package/@cornerkit/react)
 - **Official Vue package**: [`@cornerkit/vue`](https://www.npmjs.com/package/@cornerkit/vue)
+- **Official Svelte package**: [`@cornerkit/svelte`](https://www.npmjs.com/package/@cornerkit/svelte)
 - Web Components support
 
 ### Accessible by Default
@@ -599,7 +600,38 @@ onBeforeUnmount(() => {
 </template>
 ```
 
-### Svelte
+### Svelte (Recommended: @cornerkit/svelte)
+
+For Svelte projects, we recommend using the official **[@cornerkit/svelte](https://www.npmjs.com/package/@cornerkit/svelte)** package:
+
+```bash
+npm install @cornerkit/svelte
+```
+
+```svelte
+<script>
+  import { Squircle, squircle } from '@cornerkit/svelte';
+</script>
+
+<!-- Component approach (recommended) -->
+<Squircle radius={24} smoothing={0.6} class="card">
+  Beautiful squircle corners!
+</Squircle>
+
+<!-- Action approach -->
+<div use:squircle={{ radius: 20, smoothing: 0.8 }}>
+  Action-based squircle
+</div>
+
+<!-- Shorthand action (radius only) -->
+<button use:squircle={16}>Click me</button>
+```
+
+**[Full @cornerkit/svelte documentation →](https://github.com/bejarcode/cornerKit/tree/main/packages/svelte#readme)**
+
+#### Manual Integration (Alternative)
+
+If you prefer manual control, you can use @cornerkit/core directly:
 
 ```svelte
 <script>
@@ -617,20 +649,14 @@ onBeforeUnmount(() => {
     ck.apply(element, { radius, smoothing });
   });
 
-  $: if (ck && element) {
-    ck.update(element, { radius, smoothing });
-  }
+  $: if (ck && element) ck.update(element, { radius, smoothing });
 
   onDestroy(() => {
-    if (ck && element) {
-      ck.remove(element);
-    }
+    if (ck && element) ck.remove(element);
   });
 </script>
 
-<button bind:this={element}>
-  <slot />
-</button>
+<button bind:this={element}><slot /></button>
 ```
 
 ---
@@ -779,6 +805,7 @@ MIT License - see [LICENSE](../../LICENSE) for details.
 - [npm Package](https://www.npmjs.com/package/@cornerkit/core)
 - [React Package](https://www.npmjs.com/package/@cornerkit/react) - Official React integration
 - [Vue Package](https://www.npmjs.com/package/@cornerkit/vue) - Official Vue 3 integration
+- [Svelte Package](https://www.npmjs.com/package/@cornerkit/svelte) - Official Svelte integration
 - [GitHub Discussions](https://github.com/bejarcode/cornerkit/discussions)
 - [Issue Tracker](https://github.com/bejarcode/cornerkit/issues)
 - [Security Policy](../../SECURITY.md)

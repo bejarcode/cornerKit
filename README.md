@@ -148,63 +148,73 @@ function CustomCard() {
 
 **[Full @cornerkit/react documentation →](packages/react/README.md)**
 
-### Core Library (Manual Integration)
+### Vue 3 (@cornerkit/vue)
 
-For frameworks without dedicated packages, use @cornerkit/core directly:
+Official Vue 3 integration with component, composable, and directive.
 
-```jsx
-import { useEffect, useRef } from 'react';
-import CornerKit from '@cornerkit/core';
-
-function SquircleCard({ children, radius = 24 }) {
-  const ref = useRef(null);
-  const ckRef = useRef(null);
-
-  useEffect(() => {
-    if (!ckRef.current) {
-      ckRef.current = new CornerKit();
-    }
-    ckRef.current.apply(ref.current, { radius, smoothing: 0.6 });
-
-    return () => ckRef.current.remove(ref.current);
-  }, [radius]);
-
-  return <div ref={ref} className="card">{children}</div>;
-}
+```bash
+npm install @cornerkit/vue
 ```
-
-### Vue 3
 
 ```vue
+<script setup>
+import { Squircle, useSquircle, vSquircle } from '@cornerkit/vue';
+</script>
+
 <template>
-  <div ref="cardRef" class="card">
-    <slot />
+  <!-- Component approach (recommended) -->
+  <Squircle :radius="24" :smoothing="0.6" class="card">
+    Beautiful squircle corners!
+  </Squircle>
+
+  <!-- Render as any element -->
+  <Squircle tag="button" :radius="16" @click="handleClick">
+    Click me
+  </Squircle>
+
+  <!-- Directive approach -->
+  <div v-squircle="{ radius: 20, smoothing: 0.8 }">
+    Directive-based squircle
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import CornerKit from '@cornerkit/core';
-
-const props = defineProps({
-  radius: { type: Number, default: 24 }
-});
-
-const cardRef = ref(null);
-let ck = null;
-
-onMounted(() => {
-  ck = new CornerKit();
-  ck.apply(cardRef.value, { radius: props.radius, smoothing: 0.6 });
-});
-
-onBeforeUnmount(() => {
-  if (ck && cardRef.value) {
-    ck.remove(cardRef.value);
-  }
-});
-</script>
 ```
+
+**[Full @cornerkit/vue documentation →](packages/vue/README.md)**
+
+### Svelte (@cornerkit/svelte)
+
+Official Svelte integration with component and action.
+
+```bash
+npm install @cornerkit/svelte
+```
+
+```svelte
+<script>
+  import { Squircle, squircle } from '@cornerkit/svelte';
+</script>
+
+<!-- Component approach (recommended) -->
+<Squircle radius={24} smoothing={0.6} class="card">
+  Beautiful squircle corners!
+</Squircle>
+
+<!-- Action approach -->
+<div use:squircle={{ radius: 20, smoothing: 0.8 }}>
+  Action-based squircle
+</div>
+
+<!-- Shorthand action (radius only) -->
+<button use:squircle={16}>Click me</button>
+```
+
+**[Full @cornerkit/svelte documentation →](packages/svelte/README.md)**
+
+### Core Library (Manual Integration)
+
+For frameworks without dedicated packages or custom integrations, use @cornerkit/core directly.
+
+**[Full @cornerkit/core documentation →](packages/core/README.md)**
 
 ## API Highlights
 
@@ -390,8 +400,8 @@ Working examples with interactive demos:
 
 - **[Vanilla JavaScript](packages/core/examples/vanilla-js/)** - Pure HTML/CSS/JS implementation
 - **[React](packages/react/examples/)** - Squircle component and useSquircle hook demos
-- **Vue 3** (coming soon)
-- **Svelte** (coming soon)
+- **[Vue 3](packages/vue/examples/)** - Squircle component, useSquircle composable, and v-squircle directive demos
+- **[Svelte](packages/svelte/examples/)** - Squircle component and squircle action demos
 
 ## CDN Usage
 
@@ -443,10 +453,10 @@ npm run analyze-bundle         # Bundle size analysis
 ## Roadmap
 
 - **Phase 1**: Core library + Demo website ✅ Complete
-- **Phase 2**: Framework wrappers
+- **Phase 2**: Framework wrappers ✅ Complete
   - React (@cornerkit/react) ✅ Complete
-  - Vue (coming soon)
-  - Svelte (coming soon)
+  - Vue (@cornerkit/vue) ✅ Complete
+  - Svelte (@cornerkit/svelte) ✅ Complete
 - **Phase 3**: Shopify Theme App Extension
 - **Phase 4**: Future (Native CSS, Houdini, advanced features)
 

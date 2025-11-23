@@ -1,0 +1,23 @@
+{
+  "name": "@cornerkit/svelte-basic-example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "dependencies": {
+    "@cornerkit/core": "file:../../../core",
+    "@cornerkit/svelte": "file:../.."
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.1.0",
+    "svelte": "^4.2.0",
+    "svelte-check": "^3.6.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0"
+  }
+}

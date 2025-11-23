@@ -60,3 +60,4 @@ npm run dev
 
 - **Vanilla JavaScript**: See [`@cornerkit/core` examples](../../core/examples/)
 - **React**: See [`@cornerkit/react` examples](../../react/examples/)
+- **Svelte**: See [`@cornerkit/svelte` examples](../../svelte/examples/)

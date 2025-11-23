@@ -1,18 +1,18 @@
-# @cornerkit/react Examples
+# @cornerkit/svelte Examples
 
-Example applications demonstrating how to use the `@cornerkit/react` package.
+Example applications demonstrating how to use the `@cornerkit/svelte` package.
 
 ## Available Examples
 
 | Example | Description | Tech Stack |
 |---------|-------------|------------|
-| [react-basic](./react-basic/) | Complete demo with Squircle component and useSquircle hook | Vite + React + TypeScript |
+| [svelte-basic](./svelte-basic/) | Complete demo with Squircle component and use:squircle action | Vite + Svelte + TypeScript |
 
-### react-basic Features
+### svelte-basic Features
 
 - **Squircle Component**: Basic usage with various configurations
-- **useSquircle Hook**: Imperative usage with ref
-- **Polymorphic Components**: Render as button, link, or input
+- **use:squircle Action**: Apply squircle directly to any element
+- **Number Shorthand**: Simplified syntax for radius-only configuration
 - **Interactive Controls**: Real-time radius and smoothing adjustment
 - **Border Support**: Toggle borders with width and color controls
 - **Live Code Generation**: See generated code update as you adjust parameters
@@ -23,7 +23,7 @@ Each example is a standalone application. To run an example:
 
 ```bash
 # Navigate to the example directory
-cd react-basic
+cd svelte-basic
 
 # Install dependencies
 npm install
@@ -42,15 +42,15 @@ To add a new example:
 
 ## Note on Local Development
 
-The examples use a local path reference to `@cornerkit/react` for development.
+The examples use a local path reference to `@cornerkit/svelte` for development.
 Before running, ensure you've built the main package:
 
 ```bash
-# From packages/react
+# From packages/svelte
 npm run build
 
 # Then run the example
-cd examples/react-basic
+cd examples/svelte-basic
 npm install
 npm run dev
 ```
@@ -58,5 +58,5 @@ npm run dev
 ## Related Examples
 
 - **Vanilla JavaScript**: See [`@cornerkit/core` examples](../../core/examples/)
+- **React**: See [`@cornerkit/react` examples](../../react/examples/)
 - **Vue**: See [`@cornerkit/vue` examples](../../vue/examples/)
-- **Svelte**: See [`@cornerkit/svelte` examples](../../svelte/examples/)
