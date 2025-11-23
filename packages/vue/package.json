@@ -1,6 +1,6 @@
 {
   "name": "@cornerkit/vue",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vue 3 components, composables, and directives for iOS-style squircle corners",
   "type": "module",
   "main": "dist/cornerkit-vue.js",
@@ -15,6 +15,7 @@
   },
   "files": [
     "dist",
+    "LICENSE",
     "README.md"
   ],
   "sideEffects": false,

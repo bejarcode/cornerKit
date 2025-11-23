@@ -1,6 +1,6 @@
 {
   "name": "@cornerkit/react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React components and hooks for iOS-style squircle corners",
   "type": "module",
   "main": "dist/cornerkit-react.js",
@@ -15,6 +15,7 @@
   },
   "files": [
     "dist",
+    "LICENSE",
     "README.md"
   ],
   "sideEffects": false,
