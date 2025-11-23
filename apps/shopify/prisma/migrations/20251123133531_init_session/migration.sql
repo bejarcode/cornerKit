@@ -1,0 +1,14 @@
+-- CreateTable
+CREATE TABLE "Session" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "shop" TEXT NOT NULL,
+    "state" TEXT,
+    "isOnline" BOOLEAN NOT NULL DEFAULT false,
+    "scope" TEXT,
+    "expires" DATETIME,
+    "accessToken" TEXT NOT NULL,
+    "userId" BIGINT
+);
+
+-- CreateIndex
+CREATE INDEX "Session_shop_idx" ON "Session"("shop");

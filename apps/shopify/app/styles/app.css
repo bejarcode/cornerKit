@@ -1,0 +1,89 @@
+/**
+ * cornerKit Shopify App - Custom Styles
+ *
+ * Minimal custom styles - Polaris components provide most styling.
+ * Only add styles here that cannot be achieved with Polaris.
+ */
+
+/* Base resets */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "San Francisco",
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    sans-serif;
+  /* Match Polaris background */
+  background-color: var(--p-color-bg-surface);
+  color: var(--p-color-text);
+}
+
+/* Ensure app fills viewport when embedded */
+#app,
+#root {
+  min-height: 100vh;
+}
+
+/* Loading state animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Inline loading spinner */
+.inline-loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.inline-loading__spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--p-color-border);
+  border-top-color: var(--p-color-border-interactive);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Respect reduced motion preferences (WCAG 2.1 AA) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Ensure focus visibility (accessibility) */
+:focus-visible {
+  outline: 2px solid var(--p-color-border-focus);
+  outline-offset: 2px;
+}
