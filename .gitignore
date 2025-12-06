@@ -65,5 +65,7 @@ docs/
 specs/
 .claude/
 CLAUDE.md
+**/CLAUDE.md
+CLAUDE.md.backup
 .specify/
 .vite/
