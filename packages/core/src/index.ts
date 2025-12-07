@@ -139,12 +139,22 @@ export default class CornerKit {
     const element = this.resolveElement(elementOrSelector);
 
     // FR-030: Validate and merge config (global defaults + per-element overrides)
+    // T017/T018: Handle new border object and legacy borderWidth/borderColor props
+    let border = config?.border;
+
+    // Backward compatibility: Convert legacy borderWidth/borderColor to new border object
+    if (!border && (config?.borderWidth || config?.borderColor)) {
+      border = {
+        width: config.borderWidth || 1,
+        color: config.borderColor || '#000000',
+      };
+    }
+
     const mergedConfig: SquircleConfig = {
       radius: validateRadius(config?.radius ?? this.globalConfig.radius),
       smoothing: validateSmoothing(config?.smoothing ?? this.globalConfig.smoothing),
       tier: config?.tier ?? this.globalConfig.tier,
-      borderWidth: config?.borderWidth,
-      borderColor: config?.borderColor,
+      border,
     };
 
     // Detect tier (or use forced tier from config)
@@ -439,13 +449,15 @@ export default class CornerKit {
       validatedConfig.smoothing = validateSmoothing(config.smoothing);
     }
 
-    // Handle border properties
-    if (config.borderWidth !== undefined) {
-      validatedConfig.borderWidth = config.borderWidth;
-    }
-
-    if (config.borderColor !== undefined) {
-      validatedConfig.borderColor = config.borderColor;
+    // Handle border properties (Feature 006)
+    if (config.border !== undefined) {
+      validatedConfig.border = config.border;
+    } else if (config.borderWidth !== undefined || config.borderColor !== undefined) {
+      // Backward compatibility: Convert legacy borderWidth/borderColor to new border object
+      validatedConfig.border = {
+        width: config.borderWidth || managed.config.border?.width || 1,
+        color: config.borderColor || managed.config.border?.color || '#000000',
+      };
     }
 
     // Allow tier override (for advanced users)
@@ -813,9 +825,18 @@ export default class CornerKit {
 }
 
 // Re-export types for convenience
-export type { SquircleConfig, ManagedElement, ManagedElementInfo };
+export type { SquircleConfig, ManagedElementInfo, BorderConfig, GradientStop, BorderRenderOptions } from './core/types';
+export type { ManagedElement } from './core/registry';
 export { RendererTier, type BrowserSupport } from './core/detector';
 export { DEFAULT_CONFIG } from './core/types';
 
 // Re-export data attribute utilities for convenience
-export { hasSquircleAttribute, parseDataAttributes, parseRadius, parseSmoothing } from './utils/data-attributes';
+export {
+  hasSquircleAttribute,
+  parseDataAttributes,
+  parseRadius,
+  parseSmoothing,
+  parseBorderWidth,
+  parseBorderColor,
+  parseBorderStyle,
+} from './utils/data-attributes';

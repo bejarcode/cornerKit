@@ -1385,6 +1385,31 @@ kbd {
 }
 
 /* ============================================================================
+   SVG Border Support (v1.2)
+   Ensures proper stacking context for SVG-based borders
+   ============================================================================ */
+
+/* Create stacking context for elements with squircle borders */
+[data-squircle],
+.squircle-applied {
+  isolation: isolate;
+}
+
+/* Ensure positioned parent for absolute SVG placement */
+[data-squircle][data-squircle-border-width],
+.squircle-applied {
+  position: relative;
+}
+
+/* SVG background element styling (injected by JS, but CSS ensures fallback) */
+.cornerkit-border {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ============================================================================
    Smooth Scroll (Respect prefers-reduced-motion)
    ============================================================================ */
 @media (prefers-reduced-motion: no-preference) {

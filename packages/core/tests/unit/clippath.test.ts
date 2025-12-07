@@ -745,4 +745,533 @@ describe('ClipPathRenderer', () => {
       expect(section.getAttribute('aria-hidden')).toBeNull();
     });
   });
+
+  // T013: Feature 006 - SVG-Based Border Rendering Tests
+  describe('Feature 006: SVG-Based Border Rendering', () => {
+    // T013a: Solid border rendering - SVG is created and inserted
+    it('should create SVG border when border config is provided', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#3b82f6' }
+      };
+
+      renderer.apply(element, config);
+
+      // Verify SVG border was created
+      const borderSvg = element.querySelector('.cornerkit-border');
+      expect(borderSvg).not.toBeNull();
+      expect(borderSvg?.tagName.toLowerCase()).toBe('svg');
+
+      // Verify isolation context applied
+      expect(element.style.isolation).toBe('isolate');
+
+      // Verify clip-path NOT applied when border is configured
+      expect(element.style.clipPath).toBe('');
+
+      // Cleanup
+      element.remove();
+    });
+
+    // T013b: Verify border SVG attributes
+    it('should create border SVG with correct attributes', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 150, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 80, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 16,
+        smoothing: 0.8,
+        border: { width: 3, color: '#10b981' }
+      };
+
+      renderer.apply(element, config);
+
+      const borderSvg = element.querySelector('.cornerkit-border');
+      expect(borderSvg).not.toBeNull();
+      expect(borderSvg?.getAttribute('viewBox')).toBe('0 0 150 80');
+      expect(borderSvg?.getAttribute('aria-hidden')).toBe('true');
+
+      // Verify border path has correct stroke
+      const borderPath = borderSvg?.querySelector('path[fill="none"]');
+      expect(borderPath).not.toBeNull();
+      expect(borderPath?.getAttribute('stroke')).toBe('#10b981');
+
+      // Cleanup
+      element.remove();
+    });
+
+    // T013c: Solid border should use clip-path approach
+    it('should use clip-path for solid borders', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#3b82f6', style: 'solid' }
+      };
+
+      renderer.apply(element, config);
+
+      const borderSvg = element.querySelector('.cornerkit-border');
+      const borderPath = borderSvg?.querySelector('path[fill="none"]');
+
+      // Solid borders use clip-path approach
+      expect(borderPath?.getAttribute('clip-path')).toMatch(/url\(#ck-clip-/);
+
+      // Cleanup
+      element.remove();
+    });
+
+    // T014: Background color capture tests
+    it('should capture background color and make element transparent', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = 'rgb(59, 130, 246)'; // #3b82f6
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#000000' }
+      };
+
+      renderer.apply(element, config);
+
+      // Verify background captured in data attribute
+      expect(element.dataset['squircleOriginalBg']).toBe('rgb(59, 130, 246)');
+
+      // Verify element background made transparent
+      expect(element.style.backgroundColor).toBe('transparent');
+
+      // Verify SVG includes background fill path
+      const borderSvg = element.querySelector('.cornerkit-border');
+      const bgPath = borderSvg?.querySelector('path[fill="rgb(59, 130, 246)"]');
+      expect(bgPath).not.toBeNull();
+
+      // Cleanup
+      element.remove();
+    });
+
+    // T014b: Background should only be captured once
+    it('should only capture background once on subsequent updates', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = 'rgb(255, 0, 0)';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#000000' }
+      };
+
+      renderer.apply(element, config);
+
+      // First capture
+      expect(element.dataset['squircleOriginalBg']).toBe('rgb(255, 0, 0)');
+
+      // Update with different radius (same border)
+      renderer.update(element, { radius: 30, smoothing: 0.8, border: { width: 2, color: '#000000' } });
+
+      // Should still have original background
+      expect(element.dataset['squircleOriginalBg']).toBe('rgb(255, 0, 0)');
+
+      // Cleanup
+      element.remove();
+    });
+
+    // T020b: Test remove() cleans up border SVG and restores styles
+    it('should remove border SVG and restore original styles on remove()', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = 'rgb(255, 255, 255)';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#3b82f6' }
+      };
+
+      const observer = renderer.apply(element, config);
+
+      // Verify SVG exists and styles modified
+      expect(element.querySelector('.cornerkit-border')).not.toBeNull();
+      expect(element.style.isolation).toBe('isolate');
+      expect(element.style.backgroundColor).toBe('transparent');
+      expect(element.dataset['squircleOriginalBg']).toBe('rgb(255, 255, 255)');
+
+      // Remove
+      observer.cleanup();
+      observer.disconnect();
+      renderer.remove(element);
+
+      // Verify SVG removed
+      expect(element.querySelector('.cornerkit-border')).toBeNull();
+      expect(element.style.isolation).toBe('');
+      expect(element.dataset['squircleOriginalBg']).toBeUndefined();
+
+      // CRITICAL: Verify background color is RESTORED
+      expect(element.style.backgroundColor).toBe('rgb(255, 255, 255)');
+
+      // Cleanup
+      element.remove();
+    });
+
+    // Test background restoration when switching from border to no-border
+    it('should restore background when switching from border to no-border config', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = 'rgb(100, 150, 200)';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      // Apply with border
+      const configWithBorder: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#3b82f6' }
+      };
+      renderer.apply(element, configWithBorder);
+
+      // Verify background is transparent
+      expect(element.style.backgroundColor).toBe('transparent');
+      expect(element.dataset['squircleOriginalBg']).toBe('rgb(100, 150, 200)');
+
+      // Update to config WITHOUT border
+      const configWithoutBorder: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8
+        // No border
+      };
+      renderer.update(element, configWithoutBorder);
+
+      // Verify background is RESTORED and border SVG removed
+      expect(element.style.backgroundColor).toBe('rgb(100, 150, 200)');
+      expect(element.querySelector('.cornerkit-border')).toBeNull();
+      expect(element.style.clipPath).toContain("path('");
+
+      // Cleanup
+      element.remove();
+    });
+
+    // Test position restoration
+    it('should restore position when element was static', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      // Default position is static
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#3b82f6' }
+      };
+
+      const observer = renderer.apply(element, config);
+
+      // Verify position was set to relative
+      expect(element.style.position).toBe('relative');
+      expect(element.dataset['squircleSetPosition']).toBe('true');
+
+      // Remove
+      observer.cleanup();
+      observer.disconnect();
+      renderer.remove(element);
+
+      // Verify position is restored (empty string = browser default)
+      expect(element.style.position).toBe('');
+      expect(element.dataset['squircleSetPosition']).toBeUndefined();
+
+      // Cleanup
+      element.remove();
+    });
+
+    // T013d: No border - should use regular clip-path
+    it('should use regular clip-path when no border configured', () => {
+      const element = document.createElement('div');
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8
+        // No border
+      };
+
+      renderer.apply(element, config);
+
+      // Verify regular clip-path applied
+      expect(element.style.clipPath).toContain("path('");
+
+      // Verify no SVG border created
+      expect(element.querySelector('.cornerkit-border')).toBeNull();
+
+      // Verify no isolation context
+      expect(element.style.isolation).toBe('');
+
+      // Cleanup
+      element.remove();
+    });
+
+    // T022: Dashed border tests
+    it('should create dashed border with correct dasharray', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#3b82f6', style: 'dashed' }
+      };
+
+      renderer.apply(element, config);
+
+      const borderSvg = element.querySelector('.cornerkit-border');
+      const borderPath = borderSvg?.querySelector('path[fill="none"]');
+
+      // Dashed style should have 8 4 dasharray
+      expect(borderPath?.getAttribute('stroke-dasharray')).toBe('8 4');
+
+      // Cleanup
+      element.remove();
+    });
+
+    // T022b: Custom dashArray tests
+    it('should apply custom dashArray when specified', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#3b82f6', dashArray: '12 6' }
+      };
+
+      renderer.apply(element, config);
+
+      const borderSvg = element.querySelector('.cornerkit-border');
+      const borderPath = borderSvg?.querySelector('path[fill="none"]');
+
+      // Custom dasharray should be applied
+      expect(borderPath?.getAttribute('stroke-dasharray')).toBe('12 6');
+
+      // Cleanup
+      element.remove();
+    });
+
+    // Dotted border tests
+    it('should create dotted border without clip-path (inset path approach)', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#10b981', style: 'dotted' }
+      };
+
+      renderer.apply(element, config);
+
+      const borderSvg = element.querySelector('.cornerkit-border');
+      const borderPath = borderSvg?.querySelector('path[fill="none"]');
+
+      // Dotted style should NOT use clip-path (uses inset path instead)
+      expect(borderPath?.getAttribute('clip-path')).toBeNull();
+      expect(borderPath?.getAttribute('stroke-dasharray')).toBe('0 6');
+      expect(borderPath?.getAttribute('stroke-linecap')).toBe('round');
+
+      // Cleanup
+      element.remove();
+    });
+  });
+
+  // T038: Resize handler tests for borders
+  describe('Border Resize Handling (T038)', () => {
+    it('should update border SVG viewBox on resize', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#3b82f6' }
+      };
+
+      renderer.apply(element, config);
+
+      // Verify initial viewBox
+      let borderSvg = element.querySelector('.cornerkit-border');
+      expect(borderSvg?.getAttribute('viewBox')).toBe('0 0 100 100');
+
+      // Simulate resize by updating element and calling update
+      Object.defineProperty(element, 'offsetWidth', { value: 200, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 150, configurable: true });
+
+      renderer.update(element, config);
+
+      // Verify updated viewBox
+      borderSvg = element.querySelector('.cornerkit-border');
+      expect(borderSvg?.getAttribute('viewBox')).toBe('0 0 200 150');
+
+      // Cleanup
+      element.remove();
+    });
+
+    it('should maintain border style during resize', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#10b981', style: 'dashed' }
+      };
+
+      renderer.apply(element, config);
+
+      // Verify initial dashed style
+      let borderPath = element.querySelector('.cornerkit-border path[fill="none"]');
+      expect(borderPath?.getAttribute('stroke-dasharray')).toBe('8 4');
+      expect(borderPath?.getAttribute('stroke')).toBe('#10b981');
+
+      // Simulate resize
+      Object.defineProperty(element, 'offsetWidth', { value: 300, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 200, configurable: true });
+
+      renderer.update(element, config);
+
+      // Verify style maintained after resize
+      borderPath = element.querySelector('.cornerkit-border path[fill="none"]');
+      expect(borderPath?.getAttribute('stroke-dasharray')).toBe('8 4');
+      expect(borderPath?.getAttribute('stroke')).toBe('#10b981');
+
+      // Cleanup
+      element.remove();
+    });
+
+    it('should maintain gradient during resize', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: {
+          width: 2,
+          gradient: [
+            { offset: '0%', color: '#3b82f6' },
+            { offset: '100%', color: '#8b5cf6' }
+          ]
+        }
+      };
+
+      renderer.apply(element, config);
+
+      // Verify initial gradient
+      let gradient = element.querySelector('.cornerkit-border linearGradient');
+      expect(gradient).not.toBeNull();
+
+      // Simulate resize
+      Object.defineProperty(element, 'offsetWidth', { value: 400, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 300, configurable: true });
+
+      renderer.update(element, config);
+
+      // Verify gradient maintained after resize
+      gradient = element.querySelector('.cornerkit-border linearGradient');
+      expect(gradient).not.toBeNull();
+      const stops = gradient?.querySelectorAll('stop');
+      expect(stops?.length).toBe(2);
+
+      // Cleanup
+      element.remove();
+    });
+
+    it('should handle rapid resize with border without errors', () => {
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      document.body.appendChild(element);
+
+      Object.defineProperty(element, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(element, 'offsetHeight', { value: 100, configurable: true });
+
+      const config: SquircleConfig = {
+        radius: 20,
+        smoothing: 0.8,
+        border: { width: 2, color: '#3b82f6' }
+      };
+
+      renderer.apply(element, config);
+
+      // Simulate rapid resizes (should not throw)
+      expect(() => {
+        for (let i = 0; i < 10; i++) {
+          Object.defineProperty(element, 'offsetWidth', { value: 100 + i * 20, configurable: true });
+          Object.defineProperty(element, 'offsetHeight', { value: 100 + i * 15, configurable: true });
+          renderer.update(element, config);
+        }
+      }).not.toThrow();
+
+      // Verify final state is correct
+      const borderSvg = element.querySelector('.cornerkit-border');
+      expect(borderSvg).not.toBeNull();
+      expect(borderSvg?.getAttribute('viewBox')).toBe('0 0 280 235');
+
+      // Cleanup
+      element.remove();
+    });
+  });
 });

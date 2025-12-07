@@ -8,6 +8,7 @@ import { generateSquirclePath } from '../math/path-generator';
 import type { SquircleConfig, RenderOptions } from '../core/types';
 import { warn, warnZeroDimensions, warnDetachedElement } from '../utils/logger';
 import { hasZeroDimensions, isDetached } from '../utils/validator';
+import { createBorderSVG, removeBorderSVG, injectBorderStyles } from './border';
 
 /**
  * Callback function signature for dimension updates
@@ -34,61 +35,9 @@ export interface ResizeObserverWithCleanup extends ResizeObserver {
 /**
  * ClipPath Renderer Class
  * FR-018 to FR-022: SVG clip-path implementation with ResizeObserver
+ * Feature 006: SVG-based border rendering (replaces pseudo-element approach)
  */
 export class ClipPathRenderer {
-  private static borderStylesInjected = false;
-
-  /**
-   * Inject global CSS styles for squircle borders (once per page)
-   * Uses ::before for border layer, ::after for content background
-   * Main element has NO clip-path to allow pseudo-elements to show
-   */
-  private static injectBorderStyles(): void {
-    if (this.borderStylesInjected || typeof document === 'undefined') {
-      return;
-    }
-
-    const style = document.createElement('style');
-    style.id = 'cornerkit-border-styles';
-    style.textContent = `
-      [data-squircle-border]::before {
-        content: '';
-        position: absolute;
-        top: calc(var(--squircle-border-width, 0px) * -1);
-        left: calc(var(--squircle-border-width, 0px) * -1);
-        width: calc(100% + var(--squircle-border-width, 0px) * 2);
-        height: calc(100% + var(--squircle-border-width, 0px) * 2);
-        background: var(--squircle-border-color, transparent);
-        clip-path: var(--squircle-border-path);
-        z-index: 0;
-        pointer-events: none;
-        border-radius: 0;
-      }
-      [data-squircle-border]::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: var(--squircle-content-bg-color, transparent);
-        background-image: var(--squircle-content-bg-image, none);
-        background-size: var(--squircle-content-bg-size, auto);
-        background-position: var(--squircle-content-bg-position, 0% 0%);
-        background-repeat: var(--squircle-content-bg-repeat, repeat);
-        clip-path: var(--squircle-content-path);
-        z-index: 1;
-        pointer-events: none;
-        border-radius: 0;
-      }
-      [data-squircle-border] > * {
-        position: relative;
-        z-index: 2;
-      }
-    `;
-    document.head.appendChild(style);
-    this.borderStylesInjected = true;
-  }
 
   /**
    * FR-018: Apply squircle clip-path to an element
@@ -147,16 +96,73 @@ export class ClipPathRenderer {
 
   /**
    * Remove squircle clip-path from element
-   * Resets element.style.clipPath and optionally restores original transition
+   * Feature 006: Also removes SVG border if present and restores original styles
    *
    * @param element - Target HTMLElement
    * @param originalTransition - Original transition value to restore (if any)
    */
   remove(element: HTMLElement, originalTransition?: string): void {
+    // Remove CSS clip-path
     element.style.clipPath = '';
 
-    // Remove border properties
-    this.removeBorderProperties(element);
+    // Remove border SVG (Feature 006)
+    removeBorderSVG(element);
+
+    // Restore original background color if it was captured
+    const originalBg = element.dataset['squircleOriginalBg'];
+    const hadInlineBg = element.dataset['squircleHadInlineBg'] === 'true';
+    if (originalBg !== undefined) {
+      if (hadInlineBg) {
+        // Restore original inline style value (without !important)
+        element.style.backgroundColor = originalBg;
+      } else {
+        // Original was from CSS - remove inline style, let CSS cascade take over
+        element.style.removeProperty('background-color');
+      }
+    }
+
+    // Restore original background-image if it was captured
+    const originalBgImage = element.dataset['squircleOriginalBgImage'];
+    const hadInlineBgImage = element.dataset['squircleHadInlineBgImage'] === 'true';
+    if (originalBgImage !== undefined) {
+      if (hadInlineBgImage) {
+        // Restore original inline style value (without !important)
+        element.style.backgroundImage = originalBgImage;
+      } else {
+        // Original was from CSS - remove inline style, let CSS cascade take over
+        element.style.removeProperty('background-image');
+      }
+    }
+
+    // Restore original box-shadow if it was captured
+    const originalShadow = element.dataset['squircleOriginalShadow'];
+    const hadInlineShadow = element.dataset['squircleHadInlineShadow'] === 'true';
+    if (originalShadow !== undefined) {
+      if (hadInlineShadow) {
+        // Restore original inline style value (without !important)
+        element.style.boxShadow = originalShadow;
+      } else {
+        // Original was from CSS - remove inline style, let CSS cascade take over
+        element.style.removeProperty('box-shadow');
+      }
+    }
+
+    // Restore original position if we changed it (tracked via data attribute)
+    if (element.dataset['squircleSetPosition'] === 'true') {
+      element.style.position = '';
+      delete element.dataset['squircleSetPosition'];
+    }
+
+    // Restore element styles modified for border rendering
+    element.style.isolation = '';
+
+    // Clean up border-related data attributes
+    delete element.dataset['squircleOriginalBg'];
+    delete element.dataset['squircleHadInlineBg'];
+    delete element.dataset['squircleOriginalBgImage'];
+    delete element.dataset['squircleHadInlineBgImage'];
+    delete element.dataset['squircleOriginalShadow'];
+    delete element.dataset['squircleHadInlineShadow'];
 
     // Restore original transition if provided
     if (originalTransition !== undefined) {
@@ -166,13 +172,13 @@ export class ClipPathRenderer {
 
   /**
    * Generate SVG path and update element's clip-path style
-   * Internal helper method used by apply() and update()
+   * Feature 006: Uses SVG-based border rendering (replaces pseudo-element approach)
    *
    * @param element - Target HTMLElement
    * @param config - Squircle configuration
    */
   private updateClipPath(element: HTMLElement, config: SquircleConfig): void {
-    const { radius, smoothing, borderWidth, borderColor } = config;
+    const { radius, smoothing, border } = config;
 
     // Get current element dimensions
     const width = element.offsetWidth;
@@ -186,85 +192,140 @@ export class ClipPathRenderer {
     // Generate SVG path string
     const path = generateSquirclePath(width, height, radius, smoothing);
 
-    // Handle border rendering via ::before and ::after pseudo-elements
-    if (borderWidth && borderWidth > 0 && borderColor) {
+    // Handle border rendering via SVG (Feature 006)
+    if (border && border.width > 0 && (border.color || (border.gradient && border.gradient.length >= 2))) {
       // Inject global border styles (once per page)
-      ClipPathRenderer.injectBorderStyles();
+      injectBorderStyles();
 
-      // DON'T apply clip-path to main element - let pseudo-elements handle it
-      // This prevents the parent's clip-path from cutting off the border
-      element.style.clipPath = 'none';
+      // Remove any existing border SVG before creating new one
+      removeBorderSVG(element);
 
-      // Calculate border path (for the ::before element which is larger)
-      const borderElementWidth = width + borderWidth * 2;
-      const borderElementHeight = height + borderWidth * 2;
-      const borderPath = generateSquirclePath(
-        borderElementWidth,
-        borderElementHeight,
-        radius + borderWidth, // Increase radius proportionally
-        smoothing
-      );
-
-      // Capture original background ONLY ONCE (before we set it to transparent)
-      // This prevents recapturing the transparent value on subsequent updates
+      // Capture background BEFORE making element transparent
+      // Only capture once (check if not already captured)
+      let backgroundColor: string | undefined;
       if (!element.dataset['squircleOriginalBg']) {
+        // Track whether background was set via inline style (before we modify it)
+        // This is needed for proper restoration later
+        const hadInlineStyle = !!element.style.backgroundColor;
+        const hadInlineImage = !!element.style.backgroundImage;
+        const hadInlineShadow = !!element.style.boxShadow;
         const computedStyle = getComputedStyle(element);
-
-        // Store individual background properties in CSS variables
-        element.style.setProperty('--squircle-content-bg-color', computedStyle.backgroundColor);
-        element.style.setProperty('--squircle-content-bg-image', computedStyle.backgroundImage);
-        element.style.setProperty('--squircle-content-bg-size', computedStyle.backgroundSize);
-        element.style.setProperty('--squircle-content-bg-position', computedStyle.backgroundPosition);
-        element.style.setProperty('--squircle-content-bg-repeat', computedStyle.backgroundRepeat);
-
-        // Mark as captured
-        element.dataset['squircleOriginalBg'] = 'captured';
+        backgroundColor = computedStyle.backgroundColor;
+        element.dataset['squircleOriginalBg'] = backgroundColor;
+        element.dataset['squircleHadInlineBg'] = hadInlineStyle ? 'true' : 'false';
+        // Also capture background-image (for gradients)
+        const backgroundImage = computedStyle.backgroundImage;
+        element.dataset['squircleOriginalBgImage'] = backgroundImage;
+        element.dataset['squircleHadInlineBgImage'] = hadInlineImage ? 'true' : 'false';
+        // Also capture box-shadow (would show through transparent background)
+        const boxShadow = computedStyle.boxShadow;
+        element.dataset['squircleOriginalShadow'] = boxShadow;
+        element.dataset['squircleHadInlineShadow'] = hadInlineShadow ? 'true' : 'false';
+      } else {
+        backgroundColor = element.dataset['squircleOriginalBg'];
       }
 
-      // Set CSS custom properties for pseudo-elements (border path updates on resize)
-      element.style.setProperty('--squircle-border-width', `${borderWidth}px`);
-      element.style.setProperty('--squircle-border-color', borderColor);
-      element.style.setProperty('--squircle-border-path', `path('${borderPath}')`);
-      element.style.setProperty('--squircle-content-path', `path('${path}')`);
+      // Create border SVG
+      const borderSvg = createBorderSVG({
+        width,
+        height,
+        radius,
+        smoothing,
+        border,
+        backgroundColor
+      });
 
-      // Make main element's background transparent (::after will show it)
-      element.style.background = 'transparent';
+      // Insert SVG as first child (behind content due to z-index: -1)
+      if (borderSvg) {
+        element.insertBefore(borderSvg, element.firstChild);
+      }
 
-      // Mark element for border styling and ensure position context
-      element.dataset['squircleBorder'] = 'true';
-      const computedStyle = getComputedStyle(element);
-      const computedPosition = computedStyle.position;
-      if (computedPosition === 'static') {
+      // Make element background transparent (SVG handles it)
+      // Use setProperty with !important to override CSS frameworks (like Tailwind with important: true)
+      element.style.setProperty('background-color', 'transparent', 'important');
+      // Also clear background-image (for gradients) since we're not clipping the element
+      element.style.setProperty('background-image', 'none', 'important');
+      // Clear box-shadow (would show through transparent background and outside squircle shape)
+      element.style.setProperty('box-shadow', 'none', 'important');
+
+      // Apply required CSS for stacking context (T016)
+      // Check for 'static' or empty string (jsdom returns '' for unset position)
+      const computedPosition = getComputedStyle(element).position;
+      if (computedPosition === 'static' || computedPosition === '') {
         element.style.position = 'relative';
+        // Track that we set the position so we can restore it later
+        element.dataset['squircleSetPosition'] = 'true';
       }
+      element.style.isolation = 'isolate';
+
+      // DO NOT apply CSS clip-path when border is configured
+      // This prevents anti-aliasing fringe on dark backgrounds
+      element.style.clipPath = '';
     } else {
-      // No borders - apply clip-path directly to element
+      // No border - apply standard CSS clip-path
       element.style.clipPath = `path('${path}')`;
-      // Remove border properties if not configured
-      this.removeBorderProperties(element);
+
+      // Remove any existing border SVG
+      removeBorderSVG(element);
+
+      // Restore original background color if switching from border to no-border
+      const originalBg = element.dataset['squircleOriginalBg'];
+      const hadInlineBg = element.dataset['squircleHadInlineBg'] === 'true';
+      if (originalBg !== undefined) {
+        if (hadInlineBg) {
+          // Restore original inline style value (without !important)
+          element.style.backgroundColor = originalBg;
+        } else {
+          // Original was from CSS - remove inline style, let CSS cascade take over
+          element.style.removeProperty('background-color');
+        }
+      }
+
+      // Restore original background-image if switching from border to no-border
+      const originalBgImage = element.dataset['squircleOriginalBgImage'];
+      const hadInlineBgImage = element.dataset['squircleHadInlineBgImage'] === 'true';
+      if (originalBgImage !== undefined) {
+        if (hadInlineBgImage) {
+          // Restore original inline style value (without !important)
+          element.style.backgroundImage = originalBgImage;
+        } else {
+          // Original was from CSS - remove inline style, let CSS cascade take over
+          element.style.removeProperty('background-image');
+        }
+      }
+
+      // Restore original box-shadow if switching from border to no-border
+      const originalShadow = element.dataset['squircleOriginalShadow'];
+      const hadInlineShadow = element.dataset['squircleHadInlineShadow'] === 'true';
+      if (originalShadow !== undefined) {
+        if (hadInlineShadow) {
+          // Restore original inline style value (without !important)
+          element.style.boxShadow = originalShadow;
+        } else {
+          // Original was from CSS - remove inline style, let CSS cascade take over
+          element.style.removeProperty('box-shadow');
+        }
+      }
+
+      // Restore position if we set it
+      if (element.dataset['squircleSetPosition'] === 'true') {
+        element.style.position = '';
+        delete element.dataset['squircleSetPosition'];
+      }
+
+      // Remove isolation context
+      element.style.isolation = '';
+
+      // Clean up border-related data attributes
+      delete element.dataset['squircleOriginalBg'];
+      delete element.dataset['squircleHadInlineBg'];
+      delete element.dataset['squircleOriginalBgImage'];
+      delete element.dataset['squircleHadInlineBgImage'];
+      delete element.dataset['squircleOriginalShadow'];
+      delete element.dataset['squircleHadInlineShadow'];
     }
   }
 
-  /**
-   * Remove border-related CSS properties from element
-   * @param element - Target HTMLElement
-   */
-  private removeBorderProperties(element: HTMLElement): void {
-    element.style.removeProperty('--squircle-border-width');
-    element.style.removeProperty('--squircle-border-color');
-    element.style.removeProperty('--squircle-border-path');
-    element.style.removeProperty('--squircle-content-path');
-    element.style.removeProperty('--squircle-content-bg-color');
-    element.style.removeProperty('--squircle-content-bg-image');
-    element.style.removeProperty('--squircle-content-bg-size');
-    element.style.removeProperty('--squircle-content-bg-position');
-    element.style.removeProperty('--squircle-content-bg-repeat');
-
-    delete element.dataset['squircleBorder'];
-    delete element.dataset['squircleOriginalBg'];
-    // Note: We don't restore element.style.background here because
-    // the element will get the standard clip-path instead
-  }
 
   /**
    * FR-042: Apply reduced motion preferences

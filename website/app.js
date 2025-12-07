@@ -42,7 +42,7 @@ ck.apply('#my-element', {
   Your content here
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.2.0"></script>
 <script>
   // Auto-init will apply squircles to all [data-squircle] elements
   CornerKit.auto();
@@ -158,6 +158,23 @@ function updateAllCodeSnippets(radius, smoothing, borderConfig = null) {
  */
 function generateCodeWithBorder(format, radius, smoothing, borderConfig) {
   const hasBorder = borderConfig && borderConfig.enabled;
+  const hasGradient = hasBorder && borderConfig.useGradient && borderConfig.gradient;
+  const borderStyle = hasBorder && borderConfig.style !== 'solid' ? borderConfig.style : null;
+
+  // Build border object properties string for code snippets (v1.2 API)
+  const getBorderObject = (indent = '    ') => {
+    let props = `${indent}width: ${borderConfig.width}`;
+    if (borderStyle) {
+      props += `,\n${indent}style: '${borderStyle}'`;
+    }
+    if (hasGradient) {
+      const stops = borderConfig.gradient.map(s => `{ color: '${s.color}', offset: ${s.offset} }`).join(', ');
+      props += `,\n${indent}gradient: [${stops}]`;
+    } else {
+      props += `,\n${indent}color: '${borderConfig.color}'`;
+    }
+    return props;
+  };
 
   const codeTemplatesWithBorder = {
     'vanilla-js': () => {
@@ -167,12 +184,13 @@ function generateCodeWithBorder(format, radius, smoothing, borderConfig) {
 // Create instance
 const ck = new CornerKit();
 
-// Apply to element with border
+// Apply to element with border (v1.2 API)
 ck.apply('#my-element', {
   radius: ${radius},
   smoothing: ${smoothing},
-  borderWidth: ${borderConfig.width},
-  borderColor: '${borderConfig.color}'
+  border: {
+${getBorderObject('    ')}
+  }
 });`;
       }
       return codeTemplates['vanilla-js'](radius, smoothing);
@@ -180,40 +198,39 @@ ck.apply('#my-element', {
 
     'html': () => {
       if (hasBorder) {
+        const dataAttrs = borderStyle ? `\n  data-squircle-border-style="${borderStyle}"` : '';
+        // Note: Gradients require JS API - data attributes only support solid colors
+        const gradientNote = hasGradient ? '\n\n<!-- Note: Gradient borders require JS API. Data attributes only support solid colors. -->' : '';
         return `<div
   data-squircle
   data-squircle-radius="${radius}"
   data-squircle-smoothing="${smoothing}"
-  style="border: none;"
+  data-squircle-border-width="${borderConfig.width}"
+  data-squircle-border-color="${hasGradient ? borderConfig.gradient[0].color : borderConfig.color}"${dataAttrs}
 >
   Your content here
 </div>
 
-<!-- Note: Border support requires JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.2.0"></script>
 <script>
-  const ck = new CornerKit();
-  ck.apply('[data-squircle]', {
-    radius: ${radius},
-    smoothing: ${smoothing},
-    borderWidth: ${borderConfig.width},
-    borderColor: '${borderConfig.color}'
-  });
-</script>`;
+  // Auto-init applies squircles to all [data-squircle] elements
+  CornerKit.auto();
+</script>${gradientNote}`;
       }
       return codeTemplates['html'](radius, smoothing);
     },
 
     'typescript': () => {
       if (hasBorder) {
-        return `import CornerKit, { type SquircleConfig } from '@cornerkit/core';
+        return `import CornerKit, { type SquircleConfig, type BorderConfig } from '@cornerkit/core';
 
 const ck = new CornerKit();
 const config: SquircleConfig = {
   radius: ${radius},
   smoothing: ${smoothing},
-  borderWidth: ${borderConfig.width},
-  borderColor: '${borderConfig.color}'
+  border: {
+${getBorderObject('    ')}
+  }
 };
 ck.apply('#my-element', config);`;
       }
@@ -222,6 +239,10 @@ ck.apply('#my-element', config);`;
 
     'react': () => {
       if (hasBorder) {
+        // React integration uses border prop object
+        const borderObj = hasGradient
+          ? `{{ width: ${borderConfig.width}${borderStyle ? `, style: '${borderStyle}'` : ''}, gradient: [${borderConfig.gradient.map(s => `{ color: '${s.color}', offset: ${s.offset} }`).join(', ')}] }}`
+          : `{{ width: ${borderConfig.width}${borderStyle ? `, style: '${borderStyle}'` : ''}, color: '${borderConfig.color}' }}`;
         return `import { Squircle } from '@cornerkit/react';
 
 function App() {
@@ -229,9 +250,7 @@ function App() {
     <Squircle
       radius={${radius}}
       smoothing={${smoothing}}
-      borderWidth={${borderConfig.width}}
-      borderColor="${borderConfig.color}"
-      style={{ border: 'none' }}
+      border={${borderObj}}
     >
       Your content here
     </Squircle>
@@ -243,13 +262,15 @@ function App() {
 
     'vue': () => {
       if (hasBorder) {
+        // Vue integration uses border prop object
+        const borderObj = hasGradient
+          ? `{ width: ${borderConfig.width}${borderStyle ? `, style: '${borderStyle}'` : ''}, gradient: [${borderConfig.gradient.map(s => `{ color: '${s.color}', offset: ${s.offset} }`).join(', ')}] }`
+          : `{ width: ${borderConfig.width}${borderStyle ? `, style: '${borderStyle}'` : ''}, color: '${borderConfig.color}' }`;
         return `<template>
   <Squircle
     :radius="${radius}"
     :smoothing="${smoothing}"
-    :borderWidth="${borderConfig.width}"
-    borderColor="${borderConfig.color}"
-    style="border: none"
+    :border="${borderObj}"
   >
     Your content here
   </Squircle>
@@ -565,7 +586,17 @@ const exampleComponents = [
 
   // Forms - Textareas (applying border to wrapper due to textarea overflow restrictions)
   { id: 'form-textarea-wrapper', category: 'form', variant: 'textarea', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' },
-  { id: 'form-textarea-2', category: 'form', variant: 'textarea-large', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' }
+  { id: 'form-textarea-2', category: 'form', variant: 'textarea-large', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' },
+
+  // Border Styles (NEW in v1.2)
+  { id: 'border-style-solid', category: 'border-style', variant: 'solid', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#3b82f6', borderStyle: 'solid' },
+  { id: 'border-style-dashed', category: 'border-style', variant: 'dashed', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#10b981', borderStyle: 'dashed' },
+  { id: 'border-style-dotted', category: 'border-style', variant: 'dotted', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#f59e0b', borderStyle: 'dotted' },
+  { id: 'border-style-gradient', category: 'border-style', variant: 'gradient', radius: 20, smoothing: 0.8, borderWidth: 2, gradient: [{ color: '#3b82f6', offset: 0 }, { color: '#8b5cf6', offset: 1 }] },
+
+  // Dark Background Demo (SC-001 Anti-aliasing Fix)
+  { id: 'dark-demo-solid', category: 'dark-demo', variant: 'solid', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#60a5fa' },
+  { id: 'dark-demo-gradient', category: 'dark-demo', variant: 'gradient', radius: 20, smoothing: 0.8, borderWidth: 2, gradient: [{ color: '#f472b6', offset: 0 }, { color: '#a855f7', offset: 1 }] }
 ];
 
 /**
@@ -597,27 +628,33 @@ function applyToGalleryExamples() {
           smoothing: component.smoothing
         };
 
-        // Add border properties if they exist
+        // Add border properties if they exist (using v1.2 API with nested border object)
         if (component.borderWidth !== undefined) {
-          config.borderWidth = component.borderWidth;
-        }
-        if (component.borderColor !== undefined) {
-          // Use theme-aware border colors
-          let borderColor = component.borderColor;
-          
-          // Map light colors to dark mode equivalents
-          if (component.id === 'border-card-1') {
-            borderColor = getThemeBorderColor('#d1d5db', '#4b5563'); // Light gray -> Dark gray
-          } else if (component.id === 'border-button-1') {
-            borderColor = getThemeBorderColor('#9ca3af', '#6b7280'); // Medium gray -> Lighter gray
-          } else if (component.id === 'form-text-1-wrapper' ||
-                     component.id === 'form-text-2-wrapper' ||
-                     component.id === 'form-textarea-wrapper') {
-            borderColor = getThemeBorderColor('#d1d5db', '#6b7280'); // Light gray -> gray-500 for better contrast
+          config.border = {
+            width: component.borderWidth,
+            style: component.borderStyle || 'solid'
+          };
+
+          if (component.gradient !== undefined) {
+            config.border.gradient = component.gradient;
+          } else if (component.borderColor !== undefined) {
+            // Use theme-aware border colors
+            let borderColor = component.borderColor;
+
+            // Map light colors to dark mode equivalents
+            if (component.id === 'border-card-1') {
+              borderColor = getThemeBorderColor('#d1d5db', '#4b5563'); // Light gray -> Dark gray
+            } else if (component.id === 'border-button-1') {
+              borderColor = getThemeBorderColor('#9ca3af', '#6b7280'); // Medium gray -> Lighter gray
+            } else if (component.id === 'form-text-1-wrapper' ||
+                       component.id === 'form-text-2-wrapper' ||
+                       component.id === 'form-textarea-wrapper') {
+              borderColor = getThemeBorderColor('#d1d5db', '#6b7280'); // Light gray -> gray-500 for better contrast
+            }
+            // border-card-2 and border-button-2 use blue/purple which work in both modes
+
+            config.border.color = borderColor;
           }
-          // border-card-2 and border-button-2 use blue/purple which work in both modes
-          
-          config.borderColor = borderColor;
         }
 
         ck.apply(`#${component.id}`, config);
@@ -755,10 +792,19 @@ function updatePlaygroundPreview(radius, smoothing, borderConfig = null) {
   // Build config object
   const config = { radius, smoothing };
 
-  // Add border properties if enabled
+  // Add border properties if enabled (using v1.2 API with nested border object)
   if (borderConfig && borderConfig.enabled) {
-    config.borderWidth = borderConfig.width;
-    config.borderColor = borderConfig.color;
+    config.border = {
+      width: borderConfig.width,
+      style: borderConfig.style || 'solid'
+    };
+
+    // Use gradient if enabled, otherwise use solid color
+    if (borderConfig.useGradient && borderConfig.gradient) {
+      config.border.gradient = borderConfig.gradient;
+    } else {
+      config.border.color = borderConfig.color;
+    }
   }
 
   // Update preview element
@@ -813,12 +859,28 @@ function getBorderConfig() {
   const toggle = document.getElementById('border-toggle');
   const widthSlider = document.getElementById('border-width-slider');
   const colorInput = document.getElementById('border-color-input');
+  const styleSelect = document.getElementById('border-style-select');
+  const gradientToggle = document.getElementById('gradient-toggle');
+  const gradientStartPicker = document.getElementById('gradient-start-picker');
+  const gradientEndPicker = document.getElementById('gradient-end-picker');
 
-  return {
+  const config = {
     enabled: toggle ? toggle.checked : false,
     width: widthSlider ? parseInt(widthSlider.value, 10) : 2,
-    color: colorInput ? colorInput.value : '#3b82f6'
+    color: colorInput ? colorInput.value : '#3b82f6',
+    style: styleSelect ? styleSelect.value : 'solid',
+    useGradient: gradientToggle ? gradientToggle.checked : false
   };
+
+  // Add gradient colors if gradient is enabled
+  if (config.useGradient && gradientStartPicker && gradientEndPicker) {
+    config.gradient = [
+      { color: gradientStartPicker.value, offset: 0 },
+      { color: gradientEndPicker.value, offset: 1 }
+    ];
+  }
+
+  return config;
 }
 
 /**
@@ -881,6 +943,59 @@ function handleBorderToggle(e) {
   }
 
   // Update preview with current values
+  const radius = parseInt(document.getElementById('radius-slider').value, 10);
+  const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+  const borderConfig = getBorderConfig();
+
+  requestAnimationFrame(() => {
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
+  });
+}
+
+/**
+ * Handles gradient toggle checkbox change
+ */
+function handleGradientToggle(e) {
+  const solidColorControls = document.getElementById('solid-color-controls');
+  const gradientColorControls = document.getElementById('gradient-color-controls');
+
+  if (solidColorControls && gradientColorControls) {
+    if (e.target.checked) {
+      solidColorControls.classList.add('hidden');
+      gradientColorControls.classList.remove('hidden');
+    } else {
+      solidColorControls.classList.remove('hidden');
+      gradientColorControls.classList.add('hidden');
+    }
+  }
+
+  // Update preview with current values
+  const radius = parseInt(document.getElementById('radius-slider').value, 10);
+  const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+  const borderConfig = getBorderConfig();
+
+  requestAnimationFrame(() => {
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
+  });
+}
+
+/**
+ * Handles border style select change
+ */
+function handleBorderStyleChange() {
+  const radius = parseInt(document.getElementById('radius-slider').value, 10);
+  const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
+  const borderConfig = getBorderConfig();
+
+  requestAnimationFrame(() => {
+    debouncedUpdatePreview(radius, smoothing, borderConfig);
+  });
+}
+
+/**
+ * Handles gradient color change
+ */
+function handleGradientColorChange() {
   const radius = parseInt(document.getElementById('radius-slider').value, 10);
   const smoothing = parseFloat(document.getElementById('smoothing-slider').value);
   const borderConfig = getBorderConfig();
@@ -1022,6 +1137,25 @@ function initializeDemo() {
     }
     if (borderColorInput) {
       borderColorInput.addEventListener('input', (e) => handleBorderColorChange(e.target.value));
+    }
+
+    // Attach border style and gradient control event listeners
+    const borderStyleSelect = document.getElementById('border-style-select');
+    const gradientToggle = document.getElementById('gradient-toggle');
+    const gradientStartPicker = document.getElementById('gradient-start-picker');
+    const gradientEndPicker = document.getElementById('gradient-end-picker');
+
+    if (borderStyleSelect) {
+      borderStyleSelect.addEventListener('change', handleBorderStyleChange);
+    }
+    if (gradientToggle) {
+      gradientToggle.addEventListener('change', handleGradientToggle);
+    }
+    if (gradientStartPicker) {
+      gradientStartPicker.addEventListener('input', handleGradientColorChange);
+    }
+    if (gradientEndPicker) {
+      gradientEndPicker.addEventListener('input', handleGradientColorChange);
     }
 
     console.log('✅ Playground initialized with radius:', initialRadius, 'smoothing:', initialSmoothing);
@@ -1298,39 +1432,49 @@ if (darkModeToggle) {
       forceRepaint();
     });
 
-    // Reapply borders with theme-appropriate colors
+    // Reapply borders with theme-appropriate colors (v1.2 API)
     // Use double requestAnimationFrame to ensure styles have fully recalculated
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         exampleComponents.forEach(component => {
-          if (component.borderWidth !== undefined && component.borderColor !== undefined) {
+          // Handle all bordered elements (both solid and gradient)
+          if (component.borderWidth !== undefined) {
             try {
               const element = document.getElementById(component.id);
               if (element) {
-                // Get current config or use defaults
-                const currentConfig = ck.inspect(`#${component.id}`);
+                // Build config with v1.2 API (nested border object)
                 const config = {
                   radius: component.radius,
                   smoothing: component.smoothing,
-                  borderWidth: component.borderWidth
+                  border: {
+                    width: component.borderWidth,
+                    style: component.borderStyle || 'solid'
+                  }
                 };
 
-                // Determine border color based on theme
-                let borderColor = component.borderColor;
-                if (component.id === 'border-card-1') {
-                  borderColor = isDark ? '#4b5563' : '#d1d5db';
-                } else if (component.id === 'border-button-1') {
-                  borderColor = isDark ? '#6b7280' : '#9ca3af';
-                } else if (component.id === 'form-text-1-wrapper' ||
-                           component.id === 'form-text-2-wrapper' ||
-                           component.id === 'form-textarea-wrapper') {
-                  borderColor = isDark ? '#6b7280' : '#d1d5db'; // gray-500 for better contrast
+                // Handle gradient vs solid color
+                if (component.gradient !== undefined) {
+                  config.border.gradient = component.gradient;
+                } else if (component.borderColor !== undefined) {
+                  // Determine border color based on theme
+                  let borderColor = component.borderColor;
+                  if (component.id === 'border-card-1') {
+                    borderColor = isDark ? '#4b5563' : '#d1d5db';
+                  } else if (component.id === 'border-button-1') {
+                    borderColor = isDark ? '#6b7280' : '#9ca3af';
+                  } else if (component.id === 'form-text-1-wrapper' ||
+                             component.id === 'form-text-2-wrapper' ||
+                             component.id === 'form-textarea-wrapper') {
+                    borderColor = isDark ? '#6b7280' : '#d1d5db'; // gray-500 for better contrast
+                  }
+                  // border-card-2 and border-button-2 keep their colors (blue/purple work in both)
+
+                  config.border.color = borderColor;
                 }
-                // border-card-2 and border-button-2 keep their colors (blue/purple work in both)
 
-                config.borderColor = borderColor;
-
-                // Reapply the full config to ensure it updates
+                // Remove then reapply to force full re-render with new background color
+                // (ck.apply on managed elements may skip background recapture)
+                ck.remove(`#${component.id}`);
                 ck.apply(`#${component.id}`, config);
 
                 // Update form wrapper background color for the ::after pseudo-element

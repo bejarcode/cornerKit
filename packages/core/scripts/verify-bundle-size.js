@@ -2,7 +2,7 @@
 
 /**
  * Bundle Size Verification Script
- * Verifies SC-002: Bundle size <5KB gzipped
+ * Verifies SC-004: Bundle size <6KB gzipped (with border support)
  * Part of T345: Success criteria verification
  */
 
@@ -14,7 +14,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const TARGET_SIZE_KB = 5.0;
+const TARGET_SIZE_KB = 6.0;
 const DIST_DIR = join(__dirname, '..', 'dist');
 
 const BUNDLES = [
@@ -24,7 +24,7 @@ const BUNDLES = [
 ];
 
 console.log('╔═══════════════════════════════════════════════════════════════╗');
-console.log('║          Bundle Size Verification (SC-002)                   ║');
+console.log('║          Bundle Size Verification (SC-004)                   ║');
 console.log('╚═══════════════════════════════════════════════════════════════╝\n');
 
 let allPassed = true;
@@ -76,14 +76,14 @@ if (allPassed && results.length === BUNDLES.length) {
   const avgSize = (results.reduce((sum, r) => sum + r.sizeKB, 0) / results.length).toFixed(2);
   const minHeadroom = Math.min(...results.map(r => parseFloat(r.percentage))).toFixed(1);
 
-  console.log('\n✅ SUCCESS CRITERIA SC-002: PASSED');
-  console.log(`\n   All bundles are under ${TARGET_SIZE_KB} KB gzipped target`);
+  console.log('\n✅ SUCCESS CRITERIA SC-004: PASSED');
+  console.log(`\n   All bundles are under ${TARGET_SIZE_KB} KB gzipped target (with border support)`);
   console.log(`   Average size: ${avgSize} KB`);
   console.log(`   Minimum headroom: ${minHeadroom}%`);
   console.log(`\n   ${results.length}/${BUNDLES.length} bundles verified\n`);
   process.exit(0);
 } else {
-  console.log('\n❌ SUCCESS CRITERIA SC-002: FAILED');
+  console.log('\n❌ SUCCESS CRITERIA SC-004: FAILED');
   console.log(`\n   One or more bundles exceed ${TARGET_SIZE_KB} KB gzipped target\n`);
   process.exit(1);
 }
