@@ -7,6 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-12-07
+
+### Added
+- **SVG-based border rendering** - Complete rewrite of border system using layered SVG paths
+  - Eliminates anti-aliasing fringe on dark backgrounds (SC-001)
+  - SVG contains background fill path + border stroke path
+  - SVG positioned with `z-index: -1` and parent uses `isolation: isolate`
+- **New border styles** - Support for solid, dashed, and dotted borders
+  - Solid: Default style with clean edges
+  - Dashed: 8px dash / 4px gap pattern (`border.style: 'dashed'`)
+  - Dotted: Round dots using inset path rendering (`border.style: 'dotted'`)
+- **Custom dash patterns** - Configure via `border.dashArray` (e.g., `'12 6'`)
+- **Gradient borders** - Linear gradients with configurable color stops
+  - `border.gradient: [{ offset: 0, color: '#3b82f6' }, { offset: 1, color: '#8b5cf6' }]`
+  - Default direction: top-left to bottom-right
+- **Border data attributes** - Declarative HTML configuration
+  - `data-squircle-border-width="2"`
+  - `data-squircle-border-color="#3b82f6"`
+  - `data-squircle-border-style="dashed"`
+- **Border validation** - Width clamped to 1-8px range, invalid colors fall back to transparent
+- **Background capture** - Preserves background-image and box-shadow during border rendering
+
+### Changed
+- **New nested border API** - Configuration uses `border: { width, color, style, dashArray, gradient }`
+- **Backward compatible** - Legacy `borderWidth` and `borderColor` still work
+- **Bundle size** - Increased to ~5.8 KB gzipped (under 6KB target per SC-004)
+- **CSS framework compatibility** - Uses `!important` for critical styles to prevent Tailwind conflicts
+
+### Technical Details
+- Dotted borders use inset path rendering (no clip-path) to avoid artifacts through gaps
+- Background fill extends with stroke to cover anti-aliased edges in gaps
+- ResizeObserver updates borders on element resize within 16ms frame timing
+- 412 unit tests + 66 integration tests passing
+- Works consistently across Chrome 90+, Firefox 90+, Safari 14+, Edge 90+
+
+### Migration Guide
+```javascript
+// Old API (still works)
+ck.apply(element, { borderWidth: 2, borderColor: '#3b82f6' })
+
+// New API (recommended)
+ck.apply(element, {
+  border: {
+    width: 2,
+    color: '#3b82f6',
+    style: 'solid' // or 'dashed', 'dotted'
+  }
+})
+```
+
 ## [1.1.0] - 2025-11-18
 
 ### Added
@@ -187,6 +237,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Working vanilla JavaScript example with interactive demo
 - CHANGELOG.md following Keep a Changelog format
 
-[Unreleased]: https://github.com/bejarcode/cornerkit/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/bejarcode/cornerkit/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/bejarcode/cornerkit/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/bejarcode/cornerkit/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/bejarcode/cornerkit/compare/v1.0.0...v1.0.2
 [1.0.0]: https://github.com/bejarcode/cornerkit/releases/tag/v1.0.0

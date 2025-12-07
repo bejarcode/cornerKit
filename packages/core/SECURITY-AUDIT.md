@@ -1,7 +1,7 @@
 # Security Audit Report
 
-**Date**: 2025-11-12
-**Package**: @cornerkit/core v1.0.0
+**Date**: 2025-12-07
+**Package**: @cornerkit/core v1.2.0
 **Auditor**: Automated Security Analysis + Manual Code Review
 
 ---
@@ -283,6 +283,11 @@ For security issues, please report via:
 
 ## Changelog
 
+- **2025-12-07**: Security audit v1.2.0
+  - Production code: A+ rating (zero vulnerabilities)
+  - New SVG border rendering: No eval/innerHTML, uses safe DOM APIs only
+  - DevDependencies: Vulnerabilities tracked (non-production impact)
+  - All success criteria met
 - **2025-11-12**: Initial security audit v1.0.0
   - Production code: A+ rating (zero vulnerabilities)
   - DevDependencies: 6 vulnerabilities (non-production impact)
