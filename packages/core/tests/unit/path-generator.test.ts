@@ -241,6 +241,83 @@ describe('generateSquirclePath', () => {
   });
 });
 
+// T005: Tests for inset path generation (Feature 006)
+describe('generateSquirclePath with inset', () => {
+  it('should generate valid SVG path with inset parameter', () => {
+    const path = generateSquirclePath(100, 100, 20, 0.8, 5);
+
+    // Path should be valid SVG syntax
+    expect(path).toMatch(/^M/);
+    expect(path).toMatch(/Z$/);
+    expect(path).not.toMatch(/NaN/);
+    expect(path).not.toMatch(/Infinity/);
+  });
+
+  it('should generate smaller path when inset is applied', () => {
+    const pathNoInset = generateSquirclePath(100, 100, 20, 0.8, 0);
+    const pathWithInset = generateSquirclePath(100, 100, 20, 0.8, 5);
+
+    // Paths should be different
+    expect(pathNoInset).not.toBe(pathWithInset);
+
+    // Parse the starting coordinates to verify inset path starts further inward
+    const noInsetMatch = pathNoInset.match(/^M\s+([\d.-]+)\s+([\d.-]+)/);
+    const insetMatch = pathWithInset.match(/^M\s+([\d.-]+)\s+([\d.-]+)/);
+
+    expect(noInsetMatch).not.toBeNull();
+    expect(insetMatch).not.toBeNull();
+
+    // Inset path should start at y=5 (the inset amount)
+    if (insetMatch) {
+      const insetY = parseFloat(insetMatch[2]);
+      expect(insetY).toBe(5);
+    }
+  });
+
+  it('should handle large inset that reduces path to degenerate case', () => {
+    // Inset of 50 on 100x100 element leaves 0x0 inner area
+    const path = generateSquirclePath(100, 100, 20, 0.8, 50);
+
+    // Should return a degenerate path (just a point)
+    expect(path).toMatch(/^M/);
+    expect(path).toMatch(/Z$/);
+    expect(path).not.toMatch(/NaN/);
+  });
+
+  it('should use default inset of 0 when not specified', () => {
+    const pathExplicit = generateSquirclePath(100, 100, 20, 0.8, 0);
+    const pathDefault = generateSquirclePath(100, 100, 20, 0.8);
+
+    expect(pathExplicit).toBe(pathDefault);
+  });
+
+  it('should generate parseable SVG path with inset', () => {
+    const path = generateSquirclePath(100, 100, 20, 0.8, 3);
+
+    // Create SVG with the path
+    const svgString = `<svg xmlns="http://www.w3.org/2000/svg"><path d="${path}"/></svg>`;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgString, 'image/svg+xml');
+
+    // Check for parse errors
+    const parseError = doc.querySelector('parsererror');
+    expect(parseError).toBeNull();
+  });
+
+  it('should handle various inset values correctly', () => {
+    const insets = [0, 1, 2, 5, 10];
+
+    insets.forEach(inset => {
+      const path = generateSquirclePath(100, 100, 20, 0.8, inset);
+
+      // All paths should be valid
+      expect(path).toMatch(/^M/);
+      expect(path).toMatch(/Z$/);
+      expect(path).not.toMatch(/NaN/);
+    });
+  });
+});
+
 describe('generateClipPath', () => {
   it('should wrap path in CSS path() function', () => {
     const clipPath = generateClipPath(100, 100, 20, 0.8);

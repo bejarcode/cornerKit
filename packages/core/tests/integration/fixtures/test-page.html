@@ -386,6 +386,65 @@ ck.inspect('#ios-standard');</pre>
     </div>
   </section>
 
+  <section id="border-test">
+    <h2>Border Rendering (Feature 006)</h2>
+    <div class="test-container">
+      <div id="solid-border-element" class="test-element" style="width: 200px; height: 150px; background: #1a1a2e;">Solid Border</div>
+      <div id="dashed-border-element" class="test-element" style="width: 200px; height: 150px; background: #1a1a2e;">Dashed Border</div>
+      <div id="dotted-border-element" class="test-element" style="width: 200px; height: 150px; background: #1a1a2e;">Dotted Border</div>
+      <div id="gradient-border-element" class="test-element" style="width: 200px; height: 150px; background: #1a1a2e;">Gradient Border</div>
+    </div>
+  </section>
+
+  <section id="border-dark-bg-test">
+    <h2>Border on Dark Background (Anti-aliasing Test)</h2>
+    <div class="test-container" style="background: #0a0a0a; padding: 40px; border-radius: 8px;">
+      <div id="dark-bg-solid" class="test-element" style="width: 180px; height: 120px; background: #1e1e2e; color: #fff;">Dark BG Solid</div>
+      <div id="dark-bg-dashed" class="test-element" style="width: 180px; height: 120px; background: #1e1e2e; color: #fff;">Dark BG Dashed</div>
+    </div>
+  </section>
+
+  <section id="border-data-attr-test">
+    <h2>Border Data Attributes (T050)</h2>
+    <div class="test-container">
+      <div id="border-attr-solid"
+           data-squircle
+           data-squircle-radius="24"
+           data-squircle-smoothing="0.6"
+           data-squircle-border-width="2"
+           data-squircle-border-color="#3b82f6"
+           class="test-element"
+           style="width: 200px; height: 150px; background: #1a1a2e;">
+        Solid via Data Attr
+      </div>
+      <div id="border-attr-dashed"
+           data-squircle
+           data-squircle-radius="20"
+           data-squircle-border-width="2"
+           data-squircle-border-color="#10b981"
+           data-squircle-border-style="dashed"
+           class="test-element"
+           style="width: 200px; height: 150px; background: #1a1a2e;">
+        Dashed via Data Attr
+      </div>
+      <div id="border-attr-dotted"
+           data-squircle
+           data-squircle-border-color="#f59e0b"
+           data-squircle-border-style="dotted"
+           class="test-element"
+           style="width: 200px; height: 150px; background: #1a1a2e;">
+        Dotted via Data Attr
+      </div>
+      <div id="border-attr-color-only"
+           data-squircle
+           data-squircle-border-color="#ef4444"
+           class="test-element"
+           style="width: 200px; height: 150px; background: #1a1a2e;">
+        Color Only (Default Width)
+      </div>
+    </div>
+  </section>
+
   <!-- Load CornerKit -->
   <script type="module">
     // Comprehensive error handling to prevent silent test failures
@@ -469,6 +528,16 @@ ck.inspect('#ios-standard');</pre>
         ck.apply('#test-square', { radius: 40, smoothing: 0.6 });
         ck.apply('#test-wide', { radius: 30, smoothing: 0.6 });
         ck.apply('#test-tall', { radius: 30, smoothing: 0.6 });
+
+        // Border rendering test elements (Feature 006)
+        ck.apply('#solid-border-element', { radius: 24, smoothing: 0.6, border: { width: 2, color: '#3b82f6', style: 'solid' } });
+        ck.apply('#dashed-border-element', { radius: 24, smoothing: 0.6, border: { width: 2, color: '#3b82f6', style: 'dashed' } });
+        ck.apply('#dotted-border-element', { radius: 24, smoothing: 0.6, border: { width: 2, color: '#f59e0b', style: 'dotted' } });
+        ck.apply('#gradient-border-element', { radius: 24, smoothing: 0.6, border: { width: 2, gradient: [{ color: '#3b82f6', offset: 0 }, { color: '#8b5cf6', offset: 1 }] } });
+
+        // Dark background border elements (anti-aliasing test)
+        ck.apply('#dark-bg-solid', { radius: 24, smoothing: 0.6, border: { width: 2, color: '#3b82f6', style: 'solid' } });
+        ck.apply('#dark-bg-dashed', { radius: 24, smoothing: 0.6, border: { width: 2, color: '#3b82f6', style: 'dashed' } });
 
         console.log('✅ CornerKit loaded with Figma algorithm (arc + bezier curves)');
         console.log('📝 Default: smoothing=0.6 (iOS 7 standard per Figma API)');

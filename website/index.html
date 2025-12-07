@@ -6,14 +6,14 @@
 
   <!-- SEO Meta Tags -->
   <title>CornerKit - iOS-style squircle corners for the web</title>
-  <meta name="description" content="A lightweight JavaScript library for implementing iOS-style squircle (continuous curve) corners on web elements. Zero dependencies, 3.66 KB gzipped, 98%+ browser support.">
+  <meta name="description" content="A lightweight JavaScript library for implementing iOS-style squircle (continuous curve) corners on web elements. Zero dependencies, 5.5 KB gzipped, 98%+ browser support.">
   <meta name="keywords" content="squircle, superellipse, rounded corners, iOS design, web components, javascript library, border-radius alternative">
   <meta name="author" content="CornerKit">
   <link rel="canonical" href="https://bejarcode.github.io/cornerkit/">
 
   <!-- Open Graph Meta Tags -->
   <meta property="og:title" content="CornerKit - iOS-style squircle corners for the web">
-  <meta property="og:description" content="Lightweight JavaScript library for iOS-style squircle corners. Zero dependencies, 3.66 KB gzipped, 98%+ browser support.">
+  <meta property="og:description" content="Lightweight JavaScript library for iOS-style squircle corners. Zero dependencies, 5.5 KB gzipped, 98%+ browser support.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://bejarcode.github.io/cornerkit/">
   <meta property="og:image" content="https://bejarcode.github.io/cornerkit/assets/og-image.png">
@@ -179,7 +179,7 @@
           <span class="text-xs sm:text-sm text-gray-300">Pure vanilla JavaScript</span>
         </div>
         <div class="flex flex-col gap-1.5 sm:gap-2 p-3 sm:p-4 bg-white/5 hover:bg-white/10 rounded-xl transition-colors backdrop-blur-sm border border-white/10">
-          <strong class="text-sm sm:text-base lg:text-lg font-semibold text-white">3.66 KB gzipped</strong>
+          <strong class="text-sm sm:text-base lg:text-lg font-semibold text-white">5.5 KB gzipped</strong>
           <span class="text-xs sm:text-sm text-gray-300">Tiny bundle size</span>
         </div>
         <div class="flex flex-col gap-1.5 sm:gap-2 p-3 sm:p-4 bg-white/5 hover:bg-white/10 rounded-xl transition-colors backdrop-blur-sm border border-white/10">
@@ -288,7 +288,7 @@
                     type="range"
                     id="border-width-slider"
                     min="1"
-                    max="10"
+                    max="8"
                     value="2"
                     step="1"
                     class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-blue-500"
@@ -297,30 +297,87 @@
               </div>
 
               <div class="space-y-2">
+                <label for="border-style-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Border Style
+                </label>
+                <select
+                  id="border-style-select"
+                  class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  aria-label="Select border style"
+                >
+                  <option value="solid">Solid</option>
+                  <option value="dashed">Dashed</option>
+                  <option value="dotted">Dotted</option>
+                </select>
+              </div>
+
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <label for="gradient-toggle" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Gradient Border
+                  </label>
+                  <input
+                    type="checkbox"
+                    id="gradient-toggle"
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                    aria-label="Toggle gradient border"
+                  >
+                </div>
+              </div>
+
+              <div id="solid-color-controls" class="space-y-2">
                 <label for="border-color-picker" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Border Color: <span id="border-color-value" class="text-blue-600 font-semibold">#000000</span>
+                  Border Color: <span id="border-color-value" class="text-blue-600 font-semibold">#3b82f6</span>
                 </label>
                 <div class="flex items-center gap-3">
                   <input
                     type="color"
                     id="border-color-picker"
-                    value="#000000"
+                    value="#3b82f6"
                     class="w-12 h-10 rounded cursor-pointer border border-gray-300"
                     aria-label="Choose border color"
                   >
                   <input
                     type="text"
                     id="border-color-input"
-                    value="#000000"
-                    class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="#000000"
+                    value="#3b82f6"
+                    class="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="#3b82f6"
                   >
+                </div>
+              </div>
+
+              <div id="gradient-color-controls" class="space-y-2 hidden">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Gradient Colors
+                </label>
+                <div class="flex items-center gap-3">
+                  <div class="flex-1">
+                    <label for="gradient-start-picker" class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Start</label>
+                    <input
+                      type="color"
+                      id="gradient-start-picker"
+                      value="#3b82f6"
+                      class="w-full h-10 rounded cursor-pointer border border-gray-300"
+                      aria-label="Gradient start color"
+                    >
+                  </div>
+                  <div class="flex-1">
+                    <label for="gradient-end-picker" class="block text-xs text-gray-500 dark:text-gray-400 mb-1">End</label>
+                    <input
+                      type="color"
+                      id="gradient-end-picker"
+                      value="#8b5cf6"
+                      class="w-full h-10 rounded cursor-pointer border border-gray-300"
+                      aria-label="Gradient end color"
+                    >
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="playground-preview squircle-pending relative w-full h-72 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center font-bold text-lg text-white shadow-xl shadow-blue-500/30" id="playground-preview">
+          <div class="playground-preview squircle-pending relative w-full h-72 bg-blue-600 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center font-bold text-lg text-white shadow-xl shadow-blue-500/30" id="playground-preview">
             <p>Preview Element</p>
           </div>
 
@@ -379,7 +436,7 @@
           <strong class="font-semibold text-gray-900 dark:text-white">Keyboard Shortcuts:</strong> Press <kbd class="px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded shadow-sm">R</kbd> to reset | Press <kbd class="px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded shadow-sm">I</kbd> to inspect (logs to console)
         </p>
         <p class="text-gray-700 dark:text-gray-300 leading-relaxed mt-3">
-          <strong class="font-semibold text-gray-900 dark:text-white">Note:</strong> CornerKit v1.1 now includes border support! Try the border toggle above to add squircle borders with customizable width and color. The library uses CSS <code class="px-1.5 py-0.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono rounded">clip-path</code> for performance and broad compatibility.
+          <strong class="font-semibold text-gray-900 dark:text-white">New in v1.2:</strong> SVG-based borders with solid, dashed, dotted styles and gradient support! No more anti-aliasing fringe on dark backgrounds. Try the border controls above to see it in action.
         </p>
       </div>
     </div>
@@ -429,21 +486,67 @@
         <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Bordered Elements</h3>
           <div class="space-y-4">
-            <div id="border-card-1" class="p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+            <div id="border-card-1" class="p-5 bg-white dark:bg-gray-800 rounded-xl">
               <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Bordered Card</strong>
               <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Squircle border with 2px width</p>
               <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 20px, smoothing: 0.8, borderWidth: 2px</p>
             </div>
-            <div id="border-card-2" class="p-5 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/50 dark:to-blue-800/50 rounded-xl shadow-sm">
+            <div id="border-card-2" class="p-5 bg-blue-50 dark:bg-blue-900/50 rounded-xl">
               <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Colored Border</strong>
-              <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Blue squircle border with gradient background</p>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Blue squircle border with solid background</p>
               <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">radius: 24px, smoothing: 0.85, borderWidth: 3px, borderColor: #3b82f6</p>
             </div>
             <div class="flex flex-wrap gap-3">
-              <button id="border-button-1" class="px-6 py-3 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-medium rounded-xl shadow-sm hover:shadow-md transition-all">Bordered Button</button>
-              <button id="border-button-2" class="px-6 py-3 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 hover:from-purple-100 hover:to-purple-200 dark:hover:from-purple-800 dark:hover:to-purple-700 text-purple-900 dark:text-purple-100 font-medium rounded-xl shadow-sm hover:shadow-md transition-all">Purple Border</button>
+              <button id="border-button-1" class="px-6 py-3 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-medium rounded-xl transition-all">Bordered Button</button>
+              <button id="border-button-2" class="px-6 py-3 bg-purple-50 dark:bg-purple-900 hover:bg-purple-100 dark:hover:bg-purple-800 text-purple-900 dark:text-purple-100 font-medium rounded-xl transition-all">Purple Border</button>
             </div>
             <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">Buttons: radius: 20px, smoothing: 0.8, borderWidth: 2px</p>
+          </div>
+        </div>
+
+        <!-- Border Styles (NEW in v1.2) -->
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Border Styles</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">New in v1.2: SVG-based borders with style and gradient support</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div id="border-style-solid" class="p-5 bg-white dark:bg-gray-800 rounded-xl">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Solid Border</strong>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Classic solid line</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">borderStyle: 'solid'</p>
+            </div>
+            <div id="border-style-dashed" class="p-5 bg-white dark:bg-gray-800 rounded-xl">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Dashed Border</strong>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Dashed line pattern</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">borderStyle: 'dashed'</p>
+            </div>
+            <div id="border-style-dotted" class="p-5 bg-white dark:bg-gray-800 rounded-xl">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Dotted Border</strong>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Dotted line pattern</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">borderStyle: 'dotted'</p>
+            </div>
+            <div id="border-style-gradient" class="p-5 bg-white dark:bg-gray-800 rounded-xl">
+              <strong class="block text-lg font-semibold text-gray-900 dark:text-white mb-1">Gradient Border</strong>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Blue to purple gradient</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">gradient: [{color: '#3b82f6'}, {color: '#8b5cf6'}]</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dark Background Demo (SC-001 Anti-aliasing Fix) -->
+        <div class="bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm">
+          <h3 class="text-xl font-semibold text-white mb-2">Dark Background Demo</h3>
+          <p class="text-sm text-gray-400 mb-6">SVG-based borders eliminate anti-aliasing fringe on dark backgrounds</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div id="dark-demo-solid" class="p-5 bg-gray-800 rounded-xl">
+              <strong class="block text-lg font-semibold text-white mb-1">Clean Edges</strong>
+              <p class="text-sm text-gray-300 mb-2">No white fringe artifacts</p>
+              <p class="text-xs text-gray-500 font-mono">SVG borders = crisp on dark</p>
+            </div>
+            <div id="dark-demo-gradient" class="p-5 bg-gray-800 rounded-xl">
+              <strong class="block text-lg font-semibold text-white mb-1">Gradient on Dark</strong>
+              <p class="text-sm text-gray-300 mb-2">Smooth gradient rendering</p>
+              <p class="text-xs text-gray-500 font-mono">No anti-aliasing issues</p>
+            </div>
           </div>
         </div>
 
@@ -724,6 +827,7 @@
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Code Examples & Installation</h2>
+        <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Framework packages support solid borders. For dashed, dotted, or gradient borders, use <code class="text-blue-600 dark:text-blue-400">@cornerkit/core</code> directly.</p>
       </div>
 
       <div class="max-w-2xl mx-auto mb-16">
@@ -735,11 +839,11 @@
           </div>
           <div>
             <p class="text-sm text-gray-600 dark:text-gray-300 mb-2 font-medium">CDN (unpkg):</p>
-            <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">&lt;script src="https://unpkg.com/@cornerkit/core@1.1.0"&gt;&lt;/script&gt;</code></pre>
+            <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">&lt;script src="https://unpkg.com/@cornerkit/core@1.2.0"&gt;&lt;/script&gt;</code></pre>
           </div>
           <div>
             <p class="text-sm text-gray-600 dark:text-gray-300 mb-2 font-medium">CDN (jsDelivr):</p>
-            <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">&lt;script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.1.0"&gt;&lt;/script&gt;</code></pre>
+            <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto shadow-lg"><code class="font-mono text-sm">&lt;script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.2.0"&gt;&lt;/script&gt;</code></pre>
           </div>
         </div>
       </div>
@@ -792,9 +896,9 @@ ck.apply('#my-element', config);</code></pre>
           <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
-        <!-- React (teaser) -->
+        <!-- React -->
         <div class="relative bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
-          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">React <span class="text-sm text-gray-500 font-normal">(Coming Soon)</span></h4>
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">React <a href="https://www.npmjs.com/package/@cornerkit/react" class="text-sm text-blue-500 hover:text-blue-600 font-normal">@cornerkit/react</a></h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-javascript">import { Squircle } from '@cornerkit/react';
 
 function MyComponent() {
@@ -807,9 +911,9 @@ function MyComponent() {
           <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
 
-        <!-- Vue (teaser) -->
-        <div class="relative bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm lg:col-span-2">
-          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Vue <span class="text-sm text-gray-500 dark:text-gray-400 font-normal">(Coming Soon)</span></h4>
+        <!-- Vue -->
+        <div class="relative bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Vue <a href="https://www.npmjs.com/package/@cornerkit/vue" class="text-sm text-blue-500 hover:text-blue-600 font-normal">@cornerkit/vue</a></h4>
           <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-html">&lt;template&gt;
   &lt;Squircle :radius="20" :smoothing="0.8"&gt;
     &lt;div&gt;Your content&lt;/div&gt;
@@ -819,6 +923,19 @@ function MyComponent() {
 &lt;script setup&gt;
 import { Squircle } from '@cornerkit/vue';
 &lt;/script&gt;</code></pre>
+          <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
+        </div>
+
+        <!-- Svelte -->
+        <div class="relative bg-gray-50 dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Svelte <a href="https://www.npmjs.com/package/@cornerkit/svelte" class="text-sm text-blue-500 hover:text-blue-600 font-normal">@cornerkit/svelte</a></h4>
+          <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm mb-3"><code class="language-html">&lt;script&gt;
+  import { Squircle } from '@cornerkit/svelte';
+&lt;/script&gt;
+
+&lt;Squircle radius={20} smoothing={0.8}&gt;
+  &lt;div&gt;Your content&lt;/div&gt;
+&lt;/Squircle&gt;</code></pre>
           <button data-action="copy-static-example" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-sm font-medium rounded-lg transition-colors">Copy</button>
         </div>
       </div>
@@ -838,8 +955,8 @@ import { Squircle } from '@cornerkit/vue';
   </footer>
 
   <!-- CornerKit library -->
-  <!-- <script src="https://unpkg.com/@cornerkit/core@1.1.0/dist/cornerkit.js"></script> -->
-  <script src="cornerkit.js?v=20251117-border"></script>
-  <script src="app.js?v=20251117"></script>
+  <!-- <script src="https://unpkg.com/@cornerkit/core@1.2.0/dist/cornerkit.js"></script> -->
+  <script src="cornerkit.js?v=20251207-gradient-fix"></script>
+  <script src="app.js?v=20251207-gradient-fix"></script>
 </body>
 </html>

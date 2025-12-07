@@ -3,7 +3,7 @@
 > Bring iOS-style squircle corners to your web applications
 
 [![npm version](https://img.shields.io/npm/v/@cornerkit/core)](https://www.npmjs.com/package/@cornerkit/core)
-[![Bundle Size](https://img.shields.io/badge/bundle%20size-4.58%20KB-success)](https://bundlephobia.com/package/@cornerkit/core)
+[![Bundle Size](https://img.shields.io/badge/bundle%20size-5.50%20KB-success)](https://bundlephobia.com/package/@cornerkit/core)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3%2B-blue)](https://www.typescriptlang.org/)
 [![Security: A+](https://img.shields.io/badge/security-A%2B-success)](SECURITY.md)
@@ -12,7 +12,7 @@
 
 **[Live Demo](https://bejarcode.github.io/cornerKit/)** - Interactive playground with 36+ UI examples
 
-CornerKit is a lightweight JavaScript library that brings the smooth, continuous curve corners (squircles) from iOS design to the web. At just **4.58 KB gzipped** with **zero runtime dependencies**, it delivers pixel-perfect rounded corners that look better than standard CSS `border-radius`.
+CornerKit is a lightweight JavaScript library that brings the smooth, continuous curve corners (squircles) from iOS design to the web. At just **5.50 KB gzipped** with **zero runtime dependencies**, it delivers pixel-perfect rounded corners that look better than standard CSS `border-radius`.
 
 ## Live Demo
 
@@ -45,8 +45,10 @@ const ck = new CornerKit();
 ck.apply('.card', {
   radius: 24,        // Corner size in pixels
   smoothing: 0.6,    // iOS standard smoothness (0-1)
-  borderWidth: 2,    // Optional: border width in pixels
-  borderColor: '#000' // Optional: border color
+  border: {          // Optional: SVG-based border (v1.2.0+)
+    width: 2,
+    color: '#000'
+  }
 });
 ```
 
@@ -71,7 +73,7 @@ ck.apply('.card', {
 ## Why CornerKit?
 
 ### Exceptionally Tiny
-- **4.58 KB gzipped** (ESM) - 8% under 5KB budget
+- **5.50 KB gzipped** (ESM) - includes SVG border rendering
 - **Zero runtime dependencies**
 - Tree-shakeable ES modules
 - Smaller than most icon libraries
@@ -89,9 +91,9 @@ ck.apply('.card', {
 - Automatic capability detection
 
 ### Production Ready
-- **313/313 unit tests passing** (100%)
-- **46/47 integration tests passing** (97.9%)
-- **97.9% code coverage**
+- **412/412 unit tests passing** (100%)
+- **66/67 integration tests passing** (98.5%)
+- **84.9% code coverage**
 - Memory leak prevention with WeakMap registry
 - A+ security rating (zero vulnerabilities)
 
@@ -241,21 +243,44 @@ const info = ck.inspect('#button');
 console.log(info.config); // { radius: 32, smoothing: 0.6 }
 ```
 
-## Border Support
+## Border Support (v1.2.0+)
 
-CornerKit supports squircle borders using a dual pseudo-element rendering technique that creates smooth borders matching the corner curves.
+CornerKit v1.2.0 introduces SVG-based border rendering that eliminates anti-aliasing fringe on dark backgrounds and supports **solid**, **dashed**, **dotted**, and **gradient** styles.
 
 ### Basic Border Usage
 
 ```javascript
 const ck = new CornerKit();
 
-// Apply squircle with border
+// Solid border
 ck.apply('.card', {
   radius: 24,
   smoothing: 0.6,
-  borderWidth: 2,        // Border width in pixels
-  borderColor: '#e5e7eb' // Border color (any CSS color)
+  border: { width: 2, color: '#e5e7eb' }
+});
+
+// Dashed border
+ck.apply('.upload-zone', {
+  radius: 20,
+  border: { width: 2, color: '#6b7280', style: 'dashed' }
+});
+
+// Dotted border
+ck.apply('.badge', {
+  radius: 12,
+  border: { width: 3, color: '#10b981', style: 'dotted' }
+});
+
+// Gradient border
+ck.apply('.featured', {
+  radius: 24,
+  border: {
+    width: 3,
+    gradient: [
+      { offset: '0%', color: '#3b82f6' },
+      { offset: '100%', color: '#8b5cf6' }
+    ]
+  }
 });
 ```
 
@@ -265,62 +290,36 @@ ck.apply('.card', {
 <div
   data-squircle
   data-squircle-radius="24"
-  data-squircle-smoothing="0.6"
   data-squircle-border-width="2"
   data-squircle-border-color="#e5e7eb"
+  data-squircle-border-style="dashed"
 >
-  Card with squircle border
+  Card with dashed squircle border
 </div>
 ```
 
-### Compatible Elements
+### Migration from v1.1
 
-Borders work seamlessly on elements with `overflow: visible` (the default for most elements):
+Legacy `borderWidth` and `borderColor` props still work:
 
-✅ **Fully compatible:**
-- `<div>` containers
-- `<button>` elements
-- `<a>` links
-- `<span>` inline elements
-- `<section>`, `<article>`, `<header>`, etc.
+```javascript
+// Old API (v1.1) - still works
+ck.apply('.card', { borderWidth: 2, borderColor: '#e5e7eb' });
 
-### Limitations
+// New API (v1.2) - recommended
+ck.apply('.card', { border: { width: 2, color: '#e5e7eb' } });
+```
 
-Borders use CSS pseudo-elements (`::before` and `::after`) that extend beyond the element's bounds to create the border effect. This requires `overflow: visible`.
+### CSS Framework Compatibility
 
-⚠️ **Not compatible with:**
-- `<textarea>` - Has browser-enforced `overflow: auto` for scrolling
-- `<select>` - Similar overflow restrictions
-- Scrollable containers with `overflow: scroll` or `overflow: auto`
-
-### Manual Wrapper Pattern for Form Elements
-
-For form elements like `<textarea>`, wrap the element in a container and apply the border to the wrapper:
+Works with CSS frameworks that use `!important` (like Tailwind CSS):
 
 ```html
-<!-- Wrapper gets the squircle border -->
-<div
-  data-squircle
-  data-squircle-radius="16"
-  data-squircle-smoothing="0.85"
-  data-squircle-border-width="2"
-  data-squircle-border-color="#d1d5db"
-  class="inline-block w-full"
->
-  <!-- Textarea has no border/radius to avoid conflicts -->
-  <textarea
-    class="w-full px-4 py-3 bg-white border-0 focus:outline-none focus:ring-0"
-    rows="3"
-  ></textarea>
+<!-- Works correctly with Tailwind's important mode -->
+<div class="bg-blue-50 p-4" data-squircle data-squircle-border-width="2">
+  Content
 </div>
 ```
-
-**Key points:**
-- Apply squircle to the **wrapper div**, not the textarea
-- Remove conflicting styles from the textarea (border, border-radius, focus rings)
-- Wrapper should use `display: inline-block` or `block` and match desired width
-
-**Future improvement:** Phase 3 framework packages (React, Vue, Svelte) will handle wrapper injection automatically for form elements.
 
 ## Performance Benchmarks
 
@@ -328,7 +327,7 @@ All metrics verified by automated tests on 2020 MacBook Pro (M1):
 
 | Metric | Target | Actual | Performance |
 |--------|--------|--------|-------------|
-| Bundle size (ESM) | <5KB | 4.58 KB | 8% under budget |
+| Bundle size (ESM) | <6KB | 5.50 KB | 8% under budget |
 | Single element render | <10ms | 7.3ms | 27% faster |
 | Initialization | <100ms | 42ms | 58% faster |
 | 100 elements batch | <500ms | 403ms | 19% faster |
@@ -408,13 +407,13 @@ Working examples with interactive demos:
 ```html
 <!-- ES Module -->
 <script type="module">
-  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.1.0/dist/cornerkit.esm.js';
+  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.2.0/dist/cornerkit.esm.js';
   const ck = new CornerKit();
   ck.apply('.card', { radius: 24, smoothing: 0.6 });
 </script>
 
 <!-- UMD (Global) -->
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.1.0/dist/cornerkit.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.2.0/dist/cornerkit.js"></script>
 <script>
   const ck = new CornerKit();
   ck.apply('.card', { radius: 24, smoothing: 0.6 });

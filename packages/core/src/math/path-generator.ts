@@ -7,7 +7,7 @@
  * Reference: figma-squircle npm package, MartinRGB's Figma research
  */
 
-import { generateFigmaSquirclePath } from './figma-squircle';
+import { generateFigmaSquirclePath, generateFigmaSquirclePathWithInset } from './figma-squircle';
 
 /**
  * FR-016, FR-017: Generate SVG path string for a squircle shape
@@ -19,6 +19,7 @@ import { generateFigmaSquirclePath } from './figma-squircle';
  * @param height - Element height in pixels
  * @param radius - Corner radius in pixels (will be clamped to min(width/2, height/2))
  * @param smoothing - Smoothing factor 0-1 (default: 0.6 for iOS squircles)
+ * @param inset - Inset offset in pixels (default: 0). Used for dotted borders to avoid clip-path artifacts.
  * @returns SVG path string ready for clip-path CSS property
  *
  * Algorithm: Each corner = arc + 2 cubic bezier curves
@@ -30,12 +31,18 @@ export function generateSquirclePath(
   width: number,
   height: number,
   radius: number,
-  smoothing: number = 0.6
+  smoothing: number = 0.6,
+  inset: number = 0
 ): string {
   // Handle edge cases: zero dimensions or radius
   if (width <= 0 || height <= 0 || radius <= 0) {
     // Return a simple rectangle path for degenerate cases
     return `M 0,0 L ${round(width)},0 L ${round(width)},${round(height)} L 0,${round(height)} Z`;
+  }
+
+  // Use inset path generation if inset is specified (Feature 006: dotted borders)
+  if (inset > 0) {
+    return generateFigmaSquirclePathWithInset(width, height, radius, smoothing, inset);
   }
 
   // Use Figma's algorithm (handles clamping internally)

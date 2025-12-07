@@ -9,6 +9,9 @@ import {
   hasSquircleAttribute,
   parseRadius,
   parseSmoothing,
+  parseBorderWidth,
+  parseBorderColor,
+  parseBorderStyle,
   parseDataAttributes,
 } from '../../src/utils/data-attributes';
 
@@ -298,6 +301,237 @@ describe('Data Attribute Parser', () => {
 
       // Both invalid, return empty object
       expect(config).toEqual({});
+    });
+
+    // T043-T045, T049: Test border attribute parsing integration
+    it('should parse border width, color, and style attributes', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-radius', '24');
+      element.setAttribute('data-squircle-border-width', '2');
+      element.setAttribute('data-squircle-border-color', '#3b82f6');
+      element.setAttribute('data-squircle-border-style', 'dashed');
+
+      const config = parseDataAttributes(element);
+
+      expect(config).toEqual({
+        radius: 24,
+        border: {
+          width: 2,
+          color: '#3b82f6',
+          style: 'dashed',
+        },
+      });
+    });
+
+    it('should parse only border width (requires color to create border)', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-width', '3');
+
+      const config = parseDataAttributes(element);
+
+      // Border width alone should not create border config
+      expect(config.border).toBeUndefined();
+    });
+
+    it('should parse border width and color (minimum required)', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-width', '2');
+      element.setAttribute('data-squircle-border-color', '#ef4444');
+
+      const config = parseDataAttributes(element);
+
+      expect(config.border).toEqual({
+        width: 2,
+        color: '#ef4444',
+      });
+    });
+
+    it('should use default width when only color is provided', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-color', '#10b981');
+
+      const config = parseDataAttributes(element);
+
+      expect(config.border).toEqual({
+        width: 1,
+        color: '#10b981',
+      });
+    });
+  });
+
+  // T043: Test parseBorderWidth()
+  describe('parseBorderWidth()', () => {
+    it('should parse valid border width number', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-width', '2');
+
+      expect(parseBorderWidth(element)).toBe(2);
+    });
+
+    it('should parse float border width', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-width', '2.5');
+
+      expect(parseBorderWidth(element)).toBe(2.5);
+    });
+
+    it('should return undefined for missing attribute', () => {
+      const element = document.createElement('div');
+
+      expect(parseBorderWidth(element)).toBeUndefined();
+    });
+
+    it('should return undefined and warn for invalid string', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-width', 'thick');
+
+      expect(parseBorderWidth(element)).toBeUndefined();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Invalid data-squircle-border-width'),
+        expect.anything()
+      );
+    });
+
+    it('should return undefined and warn for empty string', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-width', '');
+
+      expect(parseBorderWidth(element)).toBeUndefined();
+      expect(consoleWarnSpy).toHaveBeenCalled();
+    });
+
+    it('should parse zero border width', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-width', '0');
+
+      expect(parseBorderWidth(element)).toBe(0);
+    });
+
+    it('should parse max valid border width', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-width', '8');
+
+      expect(parseBorderWidth(element)).toBe(8);
+    });
+  });
+
+  // T044: Test parseBorderColor()
+  describe('parseBorderColor()', () => {
+    it('should parse hex color', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-color', '#3b82f6');
+
+      expect(parseBorderColor(element)).toBe('#3b82f6');
+    });
+
+    it('should parse rgb color', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-color', 'rgb(59, 130, 246)');
+
+      expect(parseBorderColor(element)).toBe('rgb(59, 130, 246)');
+    });
+
+    it('should parse named color', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-color', 'blue');
+
+      expect(parseBorderColor(element)).toBe('blue');
+    });
+
+    it('should return undefined for missing attribute', () => {
+      const element = document.createElement('div');
+
+      expect(parseBorderColor(element)).toBeUndefined();
+    });
+
+    it('should return undefined for empty string', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-color', '');
+
+      expect(parseBorderColor(element)).toBeUndefined();
+    });
+
+    it('should trim whitespace from color', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-color', '  #ffffff  ');
+
+      expect(parseBorderColor(element)).toBe('#ffffff');
+    });
+
+    it('should parse rgba color', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-color', 'rgba(59, 130, 246, 0.5)');
+
+      expect(parseBorderColor(element)).toBe('rgba(59, 130, 246, 0.5)');
+    });
+
+    it('should parse hsl color', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-color', 'hsl(220, 90%, 56%)');
+
+      expect(parseBorderColor(element)).toBe('hsl(220, 90%, 56%)');
+    });
+  });
+
+  // T045: Test parseBorderStyle()
+  describe('parseBorderStyle()', () => {
+    it('should parse solid style', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-style', 'solid');
+
+      expect(parseBorderStyle(element)).toBe('solid');
+    });
+
+    it('should parse dashed style', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-style', 'dashed');
+
+      expect(parseBorderStyle(element)).toBe('dashed');
+    });
+
+    it('should parse dotted style', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-style', 'dotted');
+
+      expect(parseBorderStyle(element)).toBe('dotted');
+    });
+
+    it('should return undefined for missing attribute', () => {
+      const element = document.createElement('div');
+
+      expect(parseBorderStyle(element)).toBeUndefined();
+    });
+
+    it('should return undefined and warn for invalid style', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-style', 'double');
+
+      expect(parseBorderStyle(element)).toBeUndefined();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Invalid data-squircle-border-style'),
+        expect.anything()
+      );
+    });
+
+    it('should handle case-insensitive styles', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-style', 'DASHED');
+
+      expect(parseBorderStyle(element)).toBe('dashed');
+    });
+
+    it('should trim whitespace from style', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-style', '  dotted  ');
+
+      expect(parseBorderStyle(element)).toBe('dotted');
+    });
+
+    it('should return undefined for empty string', () => {
+      const element = document.createElement('div');
+      element.setAttribute('data-squircle-border-style', '');
+
+      expect(parseBorderStyle(element)).toBeUndefined();
     });
   });
 });
