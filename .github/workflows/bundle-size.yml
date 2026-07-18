@@ -2,7 +2,10 @@ name: Bundle Size Check
 
 # T343: Bundlephobia CI check
 # Automatically monitors bundle size on every PR
-# Verifies SC-002: Bundle size <5KB gzipped
+# Verifies SC-004: Bundle size <6.5KB gzipped
+# Budget history: <5 KB (v1.1 core) -> <6 KB (Feature 006 borders) ->
+# <6.5 KB (border hover hooks + v1.3.0 fixes). Keep in sync with
+# packages/core/scripts/verify-bundle-size.js.
 
 on:
   pull_request:
@@ -20,7 +23,7 @@ on:
 
 jobs:
   check-bundle-size:
-    name: Verify Bundle Size <6KB
+    name: Verify Bundle Size <6.5KB
     runs-on: ubuntu-latest
 
     steps:
@@ -63,15 +66,15 @@ jobs:
           UMD_KB=$(echo "scale=2; $UMD_SIZE / 1024" | bc)
           CJS_KB=$(echo "scale=2; $CJS_SIZE / 1024" | bc)
 
-          TARGET="6.00 KB"
+          TARGET="6.50 KB"
 
           ESM_STATUS="✅"
           UMD_STATUS="✅"
           CJS_STATUS="✅"
 
-          if (( $(echo "$ESM_KB >= 6.0" | bc -l) )); then ESM_STATUS="❌"; fi
-          if (( $(echo "$UMD_KB >= 6.0" | bc -l) )); then UMD_STATUS="❌"; fi
-          if (( $(echo "$CJS_KB >= 6.0" | bc -l) )); then CJS_STATUS="❌"; fi
+          if (( $(echo "$ESM_KB >= 6.5" | bc -l) )); then ESM_STATUS="❌"; fi
+          if (( $(echo "$UMD_KB >= 6.5" | bc -l) )); then UMD_STATUS="❌"; fi
+          if (( $(echo "$CJS_KB >= 6.5" | bc -l) )); then CJS_STATUS="❌"; fi
 
           echo "| ESM | ${ESM_KB} KB | < ${TARGET} | ${ESM_STATUS} |" >> $GITHUB_STEP_SUMMARY
           echo "| UMD | ${UMD_KB} KB | < ${TARGET} | ${UMD_STATUS} |" >> $GITHUB_STEP_SUMMARY
@@ -103,7 +106,7 @@ jobs:
             const umdSize = getSize('cornerkit.js');
             const cjsSize = getSize('cornerkit.cjs');
 
-            const target = 6.0;
+            const target = 6.5;
             const allPassed = parseFloat(esmSize) < target &&
                              parseFloat(umdSize) < target &&
                              parseFloat(cjsSize) < target;

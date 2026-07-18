@@ -27,7 +27,10 @@ export default defineConfig({
   // Shared settings for all the projects below
   use: {
     // Base URL to use in actions like `await page.goto('/')`
-    baseURL: 'http://localhost:5173',
+    // Port 5273 is deliberately NOT a common dev-server default (Vite uses
+    // 5173): with reuseExistingServer enabled, a foreign server on the port
+    // would be silently reused and every fixture request would miss.
+    baseURL: 'http://localhost:5273',
 
     // Collect trace when retrying the failed test
     trace: 'on-first-retry',
@@ -56,8 +59,8 @@ export default defineConfig({
 
   // Run local dev server before starting the tests
   webServer: {
-    command: 'npx http-server -p 5173 -c-1 --cors',
-    url: 'http://localhost:5173',
+    command: 'npx http-server -p 5273 -c-1 --cors',
+    url: 'http://localhost:5273',
     reuseExistingServer: !process.env.CI,
     timeout: 10000,
   },

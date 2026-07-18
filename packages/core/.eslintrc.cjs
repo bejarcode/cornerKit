@@ -26,7 +26,7 @@ module.exports = {
     // Code quality
     '@typescript-eslint/explicit-function-return-type': 'warn',
     '@typescript-eslint/explicit-module-boundary-types': 'warn',
-    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
 
     // Security: No eval or Function constructor
     'no-eval': 'error',

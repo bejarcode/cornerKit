@@ -3,16 +3,16 @@
 > Bring iOS-style squircle corners to your web applications
 
 [![npm version](https://img.shields.io/npm/v/@cornerkit/core)](https://www.npmjs.com/package/@cornerkit/core)
-[![Bundle Size](https://img.shields.io/badge/bundle%20size-5.50%20KB-success)](https://bundlephobia.com/package/@cornerkit/core)
+[![Bundle Size](https://img.shields.io/badge/bundle%20size-5.9%20KB-success)](https://bundlephobia.com/package/@cornerkit/core)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3%2B-blue)](https://www.typescriptlang.org/)
 [![Security: A+](https://img.shields.io/badge/security-A%2B-success)](SECURITY.md)
-[![Test Coverage](https://img.shields.io/badge/coverage-97.9%25-brightgreen)](packages/core/tests/)
+[![Test Coverage](https://img.shields.io/badge/coverage-86%25-brightgreen)](packages/core/tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **[Live Demo](https://bejarcode.github.io/cornerKit/)** - Interactive playground with 36+ UI examples
 
-CornerKit is a lightweight JavaScript library that brings the smooth, continuous curve corners (squircles) from iOS design to the web. At just **5.50 KB gzipped** with **zero runtime dependencies**, it delivers pixel-perfect rounded corners that look better than standard CSS `border-radius`.
+CornerKit is a lightweight JavaScript library that brings the smooth, continuous curve corners (squircles) from iOS design to the web. At just **~5.9 KB gzipped** with **zero runtime dependencies**, it delivers pixel-perfect rounded corners that look better than standard CSS `border-radius`.
 
 ## Live Demo
 
@@ -73,7 +73,7 @@ ck.apply('.card', {
 ## Why CornerKit?
 
 ### Exceptionally Tiny
-- **5.50 KB gzipped** (ESM) - includes SVG border rendering
+- **~5.9 KB gzipped** (ESM) - includes SVG border rendering
 - **Zero runtime dependencies**
 - Tree-shakeable ES modules
 - Smaller than most icon libraries
@@ -245,7 +245,7 @@ console.log(info.config); // { radius: 32, smoothing: 0.6 }
 
 ## Border Support (v1.2.0+)
 
-CornerKit v1.2.0 introduces SVG-based border rendering that eliminates anti-aliasing fringe on dark backgrounds and supports **solid**, **dashed**, **dotted**, and **gradient** styles.
+CornerKit v1.2.0 introduces SVG-based border rendering that eliminates anti-aliasing fringe on dark backgrounds and supports **solid**, **dashed**, **dotted**, and **gradient** styles. Since v1.3.0, borders also support **hover effects and theming via CSS custom properties** (`--ck-border-color`, `--ck-background`), no JavaScript required. See the [core package docs](packages/core/README.md#hover-effects-with-css-variables-v130) for details.
 
 ### Basic Border Usage
 
@@ -327,7 +327,7 @@ All metrics verified by automated tests on 2020 MacBook Pro (M1):
 
 | Metric | Target | Actual | Performance |
 |--------|--------|--------|-------------|
-| Bundle size (ESM) | <6KB | 5.50 KB | 8% under budget |
+| Bundle size (ESM) | <6.5KB | 5.87 KB | 10% under budget |
 | Single element render | <10ms | 7.3ms | 27% faster |
 | Initialization | <100ms | 42ms | 58% faster |
 | 100 elements batch | <500ms | 403ms | 19% faster |
@@ -407,13 +407,13 @@ Working examples with interactive demos:
 ```html
 <!-- ES Module -->
 <script type="module">
-  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.2.0/dist/cornerkit.esm.js';
+  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.3.0/dist/cornerkit.esm.js';
   const ck = new CornerKit();
   ck.apply('.card', { radius: 24, smoothing: 0.6 });
 </script>
 
 <!-- UMD (Global) -->
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.2.0/dist/cornerkit.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.3.0/dist/cornerkit.js"></script>
 <script>
   const ck = new CornerKit();
   ck.apply('.card', { radius: 24, smoothing: 0.6 });

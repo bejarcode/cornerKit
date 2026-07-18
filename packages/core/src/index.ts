@@ -6,8 +6,13 @@
  */
 
 import { CapabilityDetector, RendererTier } from './core/detector';
-import { ElementRegistry, type ManagedElement } from './core/registry';
-import { DEFAULT_CONFIG, type SquircleConfig, type ManagedElementInfo } from './core/types';
+import { ElementRegistry } from './core/registry';
+import {
+  DEFAULT_CONFIG,
+  type SquircleConfig,
+  type ManagedElementInfo,
+  type BorderConfig,
+} from './core/types';
 import { ClipPathRenderer } from './renderers/clippath';
 import { FallbackRenderer } from './renderers/fallback';
 import { validateRadius, validateSmoothing, validateElement } from './utils/validator';
@@ -99,15 +104,9 @@ export default class CornerKit {
     this.detector = CapabilityDetector.getInstance();
     this.registry = new ElementRegistry();
 
-    // FR-042: Cache reduced motion preference (single check, not per-element)
+    // FR-042: Cache reduced motion preference and watch for changes
     this.reducedMotionEnabled = prefersReducedMotion();
-
-    // Watch for changes to reduced motion preference
-    this.reducedMotionWatcher = watchReducedMotionPreference((matches) => {
-      this.reducedMotionEnabled = matches;
-      // Update all managed elements when preference changes
-      this.updateAllReducedMotion();
-    });
+    this.ensureReducedMotionWatcher();
   }
 
   /**
@@ -138,23 +137,25 @@ export default class CornerKit {
     // FR-038, FR-039: Validate and resolve element
     const element = this.resolveElement(elementOrSelector);
 
+    // Recreate the reduced-motion watcher if a previous destroy() removed it
+    // (the instance is documented as reusable after destroy())
+    this.ensureReducedMotionWatcher();
+
     // FR-030: Validate and merge config (global defaults + per-element overrides)
     // T017/T018: Handle new border object and legacy borderWidth/borderColor props
-    let border = config?.border;
-
-    // Backward compatibility: Convert legacy borderWidth/borderColor to new border object
-    if (!border && (config?.borderWidth || config?.borderColor)) {
-      border = {
-        width: config.borderWidth || 1,
-        color: config.borderColor || '#000000',
-      };
+    // Per-element config wins; instance-level (constructor) border is the fallback.
+    // `border: null` explicitly disables the border, overriding the instance default.
+    let border = CornerKit.resolveBorder(config);
+    if (border === undefined) {
+      border = CornerKit.resolveBorder(this.globalConfig);
     }
 
     const mergedConfig: SquircleConfig = {
       radius: validateRadius(config?.radius ?? this.globalConfig.radius),
       smoothing: validateSmoothing(config?.smoothing ?? this.globalConfig.smoothing),
       tier: config?.tier ?? this.globalConfig.tier,
-      border,
+      // Clone so managed state never aliases caller-owned (or shared global) objects
+      border: border ? CornerKit.cloneBorder(border) : undefined,
     };
 
     // Detect tier (or use forced tier from config)
@@ -253,41 +254,49 @@ export default class CornerKit {
       throw new TypeError('cornerKit: Selector must be a non-empty string');
     }
 
+    // T143: Query all matching elements
+    let elements: NodeListOf<Element>;
     try {
-      // T143: Query all matching elements
-      const elements = document.querySelectorAll(selector);
-
-      // T145: Handle 0 matches - no-op with warning
-      if (elements.length === 0) {
-        if (process.env.NODE_ENV === 'development') {
-          warn(`Selector "${selector}" matched 0 elements. No squircles applied.`);
-        }
-        return;
-      }
-
-      // T144: Iterate and apply squircle to each element
-      elements.forEach((element) => {
-        // Validate each element is an HTMLElement
-        if (element instanceof HTMLElement) {
-          this.apply(element, config);
-        } else {
-          // Skip non-HTMLElements (e.g., SVGElements) with warning
-          if (process.env.NODE_ENV === 'development') {
-            warn(
-              `Skipping non-HTMLElement in applyAll(): ${element.constructor.name}. Only HTMLElements are supported.`
-            );
-          }
-        }
-      });
+      elements = document.querySelectorAll(selector);
     } catch (error) {
       // Handle invalid CSS selector syntax
       if (error instanceof DOMException || (error as Error).name === 'SyntaxError') {
         throw new TypeError(`cornerKit: Invalid CSS selector: "${selector}"`);
       }
-
-      // Re-throw other errors
       throw error;
     }
+
+    // T145: Handle 0 matches - no-op with warning
+    if (elements.length === 0) {
+      warn(`Selector "${selector}" matched 0 elements. No squircles applied.`);
+      return;
+    }
+
+    // T144: Iterate and apply squircle to each element
+    // Failures are contained per element so one bad element does not
+    // prevent the rest of the batch from being processed
+    elements.forEach((element) => {
+      // Validate each element is an HTMLElement
+      if (element instanceof HTMLElement) {
+        try {
+          this.apply(element, config);
+        } catch (error) {
+          warn(
+            `applyAll(): failed to apply squircle to an element. Continuing with remaining elements.`,
+            {
+              element: element.tagName,
+              id: element.id || undefined,
+              error: error instanceof Error ? error.message : String(error),
+            }
+          );
+        }
+      } else {
+        // Skip non-HTMLElements (e.g., SVGElements) with warning
+        warn(
+          `Skipping non-HTMLElement in applyAll(): ${element.constructor.name}. Only HTMLElements are supported.`
+        );
+      }
+    });
   }
 
   /**
@@ -365,7 +374,7 @@ export default class CornerKit {
     // T167: Only create IntersectionObserver if there are off-screen elements
     if (offScreenElements.length > 0) {
       // rootMargin: '50px' means elements 50px away from viewport will trigger
-      this.autoObserver = new IntersectionObserver(
+      const autoObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             // T168: Check if entry is intersecting (entering viewport)
@@ -393,10 +402,11 @@ export default class CornerKit {
           rootMargin: '50px', // FR-024: 50px lookahead for smooth loading
         }
       );
+      this.autoObserver = autoObserver;
 
       // Observe all off-screen elements
       offScreenElements.forEach((element) => {
-        this.autoObserver!.observe(element);
+        autoObserver.observe(element);
       });
     }
 
@@ -451,7 +461,12 @@ export default class CornerKit {
 
     // Handle border properties (Feature 006)
     if (config.border !== undefined) {
-      validatedConfig.border = config.border;
+      // `border: null` explicitly removes the border (normalized to undefined
+      // so the registry merge clears it and the renderer tears the SVG down)
+      validatedConfig.border = config.border ? CornerKit.cloneBorder(config.border) : undefined;
+    } else if (config.borderWidth !== undefined && config.borderWidth <= 0) {
+      // Legacy prop with an explicit zero/negative width removes the border
+      validatedConfig.border = undefined;
     } else if (config.borderWidth !== undefined || config.borderColor !== undefined) {
       // Backward compatibility: Convert legacy borderWidth/borderColor to new border object
       validatedConfig.border = {
@@ -466,6 +481,8 @@ export default class CornerKit {
     }
 
     // Early return if no changes
+    // (note: border: null arrives here as an own 'border' key set to undefined,
+    // which Object.keys counts, so explicit border removal is not skipped)
     if (Object.keys(validatedConfig).length === 0) {
       return;
     }
@@ -611,8 +628,17 @@ export default class CornerKit {
       }
 
       // T261, T262: Return element information
+      // Deep-copy nested border config so callers cannot mutate live state
       return {
-        config: { ...managed.config }, // Return copy to prevent mutation
+        config: {
+          ...managed.config,
+          border: managed.config.border
+            ? {
+                ...managed.config.border,
+                gradient: managed.config.border.gradient?.map((stop) => ({ ...stop })),
+              }
+            : managed.config.border,
+        },
         tier: managed.tier,
         dimensions: {
           width: managed.lastDimensions?.width ?? element.offsetWidth,
@@ -715,16 +741,85 @@ export default class CornerKit {
             : 'clip-path 0s';
         }
       } else {
-        // Remove clip-path 0s and restore original
+        // Remove only the exact 'clip-path 0s' entry cornerKit added,
+        // preserving any clip-path transition the user defined themselves
         if (existing.includes('clip-path 0s')) {
           const restored = existing
             .split(',')
             .map(s => s.trim())
-            .filter(s => !s.startsWith('clip-path'))
+            .filter(s => s !== 'clip-path 0s')
             .join(', ');
           element.style.transition = restored || (managed.originalStyles?.transition ?? '');
         }
       }
+    });
+  }
+
+  /**
+   * Clone a border configuration (including gradient stops).
+   * Configs are cloned on intake so caller-side mutation of the object they
+   * passed in (or of a shared instance-level default) cannot reach managed state.
+   */
+  private static cloneBorder(border: BorderConfig): BorderConfig {
+    return {
+      ...border,
+      gradient: border.gradient?.map((stop) => ({ ...stop })),
+    };
+  }
+
+  /**
+   * Resolve a border configuration from a (partial) squircle config.
+   * Handles the modern `border` object, `border: null` (explicitly none),
+   * and legacy `borderWidth`/`borderColor` props.
+   *
+   * @returns BorderConfig to use, `null` for explicitly no border,
+   *          or `undefined` when the config does not specify a border at all
+   */
+  private static resolveBorder(
+    config?: Partial<SquircleConfig>
+  ): BorderConfig | null | undefined {
+    if (!config) {
+      return undefined;
+    }
+
+    // `border: null` (explicitly none) and border objects pass through
+    if (config.border !== undefined) {
+      return config.border;
+    }
+
+    // Legacy prop with an explicit zero/negative width means "no border"
+    if (config.borderWidth !== undefined && config.borderWidth <= 0) {
+      return null;
+    }
+
+    // Backward compatibility: Convert legacy borderWidth/borderColor to new border object
+    if (config.borderWidth || config.borderColor) {
+      return {
+        width: config.borderWidth || 1,
+        color: config.borderColor || '#000000',
+      };
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Create the reduced-motion preference watcher if it does not exist.
+   * Called from the constructor and lazily from apply() so the instance
+   * keeps tracking preference changes even after destroy().
+   */
+  private ensureReducedMotionWatcher(): void {
+    if (this.reducedMotionWatcher) {
+      return;
+    }
+
+    // FR-042: Cache reduced motion preference (single check, not per-element)
+    this.reducedMotionEnabled = prefersReducedMotion();
+
+    this.reducedMotionWatcher = watchReducedMotionPreference((matches) => {
+      this.reducedMotionEnabled = matches;
+      // Update all managed elements when preference changes
+      this.updateAllReducedMotion();
     });
   }
 

@@ -78,8 +78,8 @@ export function getPathParamsForCorner(
 
   // Bezier handle lengths
   // The remaining length after arc and transitions is split into 3 parts (1/3 for b, 2/3 for a)
-  let b = (p - arcSectionLength - c - d) / 3;
-  let a = 2 * b;
+  const b = (p - arcSectionLength - c - d) / 3;
+  const a = 2 * b;
 
   // Adjust bezier handles if preserveSmoothing is enabled and we exceed the budget
   // This maintains the squircle S-curve characteristic while fitting within space constraints
@@ -227,7 +227,8 @@ export function generateFigmaSquirclePath(
   width: number,
   height: number,
   radius: number,
-  smoothing: number = 0.6
+  smoothing: number = 0.6,
+  offset: number = 0
 ): string {
   // Clamp radius to element dimensions
   const clampedRadius = Math.min(radius, width / 2, height / 2);
@@ -237,28 +238,24 @@ export function generateFigmaSquirclePath(
 
   // Calculate the budget for rounding and smoothing
   // Each corner's path extends along the edge, so budget is half the edge length
-  const horizontalBudget = width / 2;
-  const verticalBudget = height / 2;
+  const budget = Math.min(width / 2, height / 2);
 
-  // Calculate path parameters for all corners with budget constraints
-  // Top-left and top-right share the top edge, so they compete for width/2
-  // Left and right edges have height/2 budget
-  const topLeftParams = getPathParamsForCorner(clampedRadius, clampedSmoothing, Math.min(horizontalBudget, verticalBudget));
-  const topRightParams = getPathParamsForCorner(clampedRadius, clampedSmoothing, Math.min(horizontalBudget, verticalBudget));
-  const bottomRightParams = getPathParamsForCorner(clampedRadius, clampedSmoothing, Math.min(horizontalBudget, verticalBudget));
-  const bottomLeftParams = getPathParamsForCorner(clampedRadius, clampedSmoothing, Math.min(horizontalBudget, verticalBudget));
+  // All four corners share identical geometry (same radius, smoothing, budget),
+  // so the path parameters are computed once and reused
+  const corner = getPathParamsForCorner(clampedRadius, clampedSmoothing, budget);
 
-  // Build the complete path
-  // Start from top-right corner, move counter-clockwise
+  // Build the complete path, starting from the top-right corner
+  // Corner sections use relative commands and are translation-invariant;
+  // `offset` shifts the absolute M/L commands (used for inset border paths)
   const path = `
-    M ${round(width - topRightParams.p)} 0
-    ${drawTopRightCorner(topRightParams)}
-    L ${round(width)} ${round(height - bottomRightParams.p)}
-    ${drawBottomRightCorner(bottomRightParams)}
-    L ${round(bottomLeftParams.p)} ${round(height)}
-    ${drawBottomLeftCorner(bottomLeftParams)}
-    L 0 ${round(topLeftParams.p)}
-    ${drawTopLeftCorner(topLeftParams)}
+    M ${round(width - corner.p + offset)} ${round(offset)}
+    ${drawTopRightCorner(corner)}
+    L ${round(width + offset)} ${round(height - corner.p + offset)}
+    ${drawBottomRightCorner(corner)}
+    L ${round(corner.p + offset)} ${round(height + offset)}
+    ${drawBottomLeftCorner(corner)}
+    L ${round(offset)} ${round(corner.p + offset)}
+    ${drawTopLeftCorner(corner)}
     Z
   `.replace(/\s+/g, ' ').trim();
 
@@ -295,47 +292,8 @@ export function generateFigmaSquirclePathWithInset(
     return `M ${round(inset)},${round(inset)} Z`;
   }
 
-  // Clamp radius to adjusted dimensions
-  const r = Math.min(radius, w / 2, h / 2);
-
-  // Clamp smoothing to valid range
-  const s = Math.max(0, Math.min(1, smoothing));
-
-  // Calculate path parameters using same algorithm as main function
-  const p = (1 + s) * r;
-  const arcMeasure = 90 * (1 - s);
-  const arcLength = Math.sin(toRadians(arcMeasure / 2)) * r * Math.sqrt(2);
-  const angleAlpha = (90 - arcMeasure) / 2;
-  const p3ToP4 = r * Math.tan(toRadians(angleAlpha / 2));
-  const angleBeta = 45 * s;
-  const c = p3ToP4 * Math.cos(toRadians(angleBeta));
-  const d = c * Math.tan(toRadians(angleBeta));
-  const b = (p - arcLength - c - d) / 3;
-  const a = 2 * b;
-
-  const i = inset; // shorthand for offset
-
-  // Generate path with inset offset applied to all absolute coordinates
-  // The path is translated by (inset, inset) to position it correctly
-  const path = `
-    M ${round(w - p + i)} ${round(i)}
-    c ${round(a)} 0 ${round(a + b)} 0 ${round(a + b + c)} ${round(d)}
-    a ${round(r)} ${round(r)} 0 0 1 ${round(arcLength)} ${round(arcLength)}
-    c ${round(d)} ${round(c)} ${round(d)} ${round(b + c)} ${round(d)} ${round(a + b + c)}
-    L ${round(w + i)} ${round(h - p + i)}
-    c 0 ${round(a)} 0 ${round(a + b)} ${round(-d)} ${round(a + b + c)}
-    a ${round(r)} ${round(r)} 0 0 1 ${round(-arcLength)} ${round(arcLength)}
-    c ${round(-c)} ${round(d)} ${round(-b - c)} ${round(d)} ${round(-a - b - c)} ${round(d)}
-    L ${round(p + i)} ${round(h + i)}
-    c ${round(-a)} 0 ${round(-a - b)} 0 ${round(-a - b - c)} ${round(-d)}
-    a ${round(r)} ${round(r)} 0 0 1 ${round(-arcLength)} ${round(-arcLength)}
-    c ${round(-d)} ${round(-c)} ${round(-d)} ${round(-b - c)} ${round(-d)} ${round(-a - b - c)}
-    L ${round(i)} ${round(p + i)}
-    c 0 ${round(-a)} 0 ${round(-a - b)} ${round(d)} ${round(-a - b - c)}
-    a ${round(r)} ${round(r)} 0 0 1 ${round(arcLength)} ${round(-arcLength)}
-    c ${round(c)} ${round(-d)} ${round(b + c)} ${round(-d)} ${round(a + b + c)} ${round(-d)}
-    Z
-  `.replace(/\s+/g, ' ').trim();
-
-  return path;
+  // The inset squircle is a smaller squircle translated by (inset, inset).
+  // Delegating to the main generator keeps budget clamping and the
+  // degenerate-arc guard consistent between outer and inset paths.
+  return generateFigmaSquirclePath(w, h, radius, smoothing, inset);
 }

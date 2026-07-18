@@ -41,14 +41,12 @@ export function parseRadius(element: HTMLElement): number | undefined {
 
   // FR-034: Handle invalid values - return undefined, warn in dev mode
   if (Number.isNaN(parsed)) {
-    if (process.env.NODE_ENV === 'development') {
-      warn(`Invalid data-squircle-radius value: "${value}". Expected a number. Using default.`, {
-        element: element.tagName,
-        id: element.id || undefined,
-        className: element.className || undefined,
-        value,
-      });
-    }
+    warn(`Invalid data-squircle-radius value: "${value}". Expected a number. Using default.`, {
+      element: element.tagName,
+      id: element.id || undefined,
+      className: element.className || undefined,
+      value,
+    });
     return undefined;
   }
 
@@ -73,14 +71,12 @@ export function parseSmoothing(element: HTMLElement): number | undefined {
 
   // FR-034: Handle invalid values - return undefined, warn in dev mode
   if (Number.isNaN(parsed)) {
-    if (process.env.NODE_ENV === 'development') {
-      warn(`Invalid data-squircle-smoothing value: "${value}". Expected a number. Using default.`, {
-        element: element.tagName,
-        id: element.id || undefined,
-        className: element.className || undefined,
-        value,
-      });
-    }
+    warn(`Invalid data-squircle-smoothing value: "${value}". Expected a number. Using default.`, {
+      element: element.tagName,
+      id: element.id || undefined,
+      className: element.className || undefined,
+      value,
+    });
     return undefined;
   }
 
@@ -104,14 +100,12 @@ export function parseBorderWidth(element: HTMLElement): number | undefined {
   const parsed = parseFloat(value);
 
   if (Number.isNaN(parsed)) {
-    if (process.env.NODE_ENV === 'development') {
-      warn(`Invalid data-squircle-border-width value: "${value}". Expected a number. Using default.`, {
-        element: element.tagName,
-        id: element.id || undefined,
-        className: element.className || undefined,
-        value,
-      });
-    }
+    warn(`Invalid data-squircle-border-width value: "${value}". Expected a number. Using default.`, {
+      element: element.tagName,
+      id: element.id || undefined,
+      className: element.className || undefined,
+      value,
+    });
     return undefined;
   }
 
@@ -162,14 +156,12 @@ export function parseBorderStyle(element: HTMLElement): BorderStyleValue | undef
   }
 
   if (!VALID_BORDER_STYLES.includes(trimmed as BorderStyleValue)) {
-    if (process.env.NODE_ENV === 'development') {
-      warn(`Invalid data-squircle-border-style value: "${value}". Expected 'solid', 'dashed', or 'dotted'. Using default.`, {
-        element: element.tagName,
-        id: element.id || undefined,
-        className: element.className || undefined,
-        value,
-      });
-    }
+    warn(`Invalid data-squircle-border-style value: "${value}". Expected 'solid', 'dashed', or 'dotted'. Using default.`, {
+      element: element.tagName,
+      id: element.id || undefined,
+      className: element.className || undefined,
+      value,
+    });
     return undefined;
   }
 

@@ -2,14 +2,14 @@
 
 > Lightweight, framework-agnostic library for iOS-style squircle corners on the web
 
-[![Bundle Size](https://img.shields.io/badge/bundle%20size-5.50%20KB-success)](https://bundlephobia.com/package/cornerkit)
+[![Bundle Size](https://img.shields.io/badge/bundle%20size-5.9%20KB-success)](https://bundlephobia.com/package/cornerkit)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3%2B-blue)](https://www.typescriptlang.org/)
 [![Security: A+](https://img.shields.io/badge/security-A%2B-success)](security/SECURITY-AUDIT.md)
-[![Test Coverage](https://img.shields.io/badge/coverage-97.9%25-brightgreen)](tests/)
+[![Test Coverage](https://img.shields.io/badge/coverage-86%25-brightgreen)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../../LICENSE)
 
-**CornerKit** brings the beautiful, continuous curve corners (squircles) of iOS design to your web applications. At just **5.50 KB gzipped** with **zero runtime dependencies**, it delivers professional-grade rounded corners with exceptional performance.
+**CornerKit** brings the beautiful, continuous curve corners (squircles) of iOS design to your web applications. At just **~5.9 KB gzipped** with **zero runtime dependencies**, it delivers professional-grade rounded corners with exceptional performance.
 
 ```bash
 npm install @cornerkit/core
@@ -20,7 +20,7 @@ npm install @cornerkit/core
 ## Key Strengths
 
 ### Exceptionally Tiny Bundle
-- **5.50 KB gzipped** (includes SVG border rendering)
+- **~5.9 KB gzipped** (includes SVG border rendering and CSS-variable hover hooks)
 - Zero runtime dependencies
 - Tree-shakeable ES modules
 - Perfect for performance-conscious projects
@@ -41,8 +41,8 @@ npm install @cornerkit/core
 - [Full Security Audit](security/SECURITY-AUDIT.md)
 
 ### Production Tested
-- **97.9% test coverage** (46/47 integration tests passing)
-- 313/313 unit tests passing (100%)
+- **67/68 integration tests passing** (1 skipped)
+- 433/433 unit tests passing (100%)
 - Unit + integration + performance tests
 - Memory leak prevention
 - Battle-tested ResizeObserver cleanup
@@ -134,13 +134,13 @@ ck.destroy();
 ```html
 <!-- ES Module -->
 <script type="module">
-  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.2.0/dist/cornerkit.esm.js';
+  import CornerKit from 'https://cdn.jsdelivr.net/npm/@cornerkit/core@1.3.0/dist/cornerkit.esm.js';
   const ck = new CornerKit();
   ck.apply('.squircle', { radius: 24, smoothing: 0.6 });
 </script>
 
 <!-- UMD (Global) -->
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.2.0/dist/cornerkit.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.3.0/dist/cornerkit.js"></script>
 <script>
   const ck = new CornerKit();
   ck.apply('.squircle', { radius: 24, smoothing: 0.6 });
@@ -375,6 +375,39 @@ ck.apply('#custom-border', {
 });
 ```
 
+#### Hover Effects with CSS Variables (v1.3.0+)
+
+The border color and background resolve through CSS custom properties, so
+hover (or any CSS state) can restyle them with plain CSS, no JavaScript:
+
+```javascript
+ck.apply('#cta-button', {
+  radius: 16,
+  border: { width: 2, color: '#3b82f6' }
+});
+```
+
+```css
+#cta-button:hover {
+  --ck-border-color: #8b5cf6;  /* border stroke on hover */
+  --ck-background: #1e293b;    /* squircle background on hover */
+}
+
+/* Optional: animate the change (respecting reduced-motion preferences) */
+@media (prefers-reduced-motion: no-preference) {
+  #cta-button .cornerkit-border path {
+    transition: stroke 0.15s ease, fill 0.15s ease;
+  }
+}
+```
+
+The values you configure in `border` stay in effect whenever the variables
+are not set, so this is fully opt-in. Works with dark mode toggles, focus
+states, and theming the same way. Note: both variables require a configured
+`border`; `--ck-background` targets the SVG background that border rendering
+manages, so it has no effect on borderless squircles (style those directly
+with regular CSS).
+
 #### HTML Data Attributes
 
 ```html
@@ -509,11 +542,11 @@ All metrics verified by automated performance tests and documented in SUCCESS-CR
 
 | Format | Raw Size | Gzipped | Target | Result |
 |--------|----------|---------|--------|--------|
-| **ESM** (cornerkit.esm.js) | 17.2 KB | **5.50 KB** | <6KB | **8% under budget** |
-| **UMD** (cornerkit.js) | 17.6 KB | **5.65 KB** | <6KB | **6% under budget** |
-| **CJS** (cornerkit.cjs) | 17.5 KB | **5.55 KB** | <6KB | **7% under budget** |
+| **ESM** (cornerkit.esm.js) | 21.4 KB | **5.87 KB** | <6.5KB | **10% under budget** |
+| **UMD** (cornerkit.js) | 22.1 KB | **6.04 KB** | <6.5KB | **7% under budget** |
+| **CJS** (cornerkit.cjs) | 22.0 KB | **5.95 KB** | <6.5KB | **8% under budget** |
 
-**Verification**: Automated bundle size monitoring in CI ensures every build stays under the 6KB gzipped target. The target increased from 5KB to 6KB in v1.2.0 to accommodate SVG border rendering features.
+**Verification**: Automated bundle size monitoring in CI ensures every build stays under the 6.5KB gzipped target. The target grew from 5KB (v1.1) to 6KB (v1.2, SVG borders) to 6.5KB (v1.3, CSS-variable hover hooks and correctness fixes).
 
 ### Render Performance
 
@@ -554,11 +587,11 @@ All metrics verified by automated performance tests and documented in SUCCESS-CR
 **All 15 success criteria met or exceeded:**
 
 - SC-001: Quick Start <5 min → **2 min** (60% faster)
-- SC-002: Bundle <6KB → **5.50 KB** (8% under)
+- SC-002: Bundle <6.5KB → **5.87 KB** (10% under)
 - SC-003: Render <10ms → **7.3ms** (27% faster)
 - SC-004: Init <100ms → **42ms** (58% faster)
 - SC-005: TypeScript strict → **Enabled** (0 errors)
-- SC-006: Unit coverage >90% → **84.9%** (increased from new border code)
+- SC-006: Unit coverage >90% → **86.4%** (below target, tracked in roadmap)
 - SC-007: Integration coverage >85% → **98.5%**
 - SC-008: Visual regression tests → **Passing**
 - SC-009: Lighthouse 100/100 → **Zero impact**

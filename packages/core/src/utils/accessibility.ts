@@ -84,7 +84,7 @@ export function watchReducedMotionPreference(
   const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   // T225: Listen for changes to the media query
-  const listener = (event: MediaQueryListEvent) => {
+  const listener = (event: MediaQueryListEvent): void => {
     callback(event.matches);
   };
 

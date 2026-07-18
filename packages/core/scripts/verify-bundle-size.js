@@ -2,7 +2,7 @@
 
 /**
  * Bundle Size Verification Script
- * Verifies SC-004: Bundle size <6KB gzipped (with border support)
+ * Verifies SC-004: Bundle size <6.5KB gzipped (borders + hover hooks)
  * Part of T345: Success criteria verification
  */
 
@@ -14,7 +14,11 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const TARGET_SIZE_KB = 6.0;
+// Budget history: <5 KB (v1.1 core) -> <6 KB (Feature 006 SVG borders) ->
+// <6.5 KB (border CSS-variable hover hooks, issue #4, + v1.3.0 correctness
+// fixes). Keep in sync with .github/workflows/bundle-size.yml and the
+// constitution (docs/core-library-review/REMEDIATION-PLAN.md, WP5/F6).
+const TARGET_SIZE_KB = 6.5;
 const DIST_DIR = join(__dirname, '..', 'dist');
 
 const BUNDLES = [

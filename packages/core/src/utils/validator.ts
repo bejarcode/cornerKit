@@ -6,6 +6,7 @@
 
 import { warn } from './logger';
 import type { SquircleConfig } from '../core/types';
+import { RendererTier } from '../core/detector';
 
 /**
  * FR-035: Validate radius parameter
@@ -23,7 +24,7 @@ import type { SquircleConfig } from '../core/types';
 export function validateRadius(radius: unknown, defaultRadius: number = 20): number {
   // Check if radius is a valid number
   if (typeof radius !== 'number' || isNaN(radius) || !isFinite(radius)) {
-    warn(`Invalid radius: ${radius}. Expected non-negative number. Using default: ${defaultRadius}`);
+    warn(`Invalid radius: ${String(radius)}. Expected non-negative number. Using default: ${defaultRadius}`);
     return defaultRadius;
   }
 
@@ -53,7 +54,7 @@ export function validateRadius(radius: unknown, defaultRadius: number = 20): num
 export function validateSmoothing(smoothing: unknown, defaultSmoothing: number = 0.8): number {
   // Check if smoothing is a valid number
   if (typeof smoothing !== 'number' || isNaN(smoothing) || !isFinite(smoothing)) {
-    warn(`Invalid smoothing: ${smoothing}. Expected number in range [0, 1]. Using default: ${defaultSmoothing}`);
+    warn(`Invalid smoothing: ${String(smoothing)}. Expected number in range [0, 1]. Using default: ${defaultSmoothing}`);
     return defaultSmoothing;
   }
 
@@ -171,12 +172,12 @@ export function validateConfig(config: {
 
   // Validate tier if provided
   if (config.tier !== undefined) {
-    const validTiers = ['native', 'houdini', 'clippath', 'fallback'];
+    const validTiers = Object.values(RendererTier) as string[];
     if (typeof config.tier === 'string' && validTiers.includes(config.tier)) {
-      validated.tier = config.tier as 'native' | 'houdini' | 'clippath' | 'fallback';
+      validated.tier = config.tier as RendererTier;
     } else {
       warn(
-        `Invalid tier: ${config.tier}. Expected one of: ${validTiers.join(', ')}. Tier will be auto-detected.`
+        `Invalid tier: ${String(config.tier)}. Expected one of: ${validTiers.join(', ')}. Tier will be auto-detected.`
       );
     }
   }

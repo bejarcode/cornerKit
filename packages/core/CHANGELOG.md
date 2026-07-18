@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-07-18
+
+### Added
+- **Border hover effects via CSS custom properties** ([#4](https://github.com/bejarcode/cornerKit/issues/4)) - Restyle borders from plain CSS, no JavaScript:
+  - `--ck-border-color` drives the border stroke (works with solid, dashed, dotted, and gradient borders)
+  - `--ck-background` drives the squircle background rendered in border mode
+  - Configured values remain the fallback whenever the variables are not set
+  - Example: `.btn:hover { --ck-border-color: hotpink }`
+- **Development builds with console warnings** - Consumers now get cornerKit's developer warnings in dev mode:
+  - ESM: served automatically via the `development` export condition (Vite, webpack, modern bundlers)
+  - CJS/Node: `NODE_ENV`-based runtime switch in the package entry
+  - Production builds remain warning-free and minified
+- **`border: null`** - Explicitly remove a border via `update()`, or override an instance-level border default per element in `apply()`
+- **Instance-level border defaults** - `new CornerKit({ border: {...} })` (and legacy `borderWidth`/`borderColor`) now applies to every element, matching radius/smoothing behavior
+
+### Fixed
+- **CJS entry was broken**: `require('@cornerkit/core')` returned an empty object (`"type": "module"` made Node parse the UMD file as ESM). `main`/`exports.require` now point to a real CommonJS entry and return the class directly
+- **CDN/UMD global was not constructible**: `window.CornerKit` is now the class itself, so `new CornerKit()` works from a script tag as documented (named exports are attached as statics; `CornerKit.default` remains for compatibility)
+- **TypeScript under `moduleResolution: node16`**: CJS consumers no longer hit TS1479; a dedicated `index.d.cts` ships alongside `index.d.ts`, with `types`-first export conditions
+- `applyAll()` no longer aborts the remaining batch when one element fails to render
+- `destroy()` no longer permanently disables reduced-motion tracking; instance reuse works as documented
+- Reduced-motion preference changes no longer strip clip-path transitions the user defined themselves
+- Borders configured on void/replaced elements (`img`, `input`, `select`, ...) no longer leave the element with a forced-transparent background; the squircle now falls back to plain clip-path rendering with a dev warning
+- `inspect()` returns deep copies; mutating the returned config can no longer corrupt managed state
+- Border configs are cloned on intake; mutating an object after passing it to `apply()`/`update()`/the constructor no longer leaks into applied elements
+- Legacy `borderWidth: 0` with a color no longer renders a 1px border (explicit zero now means "no border")
+- Dotted/inset border paths now share size clamping and degenerate-arc handling with the outer path, keeping shapes consistent on small elements and at `smoothing: 1`
+
+### Changed
+- Bundle size budget is now **< 6.5 KB gzipped** (currently ~6.0 KB UMD). History: < 5 KB (v1.1 core), < 6 KB (v1.2 borders), < 6.5 KB (hover hooks + fixes)
+- `exports` map restructured with nested `types`-first conditions (`import`/`require` x `types`/`development`/`default`)
+
 ## [1.2.0] - 2025-12-07
 
 ### Added

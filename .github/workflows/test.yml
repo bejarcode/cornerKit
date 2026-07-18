@@ -1,0 +1,53 @@
+name: Test
+
+# Core package quality gate: unit tests, type-check, and lint.
+# Added as part of the core library remediation (docs/core-library-review, WP2).
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core:
+    name: Core (tests, type-check, lint)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'packages/core/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: packages/core
+        run: npm ci
+
+      - name: Unit tests
+        working-directory: packages/core
+        run: npx vitest run
+
+      - name: Type check
+        working-directory: packages/core
+        run: npm run type-check
+
+      - name: Lint
+        working-directory: packages/core
+        run: npm run lint
+
+      - name: Build
+        working-directory: packages/core
+        run: npm run build

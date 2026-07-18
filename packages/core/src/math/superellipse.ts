@@ -65,7 +65,7 @@ export function generateCornerPoints(
 
   // Corner rotation angles (FR-015)
   // 0° = top-left, 90° = top-right, 180° = bottom-right, 270° = bottom-left
-  const rotationAngles = [0, 90, 180, 270];
+  const rotationAngles = [0, 90, 180, 270] as const;
   const angleOffset = (rotationAngles[corner] * Math.PI) / 180;
 
   // Generate points along the curve

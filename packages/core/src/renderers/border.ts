@@ -173,28 +173,33 @@ export function createBorderSVG(options: BorderRenderOptions): SVGSVGElement | n
   svg.appendChild(defs)
 
   // T010e: Background fill path (renders element background as squircle)
-  if (!shouldOmitBackground(backgroundColor)) {
+  if (backgroundColor && !shouldOmitBackground(backgroundColor)) {
     const bgPath = document.createElementNS(SVG_NS, 'path')
     bgPath.setAttribute('d', pathData)
-    bgPath.setAttribute('fill', backgroundColor!)
+    bgPath.setAttribute('fill', backgroundColor)
 
     // Extend background with stroke for dashed/dotted borders
     // This covers anti-aliased edges visible through gaps
     // CRITICAL: Clip the stroke to squircle shape to prevent corner bleeding
     if (style === 'dotted') {
-      bgPath.setAttribute('stroke', backgroundColor!)
+      bgPath.setAttribute('stroke', backgroundColor)
       bgPath.setAttribute('stroke-width', String(borderWidth * 2))
       bgPath.setAttribute('clip-path', `url(#${clipId})`)
     } else if (style === 'dashed' || dashArray) {
-      bgPath.setAttribute('stroke', backgroundColor!)
+      bgPath.setAttribute('stroke', backgroundColor)
       bgPath.setAttribute('stroke-width', String(borderWidth))
       bgPath.setAttribute('clip-path', `url(#${clipId})`)
     } else {
       // Solid: small stroke to cover anti-aliasing, clipped to shape
-      bgPath.setAttribute('stroke', backgroundColor!)
+      bgPath.setAttribute('stroke', backgroundColor)
       bgPath.setAttribute('stroke-width', '0.5')
       bgPath.setAttribute('clip-path', `url(#${clipId})`)
     }
+
+    // Same hover/theming hook for the background fill:
+    //   .btn:hover { --ck-background: #1e293b }
+    bgPath.style.fill = `var(--ck-background, ${backgroundColor})`
+    bgPath.style.stroke = `var(--ck-background, ${backgroundColor})`
 
     svg.appendChild(bgPath)
   }
@@ -203,6 +208,13 @@ export function createBorderSVG(options: BorderRenderOptions): SVGSVGElement | n
   const borderPath = document.createElementNS(SVG_NS, 'path')
   borderPath.setAttribute('fill', 'none')
   borderPath.setAttribute('stroke', strokeValue)
+  // Hover/theming hook (GitHub issue #4): the stroke resolves through a CSS
+  // custom property inherited from the host element, so plain CSS can
+  // restyle the border with no JavaScript:
+  //   .btn:hover { --ck-border-color: hotpink }
+  // The configured color/gradient is the var() fallback. The inline style
+  // wins the cascade; the attribute above stays as the resolved value.
+  borderPath.style.stroke = `var(--ck-border-color, ${strokeValue})`
 
   // CRITICAL: Dotted borders use INSET PATH (no clip-path)
   // to avoid clip-path anti-aliasing artifacts through gaps

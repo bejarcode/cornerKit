@@ -6,7 +6,16 @@
 
 import type { SquircleConfig, OriginalStyles } from './types';
 import type { RendererTier } from './detector';
+import type { ResizeObserverWithCleanup } from '../renderers/clippath';
 import { warnDuplicateApply } from '../utils/logger';
+
+/**
+ * Type guard for ResizeObservers extended with a cleanup() method
+ * (created by ClipPathRenderer to cancel pending rAF callbacks)
+ */
+function hasCleanup(observer: ResizeObserver): observer is ResizeObserverWithCleanup {
+  return 'cleanup' in observer;
+}
 
 /**
  * ManagedElement Interface
@@ -109,8 +118,8 @@ export class ElementRegistry {
       const existing = this.get(element);
       if (existing) {
         // Cleanup and disconnect old observers before replacing
-        if (existing.resizeObserver && 'cleanup' in existing.resizeObserver) {
-          (existing.resizeObserver as any).cleanup();
+        if (existing.resizeObserver && hasCleanup(existing.resizeObserver)) {
+          existing.resizeObserver.cleanup();
         }
         existing.resizeObserver?.disconnect();
         existing.intersectionObserver?.disconnect();
@@ -184,8 +193,8 @@ export class ElementRegistry {
       // Cleanup and disconnect observers
       // Call cleanup() first to cancel pending requestAnimationFrame callbacks
       // This prevents race conditions where pending callbacks execute after disconnect()
-      if (managed.resizeObserver && 'cleanup' in managed.resizeObserver) {
-        (managed.resizeObserver as any).cleanup();
+      if (managed.resizeObserver && hasCleanup(managed.resizeObserver)) {
+        managed.resizeObserver.cleanup();
       }
       managed.resizeObserver?.disconnect();
       managed.intersectionObserver?.disconnect();

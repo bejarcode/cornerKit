@@ -151,9 +151,13 @@ export interface SquircleConfig {
   /**
    * Border configuration (Feature 006)
    * Creates SVG-based border following squircle curve
+   *
+   * Pass `null` to explicitly disable the border:
+   * - in `apply()`: overrides an instance-level (constructor) border default
+   * - in `update()`: removes an existing border from the element
    * @optional
    */
-  border?: BorderConfig;
+  border?: BorderConfig | null;
 
   /**
    * @deprecated Use `border.width` instead

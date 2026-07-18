@@ -6,9 +6,21 @@
 
 import { generateSquirclePath } from '../math/path-generator';
 import type { SquircleConfig, RenderOptions } from '../core/types';
-import { warn, warnZeroDimensions, warnDetachedElement } from '../utils/logger';
+import { warn, warnOnce, warnZeroDimensions, warnDetachedElement } from '../utils/logger';
 import { hasZeroDimensions, isDetached } from '../utils/validator';
 import { createBorderSVG, removeBorderSVG, injectBorderStyles } from './border';
+
+/**
+ * Void and replaced elements that cannot render child content.
+ * The SVG border technique inserts a child <svg>, so borders fall back to
+ * plain clip-path rendering on these elements (a silent no-op border would
+ * otherwise leave the element with a forced-transparent background).
+ */
+const BORDER_UNSUPPORTED_TAGS = new Set(
+  'AREA AUDIO BASE BR CANVAS COL EMBED HR IFRAME IMG INPUT LINK META OBJECT SELECT SOURCE TEXTAREA TRACK VIDEO WBR'.split(
+    ' '
+  )
+);
 
 /**
  * Callback function signature for dimension updates
@@ -192,8 +204,25 @@ export class ClipPathRenderer {
     // Generate SVG path string
     const path = generateSquirclePath(width, height, radius, smoothing);
 
+    // Border requested and renderable?
+    const wantsBorder = !!(
+      border &&
+      border.width > 0 &&
+      (border.color || (border.gradient && border.gradient.length >= 2))
+    );
+
+    // Void/replaced elements cannot host the border SVG; fall back to
+    // plain clip-path so the element still gets its squircle shape
+    const canHostBorder = !BORDER_UNSUPPORTED_TAGS.has(element.tagName);
+    if (wantsBorder && !canHostBorder) {
+      warnOnce(
+        `Borders are not supported on <${element.tagName.toLowerCase()}> elements (they cannot render child content). Applying squircle without a border. Wrap the element in a container and apply the border to the wrapper instead.`,
+        `border-unsupported-${element.tagName}`
+      );
+    }
+
     // Handle border rendering via SVG (Feature 006)
-    if (border && border.width > 0 && (border.color || (border.gradient && border.gradient.length >= 2))) {
+    if (wantsBorder && canHostBorder) {
       // Inject global border styles (once per page)
       injectBorderStyles();
 
@@ -400,11 +429,9 @@ export class ClipPathRenderer {
             }
           } catch (error) {
             // FR-021: Handle errors (e.g., element removed from DOM)
-            if (process.env.NODE_ENV === 'development') {
-              warn('ResizeObserver error: Element may have been removed from DOM', {
-                error: error instanceof Error ? error.message : String(error),
-              });
-            }
+            warn('ResizeObserver error: Element may have been removed from DOM', {
+              error: error instanceof Error ? error.message : String(error),
+            });
 
             // Disconnect observer for this element
             observer.disconnect();
@@ -418,7 +445,7 @@ export class ClipPathRenderer {
     // Add cleanup method to cancel pending animations
     // This prevents race conditions where pending rafId callbacks execute after disconnect()
     const wrappedObserver = observer as ResizeObserverWithCleanup;
-    wrappedObserver.cleanup = () => {
+    wrappedObserver.cleanup = (): void => {
       if (rafId !== null) {
         cancelAnimationFrame(rafId);
         rafId = null;

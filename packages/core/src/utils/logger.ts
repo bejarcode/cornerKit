@@ -1,7 +1,7 @@
 /**
  * Development Logger
  * Provides helpful warnings during development that are stripped in production
- * Uses process.env.NODE_ENV checks for dead code elimination (Decision 5 from research.md)
+ * Uses process.env['NODE_ENV'] checks for dead code elimination (Decision 5 from research.md)
  */
 
 /**
@@ -24,7 +24,7 @@ export enum LogLevel {
  * Performance: Zero runtime cost in production (dead code elimination)
  */
 export function warn(message: string, context?: Record<string, unknown>): void {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env['NODE_ENV'] === 'development') {
     const prefix = '[cornerKit]';
     if (context) {
       console.warn(`${prefix} ${message}`, context);
@@ -58,7 +58,7 @@ export function error(message: string, context?: Record<string, unknown>): void 
  * @param context - Optional context object for additional details
  */
 export function info(message: string, context?: Record<string, unknown>): void {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env['NODE_ENV'] === 'development') {
     const prefix = '[cornerKit]';
     if (context) {
       console.info(`${prefix} ${message}`, context);
@@ -77,7 +77,7 @@ export function info(message: string, context?: Record<string, unknown>): void {
  */
 export function warnInvalidRadius(radius: unknown, defaultValue: number): void {
   warn(
-    `Invalid radius: ${radius}. Expected non-negative number. Using default: ${defaultValue}`
+    `Invalid radius: ${String(radius)}. Expected non-negative number. Using default: ${defaultValue}`
   );
 }
 
@@ -86,7 +86,7 @@ export function warnInvalidRadius(radius: unknown, defaultValue: number): void {
  */
 export function warnInvalidSmoothing(smoothing: unknown, defaultValue: number): void {
   warn(
-    `Invalid smoothing: ${smoothing}. Expected number in range [0, 1]. Using default: ${defaultValue}`
+    `Invalid smoothing: ${String(smoothing)}. Expected number in range [0, 1]. Using default: ${defaultValue}`
   );
 }
 
@@ -98,7 +98,7 @@ export function warnInvalidDataAttribute(
   attribute: string,
   value: unknown
 ): void {
-  warn(`Invalid data attribute value on element: ${attribute}="${value}"`, {
+  warn(`Invalid data attribute value on element: ${attribute}="${String(value)}"`, {
     element: element.tagName,
     id: element.id || undefined,
     className: element.className || undefined,
@@ -222,7 +222,7 @@ const warnedMessages = new Set<string>();
  * @param key - Unique key for this warning (defaults to message)
  */
 export function warnOnce(message: string, key?: string): void {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env['NODE_ENV'] === 'development') {
     const warningKey = key || message;
     if (!warnedMessages.has(warningKey)) {
       warn(message);
@@ -236,7 +236,7 @@ export function warnOnce(message: string, key?: string): void {
  * Useful for tests or when you want to see warnings again
  */
 export function clearWarningCache(): void {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env['NODE_ENV'] === 'development') {
     warnedMessages.clear();
   }
 }
@@ -245,7 +245,7 @@ export function clearWarningCache(): void {
  * Check if warning has been logged before
  */
 export function hasWarned(key: string): boolean {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env['NODE_ENV'] === 'development') {
     return warnedMessages.has(key);
   }
   return false;

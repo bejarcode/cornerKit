@@ -718,3 +718,58 @@ test.describe('Border Data Attributes (T050)', () => {
     expect(hasClipPath).toBe(true);
   });
 });
+
+test.describe('Border CSS Custom Properties (issue #4: hover effects)', () => {
+  test('should restyle border and background via CSS variables on hover', async ({ page }) => {
+    // User-land CSS: hover restyles border and background via variables only
+    await page.evaluate(() => {
+      const style = document.createElement('style');
+      style.textContent = `
+        #solid-border-element:hover {
+          --ck-border-color: rgb(255, 0, 0);
+          --ck-background: rgb(0, 0, 255);
+        }
+      `;
+      document.head.appendChild(style);
+
+      const element = document.getElementById('solid-border-element');
+      window.ck.apply(element, {
+        radius: 24,
+        smoothing: 0.6,
+        border: { width: 3, color: '#3b82f6' }
+      });
+    });
+
+    const readPaint = () =>
+      page.locator('#solid-border-element').evaluate((el: HTMLElement) => {
+        const borderPath = el.querySelector('svg.cornerkit-border path[fill="none"]');
+        const paths = el.querySelectorAll('svg.cornerkit-border path');
+        const bgPath = Array.from(paths).find(
+          (p) => p.getAttribute('fill') && p.getAttribute('fill') !== 'none'
+        );
+        return {
+          stroke: borderPath ? getComputedStyle(borderPath).stroke : null,
+          bgFill: bgPath ? getComputedStyle(bgPath).fill : null,
+        };
+      });
+
+    // Before hover: configured border color and captured background
+    const before = await readPaint();
+    expect(before.stroke).toBe('rgb(59, 130, 246)');
+    expect(before.bgFill).toBe('rgb(26, 26, 46)');
+
+    // Hover: CSS variables take over with no JavaScript involved
+    await page.hover('#solid-border-element');
+    const hovered = await readPaint();
+    expect(hovered.stroke).toBe('rgb(255, 0, 0)');
+    expect(hovered.bgFill).toBe('rgb(0, 0, 255)');
+
+    // Un-hover deterministically: scroll back to the page top first so the
+    // element cannot sit under the (0, 0) corner, then move the mouse there
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.mouse.move(0, 0);
+    const restored = await readPaint();
+    expect(restored.stroke).toBe('rgb(59, 130, 246)');
+    expect(restored.bgFill).toBe('rgb(26, 26, 46)');
+  });
+});
