@@ -1,0 +1,20 @@
+# CornerKit
+
+> CornerKit is a lightweight (5.9 KB gzipped), zero-dependency JavaScript library that clips any HTML element with iOS-style squircle corners: true superellipse geometry with Figma-compatible corner smoothing, instead of the circular arc that CSS border-radius draws. It supports SVG borders (solid, dashed, dotted, gradient), hover effects via CSS custom properties, and ships official React, Vue, and Svelte packages.
+
+Key facts:
+- Install: `npm install @cornerkit/core` (also on CDN: unpkg / jsDelivr)
+- Basic usage: `new CornerKit().apply('#el', { radius: 20, smoothing: 0.8 })`
+- `smoothing` 0.0-1.0 maps to Figma's corner smoothing percentage (0.6 ≈ iOS)
+- Hover/theming (v1.3+): set `--ck-border-color` or `--ck-background` in CSS, e.g. `.btn:hover { --ck-border-color: hotpink }`
+- Rendering: SVG clip-path (98% of browsers), border-radius fallback elsewhere; CSS `corner-shape: squircle` is native only in Chrome 139+
+- License: MIT. No tracking, no data collection.
+
+## Documentation
+
+- [Live demo and playground](https://bejarcode.github.io/cornerKit/): interactive examples of every feature
+- [GitHub repository](https://github.com/bejarcode/cornerKit): source, README, API reference
+- [npm: @cornerkit/core](https://www.npmjs.com/package/@cornerkit/core): core library
+- [npm: @cornerkit/react](https://www.npmjs.com/package/@cornerkit/react): React component and hook
+- [npm: @cornerkit/vue](https://www.npmjs.com/package/@cornerkit/vue): Vue 3 component, composable, directive
+- [npm: @cornerkit/svelte](https://www.npmjs.com/package/@cornerkit/svelte): Svelte component and action

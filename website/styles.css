@@ -2,9 +2,20 @@
    CSS Custom Properties (Design Tokens)
    ============================================================================= */
 :root {
-  /* Colors */
-  --color-primary: #3b82f6;
-  --color-primary-hover: #2563eb;
+  /* Colors — cornerKit brand
+     Indigo (iOS systemIndigo) is the brand accent.
+     Pink (iOS systemPink) is reserved for interaction states only:
+     if something turns pink, it is responding to you. */
+  --ink: #0A0F1E;
+  --porcelain: #F5F6F8;
+  --indigo: #5E5CE6;
+  --indigo-deep: #4B49C8;
+  --indigo-soft: #8583EE;
+  --pink: #FF2D55;
+  --slate-soft: #98A2B3;
+
+  --color-primary: var(--indigo);
+  --color-primary-hover: var(--indigo-deep);
   --color-secondary: #64748b;
   --color-text: #1f2937;
   --color-text-light: #6b7280;
@@ -13,6 +24,10 @@
   --color-border: #e5e7eb;
   --color-success: #10b981;
   --color-error: #ef4444;
+
+  /* Type roles */
+  --font-display: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono-ui: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
 
   /* Spacing */
   --spacing-unit: 8px;
@@ -275,76 +290,600 @@ kbd {
 }
 
 /* =============================================================================
-   Hero Section
+   Redesign layer — type system
    ============================================================================= */
-#hero {
-  background: var(--color-text);
-  color: white;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: var(--spacing-2xl) var(--spacing-sm);
+h1, h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
-.hero-content {
-  max-width: var(--max-width-lg);
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+}
+
+.eyebrow {
+  font-family: var(--font-mono-ui);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--indigo-soft);
+}
+
+.eyebrow-dark {
+  color: var(--indigo);
+}
+
+.dark .eyebrow-dark {
+  color: var(--indigo-soft);
+}
+
+.mono-inline {
+  font-family: var(--font-mono-ui);
+  font-size: 0.85em;
+  padding: 0.1em 0.4em;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  white-space: nowrap;
+}
+
+.mono-inline-light {
+  font-family: var(--font-mono-ui);
+  font-size: 0.85em;
+  padding: 0.1em 0.4em;
+  border-radius: 6px;
+  background: rgba(94, 92, 230, 0.10);
+  white-space: nowrap;
+}
+
+.dark .mono-inline-light {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.spec-line {
+  font-family: var(--font-mono-ui);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* =============================================================================
+   Redesign layer — buttons
+   ============================================================================= */
+.btn-primary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.btn-primary {
+  background: var(--indigo);
+  color: #fff !important;
+  box-shadow: 0 8px 24px rgba(94, 92, 230, 0.35);
+}
+
+.btn-primary:hover {
+  background: var(--indigo-deep);
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff !important;
+}
+
+.btn-copy {
+  font-family: var(--font-mono-ui);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  background: var(--indigo);
+  color: #fff;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-copy:hover {
+  background: var(--indigo-deep);
+}
+
+.install-bar {
+  font-family: var(--font-mono-ui);
+  font-size: 0.85rem;
+  padding: 0.8rem 5rem 0.8rem 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* =============================================================================
+   Redesign layer — hero: ink field + the ghost-outline signature
+   ============================================================================= */
+#hero {
+  background:
+    radial-gradient(900px 620px at 76% 40%, rgba(94, 92, 230, 0.22), transparent 62%),
+    var(--ink);
+  color: white;
 }
 
 #hero h1 {
   color: white;
-  font-size: var(--font-size-5xl);
-  margin-bottom: var(--spacing-md);
 }
 
-.hero-subtitle {
-  font-size: var(--font-size-xl);
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: var(--spacing-xl);
+.hero-stage {
+  width: min(340px, 82vw);
+}
+
+.hero-stage-inner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  /* drop-shadow follows the clip-path silhouette; box-shadow on the shape
+     itself cannot (and border mode moves backgrounds into the SVG) */
+  filter: drop-shadow(0 24px 60px rgba(94, 92, 230, 0.45));
 }
 
 .hero-demo {
-  width: 200px;
-  height: 200px;
-  margin: var(--spacing-xl) auto;
-  background: white;
-  box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  animation: heroSquircleAnimation 4s ease-in-out infinite alternate;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  /* Solid color on purpose: border mode re-renders the background inside
+     the SVG layer, which supports solid colors (not CSS gradients) */
+  background: var(--indigo);
 }
 
-@keyframes heroSquircleAnimation {
-  0% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.8;
+/* v1.3.0 in action: hovering the shape recolors its border through
+   a CSS custom property. Pink = "this responds to you". */
+#hero-demo:hover {
+  --ck-border-color: var(--pink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #hero-demo .cornerkit-border path {
+    transition: stroke 0.18s ease;
   }
 }
 
-.hero-features {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-md);
-  margin: var(--spacing-xl) 0;
-  text-align: left;
+/* The ghost: the same box drawn with plain border-radius.
+   Radius matches the live squircle config (radius 40) in app.js. */
+.hero-ghost {
+  position: absolute;
+  inset: 0;
+  border: 1.5px dashed rgba(255, 255, 255, 0.55);
+  border-radius: 40px;
+  pointer-events: none;
 }
 
-.hero-features .feature {
+.hero-readout {
+  font-family: var(--font-mono-ui);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 1.25rem;
+  text-align: center;
+}
+
+.readout-hint {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.readout-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+}
+
+.readout-swatch-solid {
+  background: var(--indigo-soft);
+}
+
+.readout-swatch-dashed {
+  border: 1.5px dashed var(--slate-soft);
+}
+
+/* =============================================================================
+   Redesign layer — comparison overlay
+   ============================================================================= */
+.overlay-stage {
+  position: relative;
+  aspect-ratio: 5 / 2;
+}
+
+.overlay-squircle {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, var(--indigo), var(--indigo-deep));
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem 1.25rem;
+}
+
+.overlay-ghost {
+  position: absolute;
+  inset: 0;
+  border: 2px dashed rgba(255, 255, 255, 0.85);
+  background: transparent !important;
+  pointer-events: none;
+}
+
+.mono-readout {
+  font-family: var(--font-mono-ui);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.legend-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 1.25rem;
+}
+
+.dark .legend-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.legend-title {
+  font-family: var(--font-mono-ui);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+}
+
+.dark .legend-title {
+  color: #fff;
+}
+
+.legend-title .readout-swatch-solid {
+  background: var(--indigo);
+}
+
+/* =============================================================================
+   Redesign layer — v1.3.0 hover showcase (gallery)
+   The library's CSS-variable hooks doing the work; no JS on hover.
+   ============================================================================= */
+#hover-demo-border:hover {
+  --ck-border-color: var(--pink);
+}
+
+#hover-demo-background:hover {
+  --ck-border-color: var(--pink);
+  --ck-background: #0F172A;
+}
+
+/* Keep copy readable while the squircle background goes dark */
+#hover-demo-background:hover strong,
+#hover-demo-background:hover p {
+  color: #fff !important;
+}
+
+#hover-demo-background strong,
+#hover-demo-background p {
+  transition: color 0.15s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hover-card .cornerkit-border path {
+    transition: stroke 0.15s ease, fill 0.15s ease;
+  }
+}
+
+.new-badge {
+  font-family: var(--font-mono-ui);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255, 45, 85, 0.12);
+  color: var(--pink);
+}
+
+.hover-snippet {
+  font-family: var(--font-mono-ui);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  background: var(--ink);
+  color: rgba(255, 255, 255, 0.85);
+  overflow-x: auto;
+}
+
+/* =============================================================================
+   Redesign layer — gallery: modal demo (nested squircles on an ink well)
+   The panel stays light in both themes on purpose: the ink well provides
+   the edge contrast that makes the clipped corners readable.
+   ============================================================================= */
+.modal-well {
+  background: var(--ink);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  align-items: center;
+  gap: 1rem;
 }
 
-.hero-features strong {
-  font-size: var(--font-size-lg);
-  color: white;
+.modal-panel {
+  background: #fff;
+  width: min(360px, 100%);
+  padding: 1.5rem;
+}
+
+.modal-btn {
+  padding: 0.55rem 1.15rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color var(--transition-fast);
+}
+
+.modal-btn-primary {
+  background: var(--indigo);
+  color: #fff;
+}
+
+.modal-btn-primary:hover {
+  background: var(--indigo-deep);
+}
+
+.modal-btn-secondary {
+  background: #EEF0F4;
+  color: var(--color-text);
+}
+
+.modal-btn-secondary:hover {
+  background: var(--color-border);
+}
+
+.modal-toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  color: var(--color-text);
+  padding: 0.6rem 1.1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.toast-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-success);
+}
+
+/* The panel and toast are intentionally light in BOTH themes (the ink well
+   provides the contrast). Pin their text so the global dark-mode utility
+   overrides (.dark .text-gray-900 { ... !important }) cannot wash them out. */
+.modal-panel strong,
+.dark .modal-panel strong,
+[data-theme="dark"] .modal-panel strong {
+  color: #101828 !important;
+}
+
+.modal-panel p,
+.dark .modal-panel p,
+[data-theme="dark"] .modal-panel p {
+  color: #475467 !important;
+}
+
+.modal-btn-secondary,
+.dark .modal-btn-secondary,
+[data-theme="dark"] .modal-btn-secondary {
+  color: #1f2937 !important;
+}
+
+.modal-toast,
+.dark .modal-toast,
+[data-theme="dark"] .modal-toast {
+  color: #101828 !important;
+}
+
+/* =============================================================================
+   Redesign layer — gallery: card surfaces
+   The media card stays light in both themes (same reasoning as the modal
+   panel: the well provides the contrast; pin its ink against the global
+   dark-mode text overrides).
+   ============================================================================= */
+.card-media {
+  background: #fff;
+}
+
+.card-media strong,
+.dark .card-media strong,
+[data-theme="dark"] .card-media strong {
+  color: #101828 !important;
+}
+
+.card-dark {
+  background: var(--ink);
+}
+
+.card-accent {
+  background: var(--indigo);
+}
+
+.card-accent-meta {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* =============================================================================
+   Redesign layer — gallery: navigation sublabels and neutral wells
+   ============================================================================= */
+.nav-sublabel {
+  font-family: var(--font-mono-ui);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+}
+
+.dark .nav-sublabel {
+  color: #9ca3af;
+}
+
+.nav-well {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+}
+
+.dark .nav-well {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* =============================================================================
+   Redesign layer — playground segmented control (replaces native select)
+   ============================================================================= */
+.style-segment {
+  display: flex;
+  gap: 4px;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 3px;
+}
+
+.dark .style-segment {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.segment-btn {
+  flex: 1;
+  padding: 0.45rem 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 8px;
+  color: var(--color-text-light);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.dark .segment-btn {
+  color: #9ca3af;
+}
+
+.segment-btn:not(.segment-btn-active):hover {
+  color: var(--color-text);
+  background: rgba(94, 92, 230, 0.08);
+}
+
+.dark .segment-btn:not(.segment-btn-active):hover {
+  color: #fff;
+}
+
+.segment-btn-active,
+.dark .segment-btn-active {
+  background: var(--indigo);
+  color: #fff;
+}
+
+/* =============================================================================
+   Redesign layer — FAQ
+   ============================================================================= */
+.faq-item {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 0;
+}
+
+.dark .faq-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.faq-item summary {
+  cursor: pointer;
+  padding: 1rem 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  list-style: none;
+  position: relative;
+  padding-right: 2.5rem;
+}
+
+.dark .faq-item summary {
+  color: #fff;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: '+';
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono-ui);
+  color: var(--indigo);
+  font-weight: 500;
+}
+
+.faq-item[open] summary::after {
+  content: '\2212';
+}
+
+.faq-item p {
+  padding: 0 1.25rem 1.1rem;
+  font-size: 0.925rem;
+  line-height: 1.65;
+  color: var(--color-text-light);
+}
+
+.dark .faq-item p {
+  color: #b7bdc9;
+}
+
+/* =============================================================================
+   Redesign layer — quality floor
+   ============================================================================= */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+}
+
+#hero a:focus-visible,
+#hero button:focus-visible {
+  outline-color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 .hero-features span {

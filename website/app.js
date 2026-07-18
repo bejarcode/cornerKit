@@ -11,8 +11,6 @@
 // ----------------------------------------------------------------------------
 // T010: Initialize CornerKit
 // ----------------------------------------------------------------------------
-console.log('🔍 Debug: window.CornerKit =', window.CornerKit);
-console.log('🔍 Debug: window.CornerKit.default =', window.CornerKit?.default);
 
 if (!window.CornerKit || !window.CornerKit.default) {
   console.error('❌ CornerKit library not loaded! Check if cornerkit.js is loaded before app.js');
@@ -42,7 +40,7 @@ ck.apply('#my-element', {
   Your content here
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.2.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.3.0"></script>
 <script>
   // Auto-init will apply squircles to all [data-squircle] elements
   CornerKit.auto();
@@ -128,7 +126,6 @@ function generateCode(format, radius, smoothing) {
  * @param {Object} borderConfig - Optional border configuration
  */
 function updateAllCodeSnippets(radius, smoothing, borderConfig = null) {
-  console.log('🔍 updateAllCodeSnippets called with radius:', radius, 'smoothing:', smoothing, 'border:', borderConfig);
   const formats = ['vanilla-js', 'html', 'typescript', 'react', 'vue'];
 
   formats.forEach(format => {
@@ -161,7 +158,7 @@ function generateCodeWithBorder(format, radius, smoothing, borderConfig) {
   const hasGradient = hasBorder && borderConfig.useGradient && borderConfig.gradient;
   const borderStyle = hasBorder && borderConfig.style !== 'solid' ? borderConfig.style : null;
 
-  // Build border object properties string for code snippets (v1.2 API)
+  // Build border object properties string for code snippets
   const getBorderObject = (indent = '    ') => {
     let props = `${indent}width: ${borderConfig.width}`;
     if (borderStyle) {
@@ -184,7 +181,7 @@ function generateCodeWithBorder(format, radius, smoothing, borderConfig) {
 // Create instance
 const ck = new CornerKit();
 
-// Apply to element with border (v1.2 API)
+// Apply to element with border
 ck.apply('#my-element', {
   radius: ${radius},
   smoothing: ${smoothing},
@@ -211,7 +208,7 @@ ${getBorderObject('    ')}
   Your content here
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.2.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cornerkit/core@1.3.0"></script>
 <script>
   // Auto-init applies squircles to all [data-squircle] elements
   CornerKit.auto();
@@ -520,7 +517,6 @@ function resetPlayground() {
  */
 function inspectPlayground() {
   const info = ck.inspect('#playground-preview');
-  console.log('🔍 Playground inspection:', info);
 
   // Also display in UI (optional enhancement)
   const metricsDisplay = document.getElementById('performance-metrics');
@@ -556,9 +552,11 @@ const exampleComponents = [
   { id: 'border-button-2', category: 'border', variant: 'button-purple', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#a855f7' },
 
   // Modals
-  { id: 'modal-dialog', category: 'modal', variant: 'dialog', radius: 20, smoothing: 0.8 },
-  { id: 'modal-alert', category: 'modal', variant: 'alert', radius: 16, smoothing: 0.75 },
-  { id: 'modal-confirmation', category: 'modal', variant: 'success', radius: 20, smoothing: 0.85 },
+  // Modal demo: panel, buttons, and toast are clipped independently (nesting)
+  { id: 'modal-dialog', category: 'modal', variant: 'dialog', radius: 24, smoothing: 0.85 },
+  { id: 'modal-btn-cancel', category: 'modal', variant: 'button', radius: 12, smoothing: 0.8 },
+  { id: 'modal-btn-confirm', category: 'modal', variant: 'button', radius: 12, smoothing: 0.8 },
+  { id: 'modal-toast', category: 'modal', variant: 'toast', radius: 14, smoothing: 0.85 },
 
   // Navigation - Tabs
   { id: 'nav-tab-1', category: 'navigation', variant: 'tab', radius: 12, smoothing: 0.8 },
@@ -586,13 +584,16 @@ const exampleComponents = [
 
   // Forms - Textareas (applying border to wrapper due to textarea overflow restrictions)
   { id: 'form-textarea-wrapper', category: 'form', variant: 'textarea', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' },
-  { id: 'form-textarea-2', category: 'form', variant: 'textarea-large', radius: 16, smoothing: 0.85, borderWidth: 2, borderColor: '#d1d5db' },
 
   // Border Styles (NEW in v1.2)
   { id: 'border-style-solid', category: 'border-style', variant: 'solid', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#3b82f6', borderStyle: 'solid' },
   { id: 'border-style-dashed', category: 'border-style', variant: 'dashed', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#10b981', borderStyle: 'dashed' },
   { id: 'border-style-dotted', category: 'border-style', variant: 'dotted', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#f59e0b', borderStyle: 'dotted' },
   { id: 'border-style-gradient', category: 'border-style', variant: 'gradient', radius: 20, smoothing: 0.8, borderWidth: 2, gradient: [{ color: '#3b82f6', offset: 0 }, { color: '#8b5cf6', offset: 1 }] },
+
+  // Hover Effects (NEW in v1.3) - restyled from CSS via --ck-border-color / --ck-background
+  { id: 'hover-demo-border', category: 'hover-demo', variant: 'border', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#5E5CE6' },
+  { id: 'hover-demo-background', category: 'hover-demo', variant: 'background', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#5E5CE6' },
 
   // Dark Background Demo (SC-001 Anti-aliasing Fix)
   { id: 'dark-demo-solid', category: 'dark-demo', variant: 'solid', radius: 20, smoothing: 0.8, borderWidth: 2, borderColor: '#60a5fa' },
@@ -1083,8 +1084,6 @@ function switchCodeTab(tabName) {
  */
 function initializeDemo() {
   console.log('🚀 CornerKit Demo Website initialized');
-  console.log('🔍 DOM ready state:', document.readyState);
-  console.log('🔍 CornerKit instance:', ck);
 
   // Display browser tier
   displayBrowserTier();
@@ -1147,6 +1146,24 @@ function initializeDemo() {
 
     if (borderStyleSelect) {
       borderStyleSelect.addEventListener('change', handleBorderStyleChange);
+
+      // Segmented control drives the hidden select. Native select popups
+      // render inconsistently across platforms; buttons are reliable.
+      const segmentButtons = document.querySelectorAll('.segment-btn[data-style]');
+      const syncStyleSegment = () => {
+        segmentButtons.forEach((b) => {
+          const active = b.dataset.style === borderStyleSelect.value;
+          b.classList.toggle('segment-btn-active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      };
+      segmentButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          borderStyleSelect.value = btn.dataset.style;
+          borderStyleSelect.dispatchEvent(new Event('change'));
+        });
+      });
+      borderStyleSelect.addEventListener('change', syncStyleSegment);
     }
     if (gradientToggle) {
       gradientToggle.addEventListener('change', handleGradientToggle);
@@ -1207,10 +1224,13 @@ function initializeDemo() {
  * Initializes the hero section
  */
 function initializeHero() {
-  // Apply animated squircle to hero demo element
+  // Apply squircle to hero demo element, with a border so the
+  // v1.3.0 CSS-variable hover effect has a stroke to recolor
+  // (see #hero-demo:hover { --ck-border-color } in styles.css)
   ck.apply('#hero-demo', {
     radius: 40,
-    smoothing: 0.85
+    smoothing: 0.85,
+    border: { width: 2, color: 'rgba(255, 255, 255, 0.35)' }
   });
 
   // Mark as ready to prevent FOUC
@@ -1409,17 +1429,13 @@ if (darkModeToggle) {
     displayBrowserTier();
 
     // Force browser to recalculate styles (applies to ALL browsers, not just Safari)
+    // NOTE: never toggle body display here — hiding <body> collapses the page
+    // height, which clamps the scroll position to the top.
     const forceRepaint = () => {
-      // Method 1: Trigger reflow on html element
+      // Trigger reflow on html element
       void html.offsetHeight;
 
-      // Method 2: Temporarily modify display to force full recalculation
-      const originalDisplay = body.style.display;
-      body.style.display = 'none';
-      void body.offsetHeight; // Force reflow
-      body.style.display = originalDisplay;
-
-      // Method 3: Force style recalculation on key container elements
+      // Force style recalculation on key container elements
       const containers = document.querySelectorAll('main, section, header, footer');
       containers.forEach(el => void el.offsetHeight);
     };
@@ -1432,7 +1448,7 @@ if (darkModeToggle) {
       forceRepaint();
     });
 
-    // Reapply borders with theme-appropriate colors (v1.2 API)
+    // Reapply borders with theme-appropriate colors
     // Use double requestAnimationFrame to ensure styles have fully recalculated
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
