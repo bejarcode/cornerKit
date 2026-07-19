@@ -93,13 +93,12 @@ function isBrowser(): boolean {
  * Build CornerKit config from props.
  */
 function buildConfig(): object {
+  // `border` passes through unchanged so the full core v1.2+ API works
+  // (style, dashArray, gradient) and `border: null` explicitly disables.
   return {
     radius: props.radius,
     smoothing: props.smoothing,
-    ...(props.border && {
-      borderWidth: props.border.width,
-      borderColor: props.border.color,
-    }),
+    ...(props.border !== undefined && { border: props.border }),
   };
 }
 

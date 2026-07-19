@@ -80,15 +80,45 @@ describe('Utils', () => {
       expect(buildConfig({ smoothing: 0.8 })).toEqual({ smoothing: 0.8 });
     });
 
-    it('should transform border to borderWidth and borderColor', () => {
+    it('should pass the border object through unchanged (v1.2+ core API)', () => {
       const config = buildConfig({
         border: { width: 2, color: '#3b82f6' },
       });
 
       expect(config).toEqual({
-        borderWidth: 2,
-        borderColor: '#3b82f6',
+        border: { width: 2, color: '#3b82f6' },
       });
+    });
+
+    it('should pass style, dashArray, and gradient through to core', () => {
+      const config = buildConfig({
+        border: {
+          width: 3,
+          style: 'dashed',
+          dashArray: '12 4',
+          gradient: [
+            { offset: '0%', color: '#3b82f6' },
+            { offset: '100%', color: '#8b5cf6' },
+          ],
+        },
+      });
+
+      expect(config).toEqual({
+        border: {
+          width: 3,
+          style: 'dashed',
+          dashArray: '12 4',
+          gradient: [
+            { offset: '0%', color: '#3b82f6' },
+            { offset: '100%', color: '#8b5cf6' },
+          ],
+        },
+      });
+    });
+
+    it('should forward border: null so core can explicitly disable a border', () => {
+      const config = buildConfig({ radius: 20, border: null });
+      expect(config).toEqual({ radius: 20, border: null });
     });
 
     it('should include all options when provided', () => {
@@ -101,8 +131,7 @@ describe('Utils', () => {
       expect(config).toEqual({
         radius: 24,
         smoothing: 0.9,
-        borderWidth: 1,
-        borderColor: 'black',
+        border: { width: 1, color: 'black' },
       });
     });
   });
@@ -180,5 +209,43 @@ describe('Utils', () => {
       };
       expect(optionsEqual(a, b)).toBe(false);
     });
+  });
+});
+
+describe('optionsEqual - v1.2+ border API (style, dashArray, gradient)', () => {
+  it('detects style changes', () => {
+    expect(
+      optionsEqual(
+        { border: { width: 2, color: 'red', style: 'solid' } },
+        { border: { width: 2, color: 'red', style: 'dashed' } }
+      )
+    ).toBe(false);
+  });
+
+  it('detects dashArray changes', () => {
+    expect(
+      optionsEqual(
+        { border: { width: 2, color: 'red', dashArray: '8 4' } },
+        { border: { width: 2, color: 'red', dashArray: '12 4' } }
+      )
+    ).toBe(false);
+  });
+
+  it('compares gradients by value, not reference', () => {
+    expect(
+      optionsEqual(
+        { border: { width: 2, gradient: [{ offset: '0%', color: 'red' }] } },
+        { border: { width: 2, gradient: [{ offset: '0%', color: 'red' }] } }
+      )
+    ).toBe(true);
+  });
+
+  it('detects gradient stop changes', () => {
+    expect(
+      optionsEqual(
+        { border: { width: 2, gradient: [{ offset: '0%', color: 'red' }] } },
+        { border: { width: 2, gradient: [{ offset: '0%', color: 'blue' }] } }
+      )
+    ).toBe(false);
   });
 });

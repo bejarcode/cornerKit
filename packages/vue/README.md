@@ -235,6 +235,48 @@ app.directive('squircle', vSquircle);
 app.mount('#app');
 ```
 
+## Borders & Hover Effects (v1.1.0+)
+
+The `border` prop (component, composable, and directive) passes straight
+through to `@cornerkit/core` (v1.2+ API), so every border style works: solid,
+dashed, dotted, custom dash patterns, and gradients.
+
+```vue
+<template>
+  <!-- Dashed border -->
+  <Squircle :radius="20" :border="{ width: 2, color: '#6b7280', style: 'dashed' }">
+    Drop zone
+  </Squircle>
+
+  <!-- Gradient border -->
+  <Squircle
+    :radius="24"
+    :border="{
+      width: 3,
+      gradient: [
+        { offset: '0%', color: '#3b82f6' },
+        { offset: '100%', color: '#8b5cf6' },
+      ],
+    }"
+  >
+    Featured card
+  </Squircle>
+
+  <!-- Explicitly no border (overrides instance defaults / removes on update) -->
+  <Squircle :radius="20" :border="null">Content</Squircle>
+</template>
+```
+
+**Hover effects need no props** (core v1.3+): the border stroke and background
+resolve through CSS custom properties, so plain CSS restyles them:
+
+```css
+.cta:hover {
+  --ck-border-color: #8b5cf6;  /* border stroke on hover */
+  --ck-background: #1e293b;    /* squircle background on hover */
+}
+```
+
 ## TypeScript
 
 Full TypeScript support with exported types:

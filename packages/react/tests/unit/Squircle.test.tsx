@@ -270,6 +270,74 @@ describe('Squircle Component', () => {
         expect(element.style.clipPath).toBeTruthy();
       });
     });
+
+    it('forwards the full border object to core (v1.2+ API, not legacy props)', async () => {
+      render(
+        <Squircle
+          radius={20}
+          border={{ width: 2, color: '#3b82f6', style: 'dashed', dashArray: '12 4' }}
+          data-testid="squircle"
+        >
+          Content
+        </Squircle>
+      );
+
+      const element = screen.getByTestId('squircle');
+
+      await vi.waitFor(() => {
+        const config = JSON.parse(element.getAttribute('data-mock-config') ?? '{}');
+        expect(config.border).toEqual({
+          width: 2,
+          color: '#3b82f6',
+          style: 'dashed',
+          dashArray: '12 4',
+        });
+        expect(config.borderWidth).toBeUndefined();
+        expect(config.borderColor).toBeUndefined();
+      });
+    });
+
+    it('forwards gradient borders to core', async () => {
+      render(
+        <Squircle
+          radius={20}
+          border={{
+            width: 3,
+            gradient: [
+              { offset: '0%', color: '#3b82f6' },
+              { offset: '100%', color: '#8b5cf6' },
+            ],
+          }}
+          data-testid="squircle"
+        >
+          Content
+        </Squircle>
+      );
+
+      const element = screen.getByTestId('squircle');
+
+      await vi.waitFor(() => {
+        const config = JSON.parse(element.getAttribute('data-mock-config') ?? '{}');
+        expect(config.border.gradient).toHaveLength(2);
+        expect(config.border.gradient[0].color).toBe('#3b82f6');
+      });
+    });
+
+    it('forwards border: null so core can explicitly disable a border', async () => {
+      render(
+        <Squircle radius={20} border={null} data-testid="squircle">
+          Content
+        </Squircle>
+      );
+
+      const element = screen.getByTestId('squircle');
+
+      await vi.waitFor(() => {
+        const config = JSON.parse(element.getAttribute('data-mock-config') ?? '{}');
+        expect('border' in config).toBe(true);
+        expect(config.border).toBeNull();
+      });
+    });
   });
 
   describe('SSR Compatibility', () => {

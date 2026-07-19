@@ -19,6 +19,8 @@ vi.mock('@cornerkit/core', () => ({
       if (el) {
         this.elements.set(el, config || {});
         el.style.clipPath = 'path("M0,0")'; // Mock clip-path
+        // Expose the received config so tests can assert pass-through
+        el.setAttribute('data-mock-config', JSON.stringify(config ?? {}));
       }
       return this;
     }
@@ -29,6 +31,7 @@ vi.mock('@cornerkit/core', () => ({
         : element;
       if (el && this.elements.has(el)) {
         this.elements.set(el, { ...this.elements.get(el), ...config });
+        el.setAttribute('data-mock-config', JSON.stringify(config ?? {}));
       }
       return this;
     }

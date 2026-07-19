@@ -107,3 +107,41 @@ describe('shallowEqual', () => {
     });
   });
 });
+
+describe('shallowEqual - v1.2+ border API (style, dashArray, gradient)', () => {
+  it('detects style changes', () => {
+    expect(
+      shallowEqual(
+        { border: { width: 2, color: 'red', style: 'solid' } },
+        { border: { width: 2, color: 'red', style: 'dashed' } }
+      )
+    ).toBe(false);
+  });
+
+  it('detects dashArray changes', () => {
+    expect(
+      shallowEqual(
+        { border: { width: 2, color: 'red', dashArray: '8 4' } },
+        { border: { width: 2, color: 'red', dashArray: '12 4' } }
+      )
+    ).toBe(false);
+  });
+
+  it('compares gradients by value, not reference', () => {
+    const a = { border: { width: 2, gradient: [{ offset: '0%', color: 'red' }] } };
+    const b = { border: { width: 2, gradient: [{ offset: '0%', color: 'red' }] } };
+    expect(shallowEqual(a, b)).toBe(true);
+  });
+
+  it('detects gradient stop changes', () => {
+    const a = { border: { width: 2, gradient: [{ offset: '0%', color: 'red' }] } };
+    const b = { border: { width: 2, gradient: [{ offset: '0%', color: 'blue' }] } };
+    expect(shallowEqual(a, b)).toBe(false);
+  });
+
+  it('treats null (explicit none) vs a border object as different', () => {
+    expect(
+      shallowEqual({ border: null }, { border: { width: 2, color: 'red' } })
+    ).toBe(false);
+  });
+});

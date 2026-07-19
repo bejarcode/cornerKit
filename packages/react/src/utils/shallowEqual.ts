@@ -31,15 +31,34 @@ export function shallowEqual(
   const prevBorder = prev.border;
   const nextBorder = next.border;
 
-  // Both undefined or same reference
+  // Both undefined/null or same reference
   if (prevBorder === nextBorder) return true;
 
-  // One is undefined, other is not
+  // One is unset (undefined or null), other is not
+  // (null vs undefined also lands here: explicit "no border" differs from unset)
   if (!prevBorder || !nextBorder) return false;
 
-  // Compare border properties
+  // Compare border properties (core v1.2+ API)
   if (prevBorder.width !== nextBorder.width) return false;
   if (prevBorder.color !== nextBorder.color) return false;
+  if (prevBorder.style !== nextBorder.style) return false;
+  if (prevBorder.dashArray !== nextBorder.dashArray) return false;
+
+  // Compare gradient stops by value
+  const prevGradient = prevBorder.gradient;
+  const nextGradient = nextBorder.gradient;
+  if (prevGradient !== nextGradient) {
+    if (!prevGradient || !nextGradient) return false;
+    if (prevGradient.length !== nextGradient.length) return false;
+    for (let i = 0; i < prevGradient.length; i++) {
+      if (
+        prevGradient[i]?.offset !== nextGradient[i]?.offset ||
+        prevGradient[i]?.color !== nextGradient[i]?.color
+      ) {
+        return false;
+      }
+    }
+  }
 
   return true;
 }

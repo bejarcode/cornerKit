@@ -78,13 +78,12 @@ export function useSquircle(
    * Build CornerKit config from options.
    */
   function buildConfig(opts: UseSquircleOptions = {}): object {
+    // `border` passes through unchanged so the full core v1.2+ API works
+    // (style, dashArray, gradient) and `border: null` explicitly disables.
     return {
       radius: opts.radius,
       smoothing: opts.smoothing,
-      ...(opts.border && {
-        borderWidth: opts.border.width,
-        borderColor: opts.border.color,
-      }),
+      ...(opts.border !== undefined && { border: opts.border }),
     };
   }
 

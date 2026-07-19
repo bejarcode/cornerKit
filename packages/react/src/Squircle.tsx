@@ -82,15 +82,15 @@ const SquircleInner = forwardRef<
         // Check if effect was cleaned up during async import
         if (!isActive) return;
 
-        // Build config from options
+        // Build config from options. `border` passes through unchanged so the
+        // full core v1.2+ API works (style, dashArray, gradient) and
+        // `border: null` explicitly disables a border. `undefined` omits the
+        // key so instance-level defaults can apply.
         const currentOptions: UseSquircleOptions = { radius, smoothing, border };
         const config = {
           radius,
           smoothing,
-          ...(border && {
-            borderWidth: border.width,
-            borderColor: border.color,
-          }),
+          ...(border !== undefined && { border }),
         };
 
         // Create new instance or update existing

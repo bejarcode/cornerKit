@@ -10,12 +10,15 @@ For detailed changelog information, see the package-specific changelogs:
 ## Quick Links
 
 ### @cornerkit/svelte
+- [v1.1.0](packages/svelte/CHANGELOG.md#110---2026-07-19) - Full border API (styles, gradients, border: null) + hover via CSS variables
 - [v1.0.0](packages/svelte/CHANGELOG.md#100---2025-11-22) - Initial release with Squircle component and squircle action
 
 ### @cornerkit/vue
+- [v1.1.0](packages/vue/CHANGELOG.md#110---2026-07-19) - Full border API (styles, gradients, border: null) + hover via CSS variables
 - [v1.0.0](packages/vue/CHANGELOG.md#100---2025-11-22) - Initial release with Squircle component, useSquircle composable, and v-squircle directive
 
 ### @cornerkit/react
+- [v1.1.0](packages/react/CHANGELOG.md#110---2026-07-19) - Full border API (styles, gradients, border: null) + hover via CSS variables
 - [v1.0.0](packages/react/CHANGELOG.md#100---2025-11-22) - Initial release with Squircle component and useSquircle hook
 
 ### @cornerkit/core

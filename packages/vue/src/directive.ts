@@ -77,13 +77,12 @@ function valuesEqual(
  * Build CornerKit config from options.
  */
 function buildConfig(options: SquircleOptions): object {
+  // `border` passes through unchanged so the full core v1.2+ API works
+  // (style, dashArray, gradient) and `border: null` explicitly disables.
   return {
     radius: options.radius,
     smoothing: options.smoothing,
-    ...(options.border && {
-      borderWidth: options.border.width,
-      borderColor: options.border.color,
-    }),
+    ...(options.border !== undefined && { border: options.border }),
   };
 }
 

@@ -58,9 +58,10 @@ export function buildConfig(options: SquircleOptions = {}): Record<string, unkno
     config.smoothing = options.smoothing;
   }
 
-  if (options.border) {
-    config.borderWidth = options.border.width;
-    config.borderColor = options.border.color;
+  // `border` passes through unchanged so the full core v1.2+ API works
+  // (style, dashArray, gradient) and `border: null` explicitly disables.
+  if (options.border !== undefined) {
+    config.border = options.border;
   }
 
   return config;
@@ -84,11 +85,27 @@ export function optionsEqual(
   if (a.radius !== b.radius) return false;
   if (a.smoothing !== b.smoothing) return false;
 
-  // Compare border
-  if (!a.border && !b.border) return true;
+  // Compare border (core v1.2+ API)
+  // Note: null (explicit "no border") vs undefined (unset) are both falsy;
+  // treating them as equal here only skips a redundant core update.
+  if (!a.border && !b.border) return a.border === b.border;
   if (!a.border || !b.border) return false;
   if (a.border.width !== b.border.width) return false;
   if (a.border.color !== b.border.color) return false;
+  if (a.border.style !== b.border.style) return false;
+  if (a.border.dashArray !== b.border.dashArray) return false;
+
+  // Compare gradient stops by value
+  const ag = a.border.gradient;
+  const bg = b.border.gradient;
+  if (ag !== bg) {
+    if (!ag || !bg || ag.length !== bg.length) return false;
+    for (let i = 0; i < ag.length; i++) {
+      if (ag[i]?.offset !== bg[i]?.offset || ag[i]?.color !== bg[i]?.color) {
+        return false;
+      }
+    }
+  }
 
   return true;
 }

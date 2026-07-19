@@ -86,6 +86,62 @@ describe('Squircle Component', () => {
       expect(wrapper.exists()).toBe(true);
     });
 
+    it('forwards the full border object to core (v1.2+ API, not legacy props)', async () => {
+      const wrapper = mount(Squircle, {
+        props: {
+          radius: 20,
+          border: { width: 2, color: '#3b82f6', style: 'dashed', dashArray: '12 4' },
+        },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      const config = JSON.parse(wrapper.element.getAttribute('data-mock-config') ?? '{}');
+      expect(config.border).toEqual({
+        width: 2,
+        color: '#3b82f6',
+        style: 'dashed',
+        dashArray: '12 4',
+      });
+      expect(config.borderWidth).toBeUndefined();
+      expect(config.borderColor).toBeUndefined();
+      wrapper.unmount();
+    });
+
+    it('forwards gradient borders to core', async () => {
+      const wrapper = mount(Squircle, {
+        props: {
+          border: {
+            width: 3,
+            gradient: [
+              { offset: '0%', color: '#3b82f6' },
+              { offset: '100%', color: '#8b5cf6' },
+            ],
+          },
+        },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      const config = JSON.parse(wrapper.element.getAttribute('data-mock-config') ?? '{}');
+      expect(config.border.gradient).toHaveLength(2);
+      expect(config.border.gradient[1].color).toBe('#8b5cf6');
+      wrapper.unmount();
+    });
+
+    it('forwards border: null so core can explicitly disable a border', async () => {
+      const wrapper = mount(Squircle, {
+        props: { radius: 20, border: null },
+        attachTo: document.body,
+      });
+
+      await flushPromises();
+      const config = JSON.parse(wrapper.element.getAttribute('data-mock-config') ?? '{}');
+      expect('border' in config).toBe(true);
+      expect(config.border).toBeNull();
+      wrapper.unmount();
+    });
+
     it('accepts all props together', async () => {
       const wrapper = mount(Squircle, {
         props: {

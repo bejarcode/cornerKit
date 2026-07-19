@@ -75,14 +75,13 @@ export function useSquircle<T extends HTMLElement = HTMLDivElement>(
         // Check if effect was cleaned up during async import
         if (!isActive) return;
 
-        // Build config from options
+        // Build config from options. `border` passes through unchanged so the
+        // full core v1.2+ API works (style, dashArray, gradient) and
+        // `border: null` explicitly disables a border.
         const config = {
           radius: options?.radius,
           smoothing: options?.smoothing,
-          ...(options?.border && {
-            borderWidth: options.border.width,
-            borderColor: options.border.color,
-          }),
+          ...(options?.border !== undefined && { border: options.border }),
         };
 
         // Create new instance or update existing
