@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-07-19
+
+### Fixed
+- Documentation only, no code changes:
+  - Browser support table now reflects actual behavior (all modern browsers render via the SVG ClipPath tier; Native CSS and Houdini tiers are roadmap items, not active)
+  - Bundle analysis example updated to current sizes and the 6.5 KB budget
+  - Test counts corrected (433 unit / 67 integration), coverage figure unified at 86.4%
+  - Removed reference to a non-published report file; clarified the 0.8 smoothing default
+
 ## [1.3.0] - 2026-07-18
 
 ### Added

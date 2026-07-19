@@ -276,7 +276,7 @@ ck.apply('#element', { smoothing: 1.0 });   // Circular
 
 **Recommended values:**
 - **0.6**: iOS 7+ standard (recommended)
-- **0.8**: Old CornerKit default
+- **0.8**: CornerKit constructor default
 - **0.85**: Figma default
 - **0.9-0.95**: Very smooth
 
@@ -536,7 +536,7 @@ border: {
 
 ## Performance Benchmarks
 
-All metrics verified by automated performance tests and documented in SUCCESS-CRITERIA-REPORT.md. Tests performed on 2020 MacBook Pro (M1).
+All metrics verified by the automated test suites in this repository (Vitest unit tests, Playwright integration and performance tests). Tests performed on 2020 MacBook Pro (M1).
 
 ### Bundle Size
 
@@ -565,8 +565,8 @@ All metrics verified by automated performance tests and documented in SUCCESS-CR
 
 | Category | Tests | Status | Coverage |
 |----------|-------|--------|----------|
-| **Unit Tests** | 412/412 | **100% passing** | 84.9% code coverage |
-| **Integration Tests** | 66/67 | **98.5% passing** | Core functionality verified |
+| **Unit Tests** | 433/433 | **100% passing** | 86.4% code coverage |
+| **Integration Tests** | 67/68 | **98.5% passing** (1 skipped) | Core functionality verified |
 | **Performance Tests** | 6/6 | **All targets met** | Automated benchmarking |
 
 **Verification**: Automated test suite runs on every commit with Vitest (unit) and Playwright (integration). All success criteria independently verified.
@@ -811,19 +811,21 @@ If you prefer manual control, you can use @cornerkit/core directly:
 
 CornerKit supports **98%+ of browsers** with progressive enhancement:
 
-| Browser | Version | Tier | Notes |
-|---------|---------|------|-------|
-| Chrome | 139+ | Native CSS | `corner-shape: squircle` |
-| Chrome | 65-138 | Houdini | Paint API (off main thread) |
+| Browser | Version | Active Tier | Notes |
+|---------|---------|-------------|-------|
 | Chrome | 23+ | ClipPath | SVG clip-path |
 | Firefox | 54+ | ClipPath | SVG clip-path |
 | Safari | 13+ | ClipPath | SVG clip-path |
-| Edge | 79+ | Houdini | Paint API |
-| Edge | 18-78 | ClipPath | SVG clip-path |
+| Edge | 18+ | ClipPath | SVG clip-path |
 | Opera | 15+ | ClipPath | SVG clip-path |
-| IE11 |  | Fallback | Standard border-radius |
+| Older browsers |  | Fallback | Standard border-radius |
 
-**Automatic capability detection** ensures optimal rendering on every browser.
+Today every modern browser renders through the SVG ClipPath tier, so output is
+pixel-identical across browsers. Two faster tiers are on the roadmap and will
+activate automatically once implemented, with no API changes:
+
+- **Native CSS** (`corner-shape: squircle`, Chrome 139+): planned, zero-JS rendering
+- **Houdini Paint API** (Chrome 65+, Edge 79+): planned, off-main-thread rendering
 
 ---
 
@@ -911,15 +913,15 @@ npm run analyze-bundle
 ═══════════════════════════════════════
 
 cornerkit.esm.js
-  Raw size:     17.2 KB
-  Gzipped size: 5.50 KB  PASS
+  Raw size:     21.4 KB
+  Gzipped size: 5.87 KB  PASS
 
 Summary:
-  Target:           6.00 KB (6KB gzipped)
-  Actual (ESM):     5.50 KB
-  Usage:            91.7% of target
-   SUCCESS: Bundle size meets target (<6KB)
-  Remaining budget: 0.50 KB
+  Target:           6.50 KB (6.5KB gzipped)
+  Actual (ESM):     5.87 KB
+  Usage:            90.3% of target
+   SUCCESS: Bundle size meets target (<6.5KB)
+  Remaining budget: 0.63 KB
 
  Tree-Shaking Verification
    OK   Debug code removed
@@ -929,7 +931,7 @@ Summary:
  Bundle size check PASSED
 ```
 
-> **Note**: Bundle size increased from 4.58 KB (v1.1) to 5.50 KB (v1.2) to add SVG-based border rendering with dashed, dotted, and gradient styles.
+> **Note**: The bundle budget grew with the feature set: 4.58 KB (v1.1) → 5.50 KB (v1.2, SVG borders with dashed/dotted/gradient styles) → 5.87 KB (v1.3, CSS-variable hover effects and correctness fixes). Budget: < 6.5 KB gzipped, enforced in CI.
 
 ---
 
